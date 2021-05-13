@@ -3,7 +3,7 @@ Simulates cellular automata systems.
 
 ## Description
 
-A simulator for cellular automata systems. Currently supports [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Created as a way to experiment with newer Java features and development techniques.
+A simulator for cellular automata systems. Created as a way to experiment with newer Java features and development techniques. Currently supports [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Cells outside of the viewable field are considered dead.
 
 ## Features
 
