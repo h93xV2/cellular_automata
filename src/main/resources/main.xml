@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import cellular_automata.Board?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="cellular_automata.CellularAutomataController">
+    <MenuBar>
+        <Menu text="File">
+            <MenuItem fx:id="openFile" text="Open"/>
+            <MenuItem fx:id="saveFile" text="Save"/>
+        </Menu>
+        <Menu text="Board">
+        	<MenuItem fx:id="showGridLines" text="Show grid lines"/>
+        </Menu>
+    </MenuBar>
+    <ToolBar>
+    	<Label text="Controls"/>
+        <Button fx:id="startGame" text="Start"/>
+        <!-- <graphic>
+		        <ImageView>
+	          		<image>
+	            		<Image url="" />
+	          		</image>
+	        	</ImageView>
+	      	</graphic>	
+        </Button>-->
+        <Button fx:id="stopGame" text="Stop"/>
+        <Button fx:id="nextIteration" text="&#8631;"/>
+        <Button fx:id="resetGame" text="&#8634;"/>
+        <Button fx:id="clearGame" text="&#10008;"/>
+        <Separator/>
+        <Label text="Speed"/>
+        <Slider fx:id="gameSpeed"/>
+    </ToolBar>
+    <HBox>
+    	<Label text="Speed:"/>
+    </HBox>
+    <Board fx:id="board"/>
+</VBox>
