@@ -12,7 +12,7 @@ public class AlertMediator {
 		errorAlert.showAndWait();
 		System.exit(1);
 	}
-	
+
 	public static void notifyRecoverableError(final String message) {
 		final Alert errorAlert = new Alert(AlertType.ERROR, message, ButtonType.OK);
 		errorAlert.setAlertType(AlertType.ERROR);

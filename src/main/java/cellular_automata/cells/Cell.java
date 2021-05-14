@@ -2,50 +2,50 @@ package cellular_automata.cells;
 
 public class Cell implements Cloneable {
 	private CellState state;
-    
-    public Cell() {
-        setState(CellState.DEAD);
-    }
 
-    public CellState getState() {
-        return state;
-    }
+	public Cell() {
+		setState(CellState.DEAD);
+	}
 
-    public void setState(final CellState state) {
-        this.state = state;
-    }
+	public CellState getState() {
+		return state;
+	}
 
-    public void toggleState() {
-        if (CellState.DEAD.equals(state)) {
-            setState(CellState.LIVE);
-            return;
-        }
+	public void setState(final CellState state) {
+		this.state = state;
+	}
 
-        setState(CellState.DEAD);
-    }
+	public void toggleState() {
+		if (CellState.DEAD.equals(state)) {
+			setState(CellState.LIVE);
+			return;
+		}
 
-    @Override
-    public boolean equals(final Object cell) {
-        if (this == cell) {
-            return true;
-        }
+		setState(CellState.DEAD);
+	}
 
-        if (!(cell instanceof Cell)) {
-            return false;
-        }
+	@Override
+	public boolean equals(final Object cell) {
+		if (this == cell) {
+			return true;
+		}
 
-        final Cell castedCell = (Cell) cell;
+		if (!(cell instanceof Cell)) {
+			return false;
+		}
 
-        return state.equals(castedCell.getState());
-    }
+		final Cell castedCell = (Cell) cell;
 
-    @Override
-    public Object clone() {
-        try {
+		return state.equals(castedCell.getState());
+	}
+
+	@Override
+	public Object clone() {
+		try {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {
 			// TODO: Figure out a way to present this error.
 			throw new RuntimeException(e);
 		}
-    }
+	}
 }

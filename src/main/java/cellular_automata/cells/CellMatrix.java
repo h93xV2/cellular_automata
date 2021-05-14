@@ -3,156 +3,156 @@ package cellular_automata.cells;
 import java.util.function.BiConsumer;
 
 public class CellMatrix implements Cloneable {
-    private static final int cellRowStartIndex = 0;
-    private static final int cellColumnStartIndex = 0;
+	private static final int cellRowStartIndex = 0;
+	private static final int cellColumnStartIndex = 0;
 	private Cell[][] seedCells;
-    private Cell[][] tempCells;
-    private Cell[][] workingCells;
-    private int width;
-    private int height;
-    
-    public CellMatrix(final int width, final int height) {
-        this(new Cell[width][height]);
-    }
-    
-    public CellMatrix(final Cell[][] sourceCells) {
-    	this.width = sourceCells.length;
-    	this.height = sourceCells[0].length;
-    	seedCells = new Cell[this.width][this.height];
-        tempCells = new Cell[this.width][this.height];
-        workingCells = new Cell[this.width][this.height];
-        
-        forEach((x, y) -> {
-        	final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
-        	seedCells[x][y] = (Cell) sourceCell.clone();
-        	tempCells[x][y] = (Cell) sourceCell.clone();
-        	workingCells[x][y] = (Cell) sourceCell.clone(); 
-        });
-    }
+	private Cell[][] tempCells;
+	private Cell[][] workingCells;
+	private int width;
+	private int height;
 
-    public void forEach(final BiConsumer<Integer, Integer> consumer) {
-        for (var x = cellRowStartIndex; x < width; x ++) {
-            for (var y = cellColumnStartIndex; y < height; y ++) {
-                consumer.accept(x, y);
-            }
-        }
-    }
+	public CellMatrix(final int width, final int height) {
+		this(new Cell[width][height]);
+	}
 
-    public Cell getCell(final int x, final int y) {
-        checkBounds(x, y);
+	public CellMatrix(final Cell[][] sourceCells) {
+		this.width = sourceCells.length;
+		this.height = sourceCells[0].length;
+		seedCells = new Cell[this.width][this.height];
+		tempCells = new Cell[this.width][this.height];
+		workingCells = new Cell[this.width][this.height];
 
-        return workingCells[x][y];
-    }
+		forEach((x, y) -> {
+			final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
+			seedCells[x][y] = (Cell) sourceCell.clone();
+			tempCells[x][y] = (Cell) sourceCell.clone();
+			workingCells[x][y] = (Cell) sourceCell.clone();
+		});
+	}
 
-    public void set(final int x, final int y, final Cell newCell) {
-        checkBounds(x, y);
+	public void forEach(final BiConsumer<Integer, Integer> consumer) {
+		for (var x = cellRowStartIndex; x < width; x++) {
+			for (var y = cellColumnStartIndex; y < height; y++) {
+				consumer.accept(x, y);
+			}
+		}
+	}
 
-        workingCells[x][y] = newCell;
-        tempCells[x][y] = (Cell) newCell.clone();
-        seedCells[x][y] = (Cell) newCell.clone();
-    }
+	public Cell getCell(final int x, final int y) {
+		checkBounds(x, y);
 
-    private void checkBounds(final int x, final int y) {
-        if (x < cellRowStartIndex || width < x || y < cellColumnStartIndex || height < y) {
-            throw new IndexOutOfBoundsException();
-        }
-    }
+		return workingCells[x][y];
+	}
 
-    public int getWidth() {
-        return width;
-    }
+	public void set(final int x, final int y, final Cell newCell) {
+		checkBounds(x, y);
 
-    public int getHeight() {
-        return height;
-    }
+		workingCells[x][y] = newCell;
+		tempCells[x][y] = (Cell) newCell.clone();
+		seedCells[x][y] = (Cell) newCell.clone();
+	}
 
-    public void lockCurrentStateAsSeed() {
-        forEach((x, y) -> seedCells[x][y].setState(workingCells[x][y].getState()));
-    }
+	private void checkBounds(final int x, final int y) {
+		if (x < cellRowStartIndex || width < x || y < cellColumnStartIndex || height < y) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
 
-    public void next() {
-        forEach((x, y) -> tempCells[x][y].setState(workingCells[x][y].getState()));
+	public int getWidth() {
+		return width;
+	}
 
-        forEach((x, y) -> {
-            final Cell currentCell = workingCells[x][y];
-            final int liveNeighbors = countLiveNeighbors(x, y);
+	public int getHeight() {
+		return height;
+	}
 
-            if (resurrect(currentCell, liveNeighbors) || kill(currentCell, liveNeighbors)) {
-                currentCell.toggleState();
-            }
-        });
-    }
+	public void lockCurrentStateAsSeed() {
+		forEach((x, y) -> seedCells[x][y].setState(workingCells[x][y].getState()));
+	}
 
-    private boolean resurrect(final Cell currentCell, final int liveNeighbors) {
-        return CellState.DEAD.equals(currentCell.getState()) && liveNeighbors == 3;
-    }
+	public void next() {
+		forEach((x, y) -> tempCells[x][y].setState(workingCells[x][y].getState()));
 
-    private boolean kill(final Cell currentCell, final int liveNeighbors) {
-        return CellState.LIVE.equals(currentCell.getState()) && !(liveNeighbors == 3 || liveNeighbors == 2);
-    }
+		forEach((x, y) -> {
+			final Cell currentCell = workingCells[x][y];
+			final int liveNeighbors = countLiveNeighbors(x, y);
 
-    private int countLiveNeighbors(final int x, final int y) {
-        var neighbors = 0;
+			if (resurrect(currentCell, liveNeighbors) || kill(currentCell, liveNeighbors)) {
+				currentCell.toggleState();
+			}
+		});
+	}
 
-        for (var i = x - 1; i <= x + 1; i ++) {
-            for (var j = y - 1; j <= y + 1; j ++) {
-                if (0 <= i && i < width && 0 <= j && j < height
-                        && ((x == i && y != j) || (x != i && y == j) || (x != i && y != j))
-                        && CellState.LIVE.equals(tempCells[i][j].getState())) {
-                    neighbors ++;
-                }
-            }
-        }
-        
-        return neighbors;
-    }
+	private boolean resurrect(final Cell currentCell, final int liveNeighbors) {
+		return CellState.DEAD.equals(currentCell.getState()) && liveNeighbors == 3;
+	}
 
-    public void reset() {
-        forEach((i, j) -> workingCells[i][j].setState(seedCells[i][j].getState()));
-    }
+	private boolean kill(final Cell currentCell, final int liveNeighbors) {
+		return CellState.LIVE.equals(currentCell.getState()) && !(liveNeighbors == 3 || liveNeighbors == 2);
+	}
 
-    public void clear() {
-        forEach((i, j) -> workingCells[i][j].setState(CellState.DEAD));
-    }
+	private int countLiveNeighbors(final int x, final int y) {
+		var neighbors = 0;
 
-    public void addCapacity(final int newHorizontalCapacity, final int newVerticalCapacity) {
-        final int newWidth = width + newHorizontalCapacity;
-        final int newHeight = height + newVerticalCapacity;
+		for (var i = x - 1; i <= x + 1; i++) {
+			for (var j = y - 1; j <= y + 1; j++) {
+				if (0 <= i && i < width && 0 <= j && j < height
+						&& ((x == i && y != j) || (x != i && y == j) || (x != i && y != j))
+						&& CellState.LIVE.equals(tempCells[i][j].getState())) {
+					neighbors++;
+				}
+			}
+		}
 
-        final Cell[][] newSeedCells = new Cell[newWidth][newHeight];
-        final Cell[][] newTempCells = new Cell[newWidth][newHeight];
-        final Cell[][] newWorkingCells = new Cell[newWidth][newHeight];
+		return neighbors;
+	}
 
-        width = newWidth;
-        height = newHeight;
+	public void reset() {
+		forEach((i, j) -> workingCells[i][j].setState(seedCells[i][j].getState()));
+	}
 
-        forEach((x, y) -> {
-            try {
-                newSeedCells[x][y] = seedCells[x][y];
-                newTempCells[x][y] = tempCells[x][y];
-                newWorkingCells[x][y] = workingCells[x][y];
-            } catch (IndexOutOfBoundsException e) {
-                newSeedCells[x][y] = new Cell();
-                newTempCells[x][y] = new Cell();
-                newWorkingCells[x][y] = new Cell();
-            }
-        });
+	public void clear() {
+		forEach((i, j) -> workingCells[i][j].setState(CellState.DEAD));
+	}
 
-        seedCells = newSeedCells;
-        tempCells = newTempCells;
-        workingCells = newWorkingCells;
-    }
+	public void addCapacity(final int newHorizontalCapacity, final int newVerticalCapacity) {
+		final int newWidth = width + newHorizontalCapacity;
+		final int newHeight = height + newVerticalCapacity;
 
-    @Override
-    public Object clone() {
-        final CellMatrix clonedCells = new CellMatrix(width, height);
+		final Cell[][] newSeedCells = new Cell[newWidth][newHeight];
+		final Cell[][] newTempCells = new Cell[newWidth][newHeight];
+		final Cell[][] newWorkingCells = new Cell[newWidth][newHeight];
 
-        forEach((x, y) -> clonedCells.set(x, y, (Cell) workingCells[x][y].clone()));
+		width = newWidth;
+		height = newHeight;
 
-        return clonedCells;
-    }
-    
-    public Cell[][] getWorkingCells() {
-    	return workingCells;
-    }
+		forEach((x, y) -> {
+			try {
+				newSeedCells[x][y] = seedCells[x][y];
+				newTempCells[x][y] = tempCells[x][y];
+				newWorkingCells[x][y] = workingCells[x][y];
+			} catch (IndexOutOfBoundsException e) {
+				newSeedCells[x][y] = new Cell();
+				newTempCells[x][y] = new Cell();
+				newWorkingCells[x][y] = new Cell();
+			}
+		});
+
+		seedCells = newSeedCells;
+		tempCells = newTempCells;
+		workingCells = newWorkingCells;
+	}
+
+	@Override
+	public Object clone() {
+		final CellMatrix clonedCells = new CellMatrix(width, height);
+
+		forEach((x, y) -> clonedCells.set(x, y, (Cell) workingCells[x][y].clone()));
+
+		return clonedCells;
+	}
+
+	public Cell[][] getWorkingCells() {
+		return workingCells;
+	}
 }
