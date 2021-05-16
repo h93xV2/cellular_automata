@@ -44,7 +44,6 @@ public class Cell implements Cloneable {
 		try {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {
-			// TODO: Figure out a way to present this error.
 			throw new RuntimeException(e);
 		}
 	}

@@ -59,7 +59,7 @@ public class CellularAutomataController {
 
 			final File fileToOpen = fileChooser.showOpenDialog(CellularAutomataApp.getPrimaryStage());
 
-			final SaveData saveData = FileSystemAdapter.openGameFile(fileToOpen);
+			final SaveData saveData = FileSystemAdapter.openFile(fileToOpen);
 
 			board.getCells()
 					.forEach((x, y) -> board.getCells().getCell(x, y).setState(saveData.getCells()[x][y].getState()));
@@ -79,7 +79,7 @@ public class CellularAutomataController {
 
 			final SaveData saveData = new SaveData(board.getCells().getWorkingCells(), board.getShowGridLines());
 
-			FileSystemAdapter.saveGameFile(saveData, fileToSaveTo);
+			FileSystemAdapter.saveFile(saveData, fileToSaveTo);
 		});
 	}
 

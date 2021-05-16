@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cellular_automata.AlertMediator;
 
 public class FileSystemAdapter {
-	public static SaveData openGameFile(final File fileToOpenFrom) {
+	public static SaveData openFile(final File fileToOpenFrom) {
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		try {
@@ -20,7 +20,7 @@ public class FileSystemAdapter {
 		return null;
 	}
 
-	public static void saveGameFile(final SaveData saveData, final File fileToSaveTo) {
+	public static void saveFile(final SaveData saveData, final File fileToSaveTo) {
 		final ObjectMapper objectMapper = new ObjectMapper();
 
 		try {
