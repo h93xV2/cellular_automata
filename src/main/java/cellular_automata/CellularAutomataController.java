@@ -26,7 +26,7 @@ public class CellularAutomataController {
 	@FXML private Slider gameSpeed;
 	private final Properties defaultProperties;
 	private final FileChooser fileChooser;
-	private static final String fileNameExtension = ".lyfe";
+	private static final String fileNameExtension = ".json";
 
 	public CellularAutomataController() {
 		defaultProperties = new Properties();
