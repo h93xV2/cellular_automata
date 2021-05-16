@@ -37,7 +37,9 @@ public class Board extends Canvas {
 			cells.lockCurrentStateAsSeed();
 			drawCells();
 		});
-
+		
+		showGridLines = true;
+		
 		drawCells();
 	}
 
