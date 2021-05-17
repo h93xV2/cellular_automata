@@ -16,13 +16,6 @@ public class RunLengthEncodedFileAdapter {
 	private static final int characterOffset = 2;
 	private static final int topLeftCornerX = 0;
 	private static final int topLeftCornerY = 1;
-	private static final String commentLineTypeOne = "#C";
-	private static final String commentLineTypeTwo = "#c";
-	private static final String nameLine = "#N";
-	private static final String authorInformation = "#O";
-	private static final String topLeftCornerTypeOne = "#P";
-	private static final String topLeftCornerTypeTwo = "#R";
-	private static final String rulesLine = "#r";
 	private static final String deadCell = "b";
 	private static final String liveCell = "o";
 	private static final String endOfLine = "$";
@@ -48,15 +41,16 @@ public class RunLengthEncodedFileAdapter {
 
 	static void parseLine(final String line, final RunLengthEncodedData data) {
 		final String lineStart = line.substring(0, 2);
+		final LineType typeOfLineUnderInspection = LineType.getPatternMap().get(lineStart);
 
-		switch (lineStart) {
-			case commentLineTypeOne -> data.addComment(parseInformationLine(line));
-			case commentLineTypeTwo -> data.addComment(parseInformationLine(line));
-			case nameLine -> data.setPatternName(parseInformationLine(line));
-			case authorInformation -> data.setAuthorInformation(parseInformationLine(line));
-			case topLeftCornerTypeOne -> data.setTopLeftCorner(parseTopLeftCorner(line));
-			case topLeftCornerTypeTwo -> data.setTopLeftCorner(parseTopLeftCorner(line));
-			case rulesLine -> data.setBirthAndSurvivalConstraints(parseRuleLine(line));
+		switch (typeOfLineUnderInspection) {
+			case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
+			case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
+			case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
+			case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
+			case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
+			case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
+			case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseRuleLine(line));
 			default -> throw new RuntimeException();
 		}
 	}
