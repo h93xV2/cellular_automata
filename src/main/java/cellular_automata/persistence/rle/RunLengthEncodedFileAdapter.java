@@ -40,7 +40,7 @@ public class RunLengthEncodedFileAdapter {
 
 	static void parseLine(final String line, final RunLengthEncodedData data) {
 		final String lineStart = line.substring(0, 2);
-		final LineType typeOfLineUnderInspection = LineType.getPatternMap().get(lineStart);
+		final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
 
 		switch (typeOfLineUnderInspection) {
 		case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));

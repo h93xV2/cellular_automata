@@ -13,30 +13,30 @@ public enum LineType {
 	TOP_LEFT_CORNER_TYPE_TWO("#R"),
 	CELL_RULES("#r");
 
-	private String pattern;
+	private String rleLineMarker;
 	private static Map<String, LineType> patternMap;
 
 	private LineType(final String pattern) {
-		this.pattern = pattern;
+		this.rleLineMarker = pattern;
 	}
 
-	String getPattern() {
-		return pattern;
+	String getRleLineMarker() {
+		return rleLineMarker;
 	}
 
-	static Map<String, LineType> getPatternMap() {
+	static Map<String, LineType> getRleLineMarkerToLineTypeMap() {
 		if (patternMap == null) {
-			populatePatternMap();
+			populateRleLineMarkerToLineTypeMap();
 		}
 
 		return patternMap;
 	}
 
-	private static void populatePatternMap() {
+	private static void populateRleLineMarkerToLineTypeMap() {
 		final Map<String, LineType> newPatternMap = new HashMap<>();
 
 		for (LineType lineType : LineType.values()) {
-			newPatternMap.put(lineType.getPattern(), lineType);
+			newPatternMap.put(lineType.getRleLineMarker(), lineType);
 		}
 
 		patternMap = Collections.unmodifiableMap(newPatternMap);

@@ -8,30 +8,30 @@ public enum CellState {
 	LIVE("o"),
 	DEAD("b");
 	
-	private String symbol;
+	private String rleCellStateSymbol;
 	private static Map<String, CellState> symbolMap;
 	
 	private CellState(final String symbol) {
-		this.symbol = symbol;
+		this.rleCellStateSymbol = symbol;
 	}
 	
-	String getSymbol() {
-		return symbol;
+	String getRleCellStateSymbol() {
+		return rleCellStateSymbol;
 	}
 	
-	static Map<String, CellState> getSymbolMap() {
+	static Map<String, CellState> getRleCellStateSymbolToCellStateMap() {
 		if (symbolMap == null) {
-			populateSymbolMap();
+			populateRleCellStateSymbolToCellStateMap();
 		}
 		
 		return symbolMap;
 	}
 	
-	private static void populateSymbolMap() {
+	private static void populateRleCellStateSymbolToCellStateMap() {
 		final Map<String, CellState> newSymbolMap = new HashMap<>();
 		
 		for (CellState cellState : CellState.values()) {
-			newSymbolMap.put(cellState.getSymbol(), cellState);
+			newSymbolMap.put(cellState.getRleCellStateSymbol(), cellState);
 		}
 		
 		symbolMap = Collections.unmodifiableMap(newSymbolMap);
