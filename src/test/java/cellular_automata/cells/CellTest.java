@@ -5,114 +5,114 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CellTest {
-	@Test
-	void cellIsDeadByDefault() {
-		final Cell cell = new Cell();
+  @Test
+  void cellIsDeadByDefault() {
+    final Cell cell = new Cell();
 
-		assertEquals(CellState.DEAD, cell.getState());
-	}
+    assertEquals(CellState.DEAD, cell.getState());
+  }
 
-	@Test
-	void deadCellIsToggledAlive() {
-		final Cell cell = new Cell();
-		cell.toggleState();
+  @Test
+  void deadCellIsToggledAlive() {
+    final Cell cell = new Cell();
+    cell.toggleState();
 
-		assertEquals(CellState.LIVE, cell.getState());
-	}
+    assertEquals(CellState.LIVE, cell.getState());
+  }
 
-	@Test
-	void cellCanHaveStateSet() {
-		final Cell cell = new Cell();
-		cell.toggleState();
-		cell.setState(CellState.DEAD);
+  @Test
+  void cellCanHaveStateSet() {
+    final Cell cell = new Cell();
+    cell.toggleState();
+    cell.setState(CellState.DEAD);
 
-		assertEquals(CellState.DEAD, cell.getState());
-	}
+    assertEquals(CellState.DEAD, cell.getState());
+  }
 
-	@Test
-	void cellsAreEqual() {
-		final Cell cellA = new Cell();
-		final Cell cellB = new Cell();
+  @Test
+  void cellsAreEqual() {
+    final Cell cellA = new Cell();
+    final Cell cellB = new Cell();
 
-		assertEquals(cellA, cellB);
-	}
+    assertEquals(cellA, cellB);
+  }
 
-	@Test
-	void cellEqualityIsReflexive() {
-		final Cell cell = new Cell();
+  @Test
+  void cellEqualityIsReflexive() {
+    final Cell cell = new Cell();
 
-		assertEquals(cell, cell);
-	}
+    assertEquals(cell, cell);
+  }
 
-	@Test
-	void cellEqualityIsSymmetric() {
-		final Cell x = new Cell();
-		final Cell y = new Cell();
+  @Test
+  void cellEqualityIsSymmetric() {
+    final Cell x = new Cell();
+    final Cell y = new Cell();
 
-		assertTrue(x.equals(y) && y.equals(x));
-	}
+    assertTrue(x.equals(y) && y.equals(x));
+  }
 
-	@Test
-	void cellEqualityIsTransitive() {
-		final Cell x = new Cell();
-		final Cell y = new Cell();
-		final Cell z = new Cell();
+  @Test
+  void cellEqualityIsTransitive() {
+    final Cell x = new Cell();
+    final Cell y = new Cell();
+    final Cell z = new Cell();
 
-		assertTrue(x.equals(y) && y.equals(z) && x.equals(z));
-	}
+    assertTrue(x.equals(y) && y.equals(z) && x.equals(z));
+  }
 
-	@Test
-	void cellsAreNotNull() {
-		final Cell cell = new Cell();
+  @Test
+  void cellsAreNotNull() {
+    final Cell cell = new Cell();
 
-		assertFalse(cell.equals(null));
-	}
+    assertFalse(cell.equals(null));
+  }
 
-	@Test
-	void cellsWithDifferentStatesAreNotEqual() {
-		final Cell cellA = new Cell();
-		final Cell cellB = new Cell();
+  @Test
+  void cellsWithDifferentStatesAreNotEqual() {
+    final Cell cellA = new Cell();
+    final Cell cellB = new Cell();
 
-		cellA.toggleState();
+    cellA.toggleState();
 
-		assertNotEquals(cellA, cellB);
-	}
+    assertNotEquals(cellA, cellB);
+  }
 
-	@Test
-	void clonedCellIsNewObject() throws CloneNotSupportedException {
-		final Cell cell = new Cell();
+  @Test
+  void clonedCellIsNewObject() throws CloneNotSupportedException {
+    final Cell cell = new Cell();
 
-		final Cell clone = (Cell) cell.clone();
+    final Cell clone = (Cell) cell.clone();
 
-		assertTrue(clone != cell);
-	}
+    assertTrue(clone != cell);
+  }
 
-	@Test
-	void clonedCellEqualsOriginalCell() throws CloneNotSupportedException {
-		final Cell cell = new Cell();
+  @Test
+  void clonedCellEqualsOriginalCell() throws CloneNotSupportedException {
+    final Cell cell = new Cell();
 
-		final Cell clone = (Cell) cell.clone();
+    final Cell clone = (Cell) cell.clone();
 
-		assertEquals(cell, clone);
-	}
+    assertEquals(cell, clone);
+  }
 
-	@Test
-	void modifiedCloneIsNotEqualToOriginal() throws CloneNotSupportedException {
-		final Cell cell = new Cell();
+  @Test
+  void modifiedCloneIsNotEqualToOriginal() throws CloneNotSupportedException {
+    final Cell cell = new Cell();
 
-		final Cell clone = (Cell) cell.clone();
-		clone.toggleState();
+    final Cell clone = (Cell) cell.clone();
+    clone.toggleState();
 
-		assertNotEquals(cell, clone);
-	}
+    assertNotEquals(cell, clone);
+  }
 
-	@Test
-	void originalIsNotAffectedByCloneStateChange() throws CloneNotSupportedException {
-		final Cell cell = new Cell();
+  @Test
+  void originalIsNotAffectedByCloneStateChange() throws CloneNotSupportedException {
+    final Cell cell = new Cell();
 
-		final Cell clone = (Cell) cell.clone();
-		clone.toggleState();
+    final Cell clone = (Cell) cell.clone();
+    clone.toggleState();
 
-		assertEquals(cell, cell);
-	}
+    assertEquals(cell, cell);
+  }
 }

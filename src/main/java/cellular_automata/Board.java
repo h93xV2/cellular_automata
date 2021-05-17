@@ -8,140 +8,140 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 public class Board extends Canvas {
-	private CellMatrix cells;
-	private double cellWidth;
-	private double cellHeight;
-	private double workingCellWidth;
-	private double workingCellHeight;
-	private boolean showGridLines;
-	private static final double lineWidth = 1.0;
+  private CellMatrix cells;
+  private double cellWidth;
+  private double cellHeight;
+  private double workingCellWidth;
+  private double workingCellHeight;
+  private boolean showGridLines;
+  private static final double lineWidth = 1.0;
 
-	public void setUp(final int boardWidth, final int boardHeight, final int cellWidth, final int cellHeight) {
-		setWidth(boardWidth);
-		setHeight(boardHeight);
+  public void setUp(final int boardWidth, final int boardHeight, final int cellWidth, final int cellHeight) {
+    setWidth(boardWidth);
+    setHeight(boardHeight);
 
-		this.cellWidth = cellWidth;
-		this.cellHeight = cellHeight;
-		this.workingCellWidth = this.cellWidth;
-		this.workingCellHeight = this.cellHeight;
+    this.cellWidth = cellWidth;
+    this.cellHeight = cellHeight;
+    this.workingCellWidth = this.cellWidth;
+    this.workingCellHeight = this.cellHeight;
 
-		final int cellMatrixWidth = computeCellMatrixWidth();
-		final int cellMatrixHeight = computeCellMatrixHeight();
+    final int cellMatrixWidth = computeCellMatrixWidth();
+    final int cellMatrixHeight = computeCellMatrixHeight();
 
-		cells = new CellMatrix(cellMatrixWidth, cellMatrixHeight);
+    cells = new CellMatrix(cellMatrixWidth, cellMatrixHeight);
 
-		setOnMouseClicked(event -> {
-			final int convertedX = (int) (event.getX() / workingCellWidth);
-			final int convertedY = (int) (event.getY() / workingCellHeight);
-			cells.getCell(convertedX, convertedY).toggleState();
-			cells.lockCurrentStateAsSeed();
-			drawCells();
-		});
-		
-		showGridLines = true;
-		
-		drawCells();
-	}
+    setOnMouseClicked(event -> {
+      final int convertedX = (int) (event.getX() / workingCellWidth);
+      final int convertedY = (int) (event.getY() / workingCellHeight);
+      cells.getCell(convertedX, convertedY).toggleState();
+      cells.lockCurrentStateAsSeed();
+      drawCells();
+    });
 
-	public int computeCellMatrixWidth() {
-		return (int) (getHeight() / workingCellWidth);
-	}
+    showGridLines = true;
 
-	public int computeCellMatrixHeight() {
-		return (int) (getWidth() / workingCellHeight);
-	}
+    drawCells();
+  }
 
-	public void drawCells() {
-		final GraphicsContext gc = getGraphicsContext2D();
+  public int computeCellMatrixWidth() {
+    return (int) (getHeight() / workingCellWidth);
+  }
 
-		gc.setFill(Color.WHITE);
-		gc.fillRect(0.0, 0.0, getWidth(), getHeight());
+  public int computeCellMatrixHeight() {
+    return (int) (getWidth() / workingCellHeight);
+  }
 
-		final Pair<Double, Double> computedCellDimensions = drawConditionalGridAndGetCellDimensions();
+  public void drawCells() {
+    final GraphicsContext gc = getGraphicsContext2D();
 
-		final double cellDrawWidth = computedCellDimensions.getKey();
-		final double cellDrawHeight = computedCellDimensions.getValue();
+    gc.setFill(Color.WHITE);
+    gc.fillRect(0.0, 0.0, getWidth(), getHeight());
 
-		cells.forEach((cellX, cellY) -> {
-			final double boardX = computeBoardX(cellX);
-			final double boardY = computeBoardY(cellY);
+    final Pair<Double, Double> computedCellDimensions = drawConditionalGridAndGetCellDimensions();
 
-			if (CellState.DEAD.equals(cells.getCell(cellX, cellY).getState())) {
-				gc.setFill(Color.WHITE);
-			} else {
-				gc.setFill(Color.BLACK);
-			}
+    final double cellDrawWidth = computedCellDimensions.getKey();
+    final double cellDrawHeight = computedCellDimensions.getValue();
 
-			gc.fillRect(boardX, boardY, cellDrawWidth, cellDrawHeight);
-		});
-	}
+    cells.forEach((cellX, cellY) -> {
+      final double boardX = computeBoardX(cellX);
+      final double boardY = computeBoardY(cellY);
 
-	private Pair<Double, Double> drawConditionalGridAndGetCellDimensions() {
-		final GraphicsContext gc = getGraphicsContext2D();
+      if (CellState.DEAD.equals(cells.getCell(cellX, cellY).getState())) {
+        gc.setFill(Color.WHITE);
+      } else {
+        gc.setFill(Color.BLACK);
+      }
 
-		var cellWidth = workingCellWidth;
-		var cellHeight = workingCellHeight;
+      gc.fillRect(boardX, boardY, cellDrawWidth, cellDrawHeight);
+    });
+  }
 
-		if (showGridLines) {
-			cellWidth -= 2.0 * lineWidth;
-			cellHeight -= 2.0 * lineWidth;
-			drawGridLines(gc);
-		}
+  private Pair<Double, Double> drawConditionalGridAndGetCellDimensions() {
+    final GraphicsContext gc = getGraphicsContext2D();
 
-		return new Pair<>(cellWidth, cellHeight);
-	}
+    var cellWidth = workingCellWidth;
+    var cellHeight = workingCellHeight;
 
-	private void drawGridLines(final GraphicsContext gc) {
-		gc.setStroke(Color.LIGHTBLUE);
-		gc.setLineWidth(lineWidth);
-		gc.beginPath();
+    if (showGridLines) {
+      cellWidth -= 2.0 * lineWidth;
+      cellHeight -= 2.0 * lineWidth;
+      drawGridLines(gc);
+    }
 
-		for (var x = 0.0; x <= getWidth(); x += workingCellWidth) {
-			gc.moveTo(x, 0.0);
-			gc.lineTo(x, getHeight());
-		}
+    return new Pair<>(cellWidth, cellHeight);
+  }
 
-		for (var y = 0.0; y <= getHeight(); y += workingCellHeight) {
-			gc.moveTo(0.0, y);
-			gc.lineTo(getWidth(), y);
-		}
+  private void drawGridLines(final GraphicsContext gc) {
+    gc.setStroke(Color.LIGHTBLUE);
+    gc.setLineWidth(lineWidth);
+    gc.beginPath();
 
-		gc.stroke();
-	}
+    for (var x = 0.0; x <= getWidth(); x += workingCellWidth) {
+      gc.moveTo(x, 0.0);
+      gc.lineTo(x, getHeight());
+    }
 
-	private double computeBoardX(final int cellX) {
-		var boardX = (double) (cellX * workingCellWidth);
+    for (var y = 0.0; y <= getHeight(); y += workingCellHeight) {
+      gc.moveTo(0.0, y);
+      gc.lineTo(getWidth(), y);
+    }
 
-		if (showGridLines) {
-			boardX += lineWidth;
-		}
+    gc.stroke();
+  }
 
-		return boardX;
-	}
+  private double computeBoardX(final int cellX) {
+    var boardX = (double) (cellX * workingCellWidth);
 
-	private double computeBoardY(final int cellY) {
-		var boardY = (double) (cellY * workingCellHeight);
+    if (showGridLines) {
+      boardX += lineWidth;
+    }
 
-		if (showGridLines) {
-			boardY += lineWidth;
-		}
+    return boardX;
+  }
 
-		return boardY;
-	}
+  private double computeBoardY(final int cellY) {
+    var boardY = (double) (cellY * workingCellHeight);
 
-	public void toggleGridLines() {
-		showGridLines = !showGridLines;
-	}
+    if (showGridLines) {
+      boardY += lineWidth;
+    }
 
-	public boolean getShowGridLines() {
-		return showGridLines;
-	}
+    return boardY;
+  }
 
-	public void setShowGridLines(final boolean showGridLines) {
-		this.showGridLines = showGridLines;
-	}
+  public void toggleGridLines() {
+    showGridLines = !showGridLines;
+  }
 
-	public CellMatrix getCells() {
-		return cells;
-	}
+  public boolean getShowGridLines() {
+    return showGridLines;
+  }
+
+  public void setShowGridLines(final boolean showGridLines) {
+    this.showGridLines = showGridLines;
+  }
+
+  public CellMatrix getCells() {
+    return cells;
+  }
 }

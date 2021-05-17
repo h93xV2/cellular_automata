@@ -8,27 +8,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cellular_automata.AlertMediator;
 
 public class FileSystemAdapter {
-	public static final String fileNameExtension = ".json";
-	
-	public static SaveData openFile(final File fileToOpenFrom) {
-		final ObjectMapper objectMapper = new ObjectMapper();
+  public static final String fileNameExtension = ".json";
 
-		try {
-			return objectMapper.readValue(fileToOpenFrom, SaveData.class);
-		} catch (IOException e) {
-			AlertMediator.notifyRecoverableError("Unable to open the requested game file.");
-		}
+  public static SaveData openFile(final File fileToOpenFrom) {
+    final ObjectMapper objectMapper = new ObjectMapper();
 
-		return null;
-	}
+    try {
+      return objectMapper.readValue(fileToOpenFrom, SaveData.class);
+    } catch (IOException e) {
+      AlertMediator.notifyRecoverableError("Unable to open the requested game file.");
+    }
 
-	public static void saveFile(final SaveData saveData, final File fileToSaveTo) {
-		final ObjectMapper objectMapper = new ObjectMapper();
+    return null;
+  }
 
-		try {
-			objectMapper.writeValue(fileToSaveTo, saveData);
-		} catch (IOException e) {
-			AlertMediator.notifyRecoverableError("Unable to save the game data to the requested file.");
-		}
-	}
+  public static void saveFile(final SaveData saveData, final File fileToSaveTo) {
+    final ObjectMapper objectMapper = new ObjectMapper();
+
+    try {
+      objectMapper.writeValue(fileToSaveTo, saveData);
+    } catch (IOException e) {
+      AlertMediator.notifyRecoverableError("Unable to save the game data to the requested file.");
+    }
+  }
 }
