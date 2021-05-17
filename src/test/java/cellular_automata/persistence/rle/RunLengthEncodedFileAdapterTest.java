@@ -87,4 +87,13 @@ public class RunLengthEncodedFileAdapterTest {
 		
 		assertTrue(data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().isEmpty());
 	}
+
+	@Test void parseDifferentFormatBirthConstraints() {
+		final String cellRules = "#r 23/3";
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		
+		RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+		
+		assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
+	}
 }

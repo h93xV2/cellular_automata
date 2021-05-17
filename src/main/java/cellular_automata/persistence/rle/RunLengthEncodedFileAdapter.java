@@ -76,25 +76,37 @@ public class RunLengthEncodedFileAdapter {
 		final String[] neighborLists = strippedLine.split("/");
 
 		if (neighborLists[0].startsWith("B")) {
-			final String[] birthNeighbors = neighborLists[0].substring(1).split("");
-			
-			for (var neighborCount : birthNeighbors) {
-				if (!"".equals(neighborCount)) {
-					constraints.getLiveNeighborsRequiredForBirth().add(Integer.parseInt(neighborCount));
-				}
-			}
+			parseBirthNeighbors(neighborLists[0].substring(1), constraints);
+		} else {
+			parseSurvivalNeighbors(neighborLists[0], constraints);
 		}
 
 		if (neighborLists[1].startsWith("S")) {
-			final String[] survivalNeighbors = neighborLists[1].substring(1).split("");
-			
-			for (var neighborCount : survivalNeighbors) {
-				if (!"".equals(neighborCount)) {
-					constraints.getLiveNeighborsRequiredForSurvival().add(Integer.parseInt(neighborCount));
-				}
-			}
+			parseSurvivalNeighbors(neighborLists[1].substring(1), constraints);
+		} else {
+			parseBirthNeighbors(neighborLists[1], constraints);
 		}
 
 		return constraints;
+	}
+	
+	private static void parseBirthNeighbors(final String neighborList, final BirthAndSurvivalConstraints constraints) {
+		final String[] birthNeighbors = neighborList.split("");
+		
+		for (var neighborCount : birthNeighbors) {
+			if (!"".equals(neighborCount)) {
+				constraints.getLiveNeighborsRequiredForBirth().add(Integer.parseInt(neighborCount));
+			}
+		}
+	}
+	
+	private static void parseSurvivalNeighbors(final String neighborList, final BirthAndSurvivalConstraints constraints) {
+		final String[] survivalNeighbors = neighborList.split("");
+		
+		for (var neighborCount : survivalNeighbors) {
+			if (!"".equals(neighborCount)) {
+				constraints.getLiveNeighborsRequiredForSurvival().add(Integer.parseInt(neighborCount));
+			}
+		}
 	}
 }
