@@ -16,12 +16,11 @@ public class RunLengthEncodedFileAdapter {
 	private static final int characterOffset = 2;
 	private static final int topLeftCornerX = 0;
 	private static final int topLeftCornerY = 1;
-	private static final String deadCell = "b";
-	private static final String liveCell = "o";
 	private static final String endOfLine = "$";
 	private static final String endOfPattern = "!";
 
-	private RunLengthEncodedFileAdapter() {}
+	private RunLengthEncodedFileAdapter() {
+	}
 
 	public static Cell[][] parseFile(final File fileToParse) {
 		try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
@@ -44,14 +43,14 @@ public class RunLengthEncodedFileAdapter {
 		final LineType typeOfLineUnderInspection = LineType.getPatternMap().get(lineStart);
 
 		switch (typeOfLineUnderInspection) {
-			case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
-			case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
-			case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
-			case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
-			case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
-			case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
-			case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseRuleLine(line));
-			default -> throw new RuntimeException();
+		case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
+		case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
+		case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
+		case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
+		case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
+		case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
+		case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseRuleLine(line));
+		default -> throw new RuntimeException();
 		}
 	}
 
@@ -67,7 +66,7 @@ public class RunLengthEncodedFileAdapter {
 
 		return new Pair<Integer, Integer>(x, y);
 	}
-	
+
 	private static BirthAndSurvivalConstraints parseRuleLine(final String line) {
 		final String strippedLine = parseInformationLine(line);
 		final String[] neighborLists = strippedLine.split("/");
@@ -83,7 +82,7 @@ public class RunLengthEncodedFileAdapter {
 
 		return constraints;
 	}
-	
+
 	private static void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
 		final String[] neighbors = neighborList.split("");
 

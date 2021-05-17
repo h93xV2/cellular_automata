@@ -70,19 +70,19 @@ public class RunLengthEncodedData {
 	public void setHeight(final int height) {
 		this.height = height;
 	}
-	
+
 	public BirthAndSurvivalConstraints getBirthAndSurvivalConstraints() {
 		return constraints;
 	}
-	
+
 	public void setBirthAndSurvivalConstraints(final BirthAndSurvivalConstraints constraints) {
 		this.constraints.getLiveNeighborsRequiredForBirth().clear();
 		this.constraints.getLiveNeighborsRequiredForSurvival().clear();
-		
+
 		for (Integer birthNeighbors : constraints.getLiveNeighborsRequiredForBirth()) {
 			this.constraints.getLiveNeighborsRequiredForBirth().add(birthNeighbors);
 		}
-		
+
 		for (Integer survivalNeighbors : constraints.getLiveNeighborsRequiredForSurvival()) {
 			this.constraints.getLiveNeighborsRequiredForSurvival().add(survivalNeighbors);
 		}
