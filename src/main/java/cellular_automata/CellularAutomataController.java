@@ -26,7 +26,6 @@ public class CellularAutomataController {
 	@FXML private Slider gameSpeed;
 	private final Properties defaultProperties;
 	private final FileChooser fileChooser;
-	private static final String fileNameExtension = ".json";
 
 	public CellularAutomataController() {
 		defaultProperties = new Properties();
@@ -44,7 +43,7 @@ public class CellularAutomataController {
 
 		fileChooser.setTitle("Select file");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
-				"Game of Life files (*" + fileNameExtension + ")", "*" + fileNameExtension));
+				"Game of Life files (*" + FileSystemAdapter.fileNameExtension + ")", "*" + FileSystemAdapter.fileNameExtension));
 	}
 
 	public void initialize() {
@@ -73,8 +72,8 @@ public class CellularAutomataController {
 
 			var fileToSaveTo = fileChooser.showSaveDialog(CellularAutomataApp.getPrimaryStage());
 
-			if (!fileToSaveTo.getName().contains(fileNameExtension)) {
-				fileToSaveTo = new File(fileToSaveTo.getAbsolutePath() + fileNameExtension);
+			if (!fileToSaveTo.getName().contains(FileSystemAdapter.fileNameExtension)) {
+				fileToSaveTo = new File(fileToSaveTo.getAbsolutePath() + FileSystemAdapter.fileNameExtension);
 			}
 
 			final SaveData saveData = new SaveData(board.getCells().getWorkingCells(), board.getShowGridLines());
