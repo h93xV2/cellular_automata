@@ -28,6 +28,8 @@ public class RunLengthEncodedFileAdapter {
 	private static final String endOfLine = "$";
 	private static final String endOfPattern = "!";
 
+	private RunLengthEncodedFileAdapter() {}
+
 	public static Cell[][] parseFile(final File fileToParse) {
 		try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
 			final RunLengthEncodedData data = new RunLengthEncodedData();
@@ -73,40 +75,24 @@ public class RunLengthEncodedFileAdapter {
 	}
 	
 	private static BirthAndSurvivalConstraints parseRuleLine(final String line) {
-		final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
 		final String strippedLine = parseInformationLine(line);
 		final String[] neighborLists = strippedLine.split("/");
+		final String birthList = neighborLists[0].startsWith("B") ? neighborLists[0].substring(1) : neighborLists[1];
+		final String survivalList = neighborLists[1].startsWith("S") ? neighborLists[1].substring(1) : neighborLists[0];
 
-		if (neighborLists[0].startsWith("B")) {
-			parseBirthNeighbors(neighborLists[0].substring(1), constraints);
-		} else {
-			parseSurvivalNeighbors(neighborLists[0], constraints);
-		}
+		final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+		final List<Integer> neighborsRequiredForBirth = constraints.getLiveNeighborsRequiredForBirth();
+		final List<Integer> neighborsRequiredForSurvival = constraints.getLiveNeighborsRequiredForSurvival();
 
-		if (neighborLists[1].startsWith("S")) {
-			parseSurvivalNeighbors(neighborLists[1].substring(1), constraints);
-		} else {
-			parseBirthNeighbors(neighborLists[1], constraints);
-		}
+		parseNeighborList(birthList, neighborsRequiredForBirth::add);
+		parseNeighborList(survivalList, neighborsRequiredForSurvival::add);
 
 		return constraints;
 	}
 	
-	private static void parseBirthNeighbors(final String neighborList, final BirthAndSurvivalConstraints constraints) {
-		final List<Integer> neighborsRequiredForBirth = constraints.getLiveNeighborsRequiredForBirth();
-		
-		parseNeighborList(neighborList, neighborsRequiredForBirth::add);
-	}
-	
-	private static void parseSurvivalNeighbors(final String neighborList, final BirthAndSurvivalConstraints constraints) {
-		final List<Integer> neighborsRequiredForSurvival = constraints.getLiveNeighborsRequiredForSurvival();
-		
-		parseNeighborList(neighborList, neighborsRequiredForSurvival::add);
-	}
-	
 	private static void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
 		final String[] neighbors = neighborList.split("");
-		
+
 		for (var neighborCount : neighbors) {
 			if (!"".equals(neighborCount)) {
 				neighborConsumer.accept(Integer.parseInt(neighborCount));
