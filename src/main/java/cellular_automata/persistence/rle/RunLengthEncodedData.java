@@ -3,6 +3,7 @@ package cellular_automata.persistence.rle;
 import java.util.ArrayList;
 import java.util.List;
 
+import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import javafx.util.Pair;
 
@@ -11,6 +12,7 @@ public class RunLengthEncodedData {
 	private String patternName;
 	private String authorInformation;
 	private Pair<Integer, Integer> topLeftCorner;
+	private BirthAndSurvivalConstraints constraints;
 	private int width;
 	private int height;
 	private Cell[][] cells;
@@ -18,6 +20,7 @@ public class RunLengthEncodedData {
 	public RunLengthEncodedData() {
 		comments = new ArrayList<>();
 		topLeftCorner = new Pair<Integer, Integer>(0, 0);
+		constraints = new BirthAndSurvivalConstraints();
 	}
 
 	public List<String> getComments() {
@@ -66,5 +69,22 @@ public class RunLengthEncodedData {
 
 	public void setHeight(final int height) {
 		this.height = height;
+	}
+	
+	public BirthAndSurvivalConstraints getBirthAndSurvivalConstraints() {
+		return constraints;
+	}
+	
+	public void setBirthAndSurvivalConstraints(final BirthAndSurvivalConstraints constraints) {
+		this.constraints.getLiveNeighborsRequiredForBirth().clear();
+		this.constraints.getLiveNeighborsRequiredForSurvival().clear();
+		
+		for (Integer birthNeighbors : constraints.getLiveNeighborsRequiredForBirth()) {
+			this.constraints.getLiveNeighborsRequiredForBirth().add(birthNeighbors);
+		}
+		
+		for (Integer survivalNeighbors : constraints.getLiveNeighborsRequiredForSurvival()) {
+			this.constraints.getLiveNeighborsRequiredForSurvival().add(survivalNeighbors);
+		}
 	}
 }

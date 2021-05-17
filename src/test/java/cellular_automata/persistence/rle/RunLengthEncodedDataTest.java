@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import cellular_automata.cells.BirthAndSurvivalConstraints;
 import javafx.util.Pair;
 
 public class RunLengthEncodedDataTest {
@@ -93,5 +94,32 @@ public class RunLengthEncodedDataTest {
 		data.setHeight(15);
 		
 		assertEquals(15, data.getHeight());
+	}
+	
+	@Test void gitBirthAndSurvivalConstraints() {
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		final BirthAndSurvivalConstraints constraints = data.getBirthAndSurvivalConstraints();
+		
+		assertTrue(constraints.getLiveNeighborsRequiredForBirth().isEmpty() && constraints.getLiveNeighborsRequiredForSurvival().isEmpty());
+	}
+	
+	@Test void birthConstraintsCanBeSet() {
+		final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+		constraints.addBirthNeighborCount(20);
+		
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		data.setBirthAndSurvivalConstraints(constraints);
+		
+		assertEquals(20, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
+	}
+	
+	@Test void survivalConstraintsCanBeSet() {
+		final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+		constraints.addSurvivalNeighborCount(7);
+		
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		data.setBirthAndSurvivalConstraints(constraints);
+		
+		assertEquals(7, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
 	}
 }

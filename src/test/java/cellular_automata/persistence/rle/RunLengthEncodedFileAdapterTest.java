@@ -60,4 +60,31 @@ public class RunLengthEncodedFileAdapterTest {
 		
 		assertEquals(new Pair<Integer, Integer>(-13, -20), data.getTopLeftCorner());
 	}
+	
+	@Test void parseBirthConstraints() {
+		final String cellRules = "#r B3/S23";
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		
+		RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+		
+		assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
+	}
+	
+	@Test void parseSurvivalConstraints() {
+		final String cellRules = "#r B3/S9";
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		
+		RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+		
+		assertEquals(9, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
+	}
+	
+	@Test void parseEmptySurvivalConstraints() {
+		final String cellRules = "#r B2/S";
+		final RunLengthEncodedData data = new RunLengthEncodedData();
+		
+		RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+		
+		assertTrue(data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().isEmpty());
+	}
 }
