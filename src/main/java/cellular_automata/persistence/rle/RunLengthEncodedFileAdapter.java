@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 import cellular_automata.AlertMediator;
 import cellular_automata.cells.BirthAndSurvivalConstraints;
@@ -91,21 +93,23 @@ public class RunLengthEncodedFileAdapter {
 	}
 	
 	private static void parseBirthNeighbors(final String neighborList, final BirthAndSurvivalConstraints constraints) {
-		final String[] birthNeighbors = neighborList.split("");
+		final List<Integer> neighborsRequiredForBirth = constraints.getLiveNeighborsRequiredForBirth();
 		
-		for (var neighborCount : birthNeighbors) {
-			if (!"".equals(neighborCount)) {
-				constraints.getLiveNeighborsRequiredForBirth().add(Integer.parseInt(neighborCount));
-			}
-		}
+		parseNeighborList(neighborList, neighborsRequiredForBirth::add);
 	}
 	
 	private static void parseSurvivalNeighbors(final String neighborList, final BirthAndSurvivalConstraints constraints) {
-		final String[] survivalNeighbors = neighborList.split("");
+		final List<Integer> neighborsRequiredForSurvival = constraints.getLiveNeighborsRequiredForSurvival();
 		
-		for (var neighborCount : survivalNeighbors) {
+		parseNeighborList(neighborList, neighborsRequiredForSurvival::add);
+	}
+	
+	private static void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
+		final String[] neighbors = neighborList.split("");
+		
+		for (var neighborCount : neighbors) {
 			if (!"".equals(neighborCount)) {
-				constraints.getLiveNeighborsRequiredForSurvival().add(Integer.parseInt(neighborCount));
+				neighborConsumer.accept(Integer.parseInt(neighborCount));
 			}
 		}
 	}
