@@ -2,7 +2,6 @@ package cellular_automata.persistence.rle;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -23,12 +22,14 @@ public class RunLengthEncodedFileAdapter {
 	private static final String endOfLine = "$";
 	private static final String endOfPattern = "!";
 
-	public Cell[][] parseFile(final File fileToParse) {
+	public static Cell[][] parseFile(final File fileToParse) {
 		try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
+			final RunLengthEncodedData data = new RunLengthEncodedData();
+			
 			var line = "";
-
+			
 			while ((line = reader.readLine()) != null) {
-				parseLine(line);
+				parseLine(line, data);
 			}
 		} catch (IOException e) {
 			AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.");
@@ -37,9 +38,8 @@ public class RunLengthEncodedFileAdapter {
 		return null;
 	}
 
-	private void parseLine(final String line) {
+	static void parseLine(final String line, final RunLengthEncodedData data) {
 		final String lineStart = line.substring(0, 2);
-		final RunLengthEncodedData data = new RunLengthEncodedData();
 
 		switch (lineStart) {
 		case commentLineTypeOne -> data.addComment(parseInformationLine(line));
@@ -53,11 +53,11 @@ public class RunLengthEncodedFileAdapter {
 		;
 	}
 
-	private String parseInformationLine(final String line) {
+	private static String parseInformationLine(final String line) {
 		return line.substring(2).trim();
 	}
 
-	private Pair<Integer, Integer> parseTopLeftCorner(final String line) {
+	private static Pair<Integer, Integer> parseTopLeftCorner(final String line) {
 		final String parsedLine = parseInformationLine(line);
 		final String[] coordinates = parsedLine.split(" ");
 		final int x = Integer.valueOf(coordinates[0]);
