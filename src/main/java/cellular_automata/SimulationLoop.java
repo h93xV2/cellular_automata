@@ -4,18 +4,19 @@ import cellular_automata.cells.CellMatrix;
 import javafx.animation.AnimationTimer;
 
 public class SimulationLoop extends AnimationTimer {
-  private static final long DEFAULT_TIME_STEP = 125000000;
   private final CellMatrix cells;
   private long lastTime;
   private boolean firstIteration;
-  private long timeStep;
+  private final long referenceTimeStep;
+  private long currentTimeStep;
   private Board board;
 
-  public SimulationLoop(final Board board) {
+  public SimulationLoop(final Board board, final long timeStep) {
     this.board = board;
     this.cells = this.board.getCells();
     firstIteration = true;
-    timeStep = DEFAULT_TIME_STEP;
+    referenceTimeStep = timeStep;
+    currentTimeStep = timeStep;
   }
 
   @Override
@@ -24,7 +25,7 @@ public class SimulationLoop extends AnimationTimer {
       firstIteration = false;
     }
 
-    if (now - lastTime > timeStep) {
+    if (now - lastTime > currentTimeStep) {
       lastTime = now;
       next();
     }
@@ -55,6 +56,6 @@ public class SimulationLoop extends AnimationTimer {
   }
 
   public void setTimeStepMultiplier(final double multiplier) {
-    timeStep = (long) (DEFAULT_TIME_STEP / multiplier);
+    currentTimeStep = (long) (referenceTimeStep / multiplier);
   }
 }

@@ -43,19 +43,38 @@ public class CellularAutomataController {
 
     fileChooser.setTitle("Select file");
     fileChooser.getExtensionFilters()
-        .add(new FileChooser.ExtensionFilter("Game of Life files (*" + FileSystemAdapter.fileNameExtension + ")",
+        .add(new FileChooser.ExtensionFilter("Automata custom files (*" + FileSystemAdapter.fileNameExtension + ")",
             "*" + FileSystemAdapter.fileNameExtension));
   }
 
   public void initialize() {
     setUpBoard();
-    final SimulationLoop game = setUpGame();
-    setUpFileControls(game);
+    final SimulationLoop loop = setUpGame();
+    setUpFileControls(loop);
   }
 
-  private void setUpFileControls(final SimulationLoop game) {
+  private void setUpBoard() {
+    try {
+      setUpBoardDimensions();
+    } catch (NumberFormatException nfe) {
+      AlertMediator.notifyNonRecoverableError("Unable to establish the size of the window.");
+    }
+
+    setUpBoardControls();
+  }
+
+  private SimulationLoop setUpGame() {
+    final SimulationLoop game = new SimulationLoop(board, Long.valueOf((String) defaultProperties.get("timeStep")));
+
+    setUpGameControlButtons(game);
+    setupGameSpeedSlider(game);
+
+    return game;
+  }
+
+  private void setUpFileControls(final SimulationLoop loop) {
     openFile.setOnAction(event -> {
-      game.stop();
+      loop.stop();
 
       final File fileToOpen = fileChooser.showOpenDialog(CellularAutomataApp.getPrimaryStage());
 
@@ -68,7 +87,7 @@ public class CellularAutomataController {
     });
 
     saveFile.setOnAction(event -> {
-      game.reset();
+      loop.reset();
 
       var fileToSaveTo = fileChooser.showSaveDialog(CellularAutomataApp.getPrimaryStage());
 
@@ -80,16 +99,6 @@ public class CellularAutomataController {
 
       FileSystemAdapter.saveFile(saveData, fileToSaveTo);
     });
-  }
-
-  private void setUpBoard() {
-    try {
-      setUpBoardDimensions();
-    } catch (NumberFormatException nfe) {
-      AlertMediator.notifyNonRecoverableError("Unable to establish the size of the window.");
-    }
-
-    setUpBoardControls();
   }
 
   private void setUpBoardDimensions() {
@@ -108,24 +117,15 @@ public class CellularAutomataController {
     });
   }
 
-  private SimulationLoop setUpGame() {
-    final SimulationLoop game = new SimulationLoop(board);
-
-    setUpGameControlButtons(game);
-    setupGameSpeedSlider(game);
-
-    return game;
+  private void setUpGameControlButtons(final SimulationLoop loop) {
+    startGame.setOnAction(event -> loop.start());
+    stopGame.setOnAction(event -> loop.stop());
+    nextIteration.setOnAction(event -> loop.next());
+    resetGame.setOnAction(event -> loop.reset());
+    clearGame.setOnAction(event -> loop.clear());
   }
 
-  private void setUpGameControlButtons(final SimulationLoop game) {
-    startGame.setOnAction(event -> game.start());
-    stopGame.setOnAction(event -> game.stop());
-    nextIteration.setOnAction(event -> game.next());
-    resetGame.setOnAction(event -> game.reset());
-    clearGame.setOnAction(event -> game.clear());
-  }
-
-  private void setupGameSpeedSlider(final SimulationLoop game) {
+  private void setupGameSpeedSlider(final SimulationLoop loop) {
     try {
       initializeGameSpeedSlider();
     } catch (NumberFormatException nfe) {
@@ -133,7 +133,7 @@ public class CellularAutomataController {
     }
 
     gameSpeed.valueProperty().addListener((observableValue, oldValue, newValue) -> {
-      game.setTimeStepMultiplier(newValue.doubleValue());
+      loop.setTimeStepMultiplier(newValue.doubleValue());
     });
   }
 
