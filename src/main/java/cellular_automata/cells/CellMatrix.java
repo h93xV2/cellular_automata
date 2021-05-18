@@ -115,34 +115,6 @@ public class CellMatrix implements Cloneable {
     forEach((i, j) -> workingCells[i][j].setState(CellState.DEAD));
   }
 
-  public void addCapacity(final int newHorizontalCapacity, final int newVerticalCapacity) {
-    final int newWidth = width + newHorizontalCapacity;
-    final int newHeight = height + newVerticalCapacity;
-
-    final Cell[][] newSeedCells = new Cell[newWidth][newHeight];
-    final Cell[][] newTempCells = new Cell[newWidth][newHeight];
-    final Cell[][] newWorkingCells = new Cell[newWidth][newHeight];
-
-    width = newWidth;
-    height = newHeight;
-
-    forEach((x, y) -> {
-      try {
-        newSeedCells[x][y] = seedCells[x][y];
-        newTempCells[x][y] = tempCells[x][y];
-        newWorkingCells[x][y] = workingCells[x][y];
-      } catch (IndexOutOfBoundsException e) {
-        newSeedCells[x][y] = new Cell();
-        newTempCells[x][y] = new Cell();
-        newWorkingCells[x][y] = new Cell();
-      }
-    });
-
-    seedCells = newSeedCells;
-    tempCells = newTempCells;
-    workingCells = newWorkingCells;
-  }
-
   @Override
   public Object clone() {
     final CellMatrix clonedCells = new CellMatrix(width, height);
