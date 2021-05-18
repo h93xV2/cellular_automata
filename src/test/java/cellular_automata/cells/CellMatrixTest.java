@@ -99,4 +99,18 @@ public class CellMatrixTest {
 
     assertEquals(5, matrix.getHeight());
   }
+
+  @Test
+  void oneCellDies() {
+    final CellMatrix matrix = new CellMatrix(1, 1);
+    matrix.getCell(0, 0).toggleState();
+
+    final boolean aliveBeforeNext = CellState.LIVE.equals(matrix.getCell(0, 0).getState());
+
+    matrix.next();
+
+    final boolean deadAfterNext = CellState.DEAD.equals(matrix.getCell(0, 0).getState());
+
+    assertTrue(aliveBeforeNext && deadAfterNext);
+  }
 }
