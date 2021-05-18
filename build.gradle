@@ -19,6 +19,9 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = 16
+targetCompatibility = 16
+
 javafx {
     version = "15.0.1"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
@@ -39,7 +42,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
     
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
 }
 
 application {
