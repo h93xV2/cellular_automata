@@ -57,4 +57,8 @@ test {
 
 jacocoTestReport {
     dependsOn test
+    reports {
+        html.enabled true
+        csv.enabled true
+    }
 }
