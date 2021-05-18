@@ -84,17 +84,21 @@ public class CellularAutomataController {
 
   private void setUpBoard() {
     try {
-      final int boardWidth = Integer.valueOf((String) defaultProperties.get("boardWidth"));
-      final int boardHeight = Integer.valueOf((String) defaultProperties.get("boardHeight"));
-      final int cellWidth = Integer.valueOf((String) defaultProperties.get("cellWidth"));
-      final int cellHeight = Integer.valueOf((String) defaultProperties.get("cellHeight"));
-
-      board.setUp(boardWidth, boardHeight, cellWidth, cellHeight);
+      setUpBoardDimensions();
     } catch (NumberFormatException nfe) {
       AlertMediator.notifyNonRecoverableError("Unable to establish the size of the window.");
     }
 
     setUpBoardControls();
+  }
+
+  private void setUpBoardDimensions() {
+    final int boardWidth = Integer.valueOf((String) defaultProperties.get("boardWidth"));
+    final int boardHeight = Integer.valueOf((String) defaultProperties.get("boardHeight"));
+    final int cellWidth = Integer.valueOf((String) defaultProperties.get("cellWidth"));
+    final int cellHeight = Integer.valueOf((String) defaultProperties.get("cellHeight"));
+
+    board.setUp(boardWidth, boardHeight, cellWidth, cellHeight);
   }
 
   private void setUpBoardControls() {
@@ -123,13 +127,7 @@ public class CellularAutomataController {
 
   private void setupGameSpeedSlider(final SimulationLoop game) {
     try {
-      final double minimumSpeed = Double.valueOf((String) defaultProperties.get("minimumSpeed"));
-      final double initialSpeed = Double.valueOf((String) defaultProperties.get("initialSpeed"));
-      final double maximumSpeed = Double.valueOf((String) defaultProperties.get("maximumSpeed"));
-
-      gameSpeed.setMin(minimumSpeed);
-      gameSpeed.setValue(initialSpeed);
-      gameSpeed.setMax(maximumSpeed);
+      initializeGameSpeedSlider();
     } catch (NumberFormatException nfe) {
       AlertMediator.notifyNonRecoverableError("Unable to create the slider used to control speed.");
     }
@@ -137,5 +135,15 @@ public class CellularAutomataController {
     gameSpeed.valueProperty().addListener((observableValue, oldValue, newValue) -> {
       game.setTimeStepMultiplier(newValue.doubleValue());
     });
+  }
+
+  private void initializeGameSpeedSlider() {
+    final double minimumSpeed = Double.valueOf((String) defaultProperties.get("minimumSpeed"));
+    final double initialSpeed = Double.valueOf((String) defaultProperties.get("initialSpeed"));
+    final double maximumSpeed = Double.valueOf((String) defaultProperties.get("maximumSpeed"));
+
+    gameSpeed.setMin(minimumSpeed);
+    gameSpeed.setValue(initialSpeed);
+    gameSpeed.setMax(maximumSpeed);
   }
 }
