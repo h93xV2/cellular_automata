@@ -39,18 +39,24 @@ public class RunLengthEncodedFileAdapter {
   }
 
   static void parseLine(final String line, final RunLengthEncodedData data) {
-    final String lineStart = line.substring(0, 2);
+    final String lineStart = line.trim().substring(0, 2);
     final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
-
-    switch (typeOfLineUnderInspection) {
-    case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
-    case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
-    case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
-    case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
-    case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
-    case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
-    case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseRuleLine(line));
-    default -> throw new RuntimeException();
+    
+    if (typeOfLineUnderInspection != null) {
+      switch (typeOfLineUnderInspection) {
+      case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
+      case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
+      case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
+      case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
+      case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
+      case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
+      case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseMarkedRuleLine(line));
+      default -> throw new RuntimeException();
+      }
+    } else {
+      if (lineStart.startsWith("x")) {
+        parseHeaderLine(line, data);
+      }
     }
   }
 
@@ -67,9 +73,14 @@ public class RunLengthEncodedFileAdapter {
     return new Pair<Integer, Integer>(x, y);
   }
 
-  private static BirthAndSurvivalConstraints parseRuleLine(final String line) {
+  private static BirthAndSurvivalConstraints parseMarkedRuleLine(final String line) {
     final String strippedLine = parseInformationLine(line);
-    final String[] neighborLists = strippedLine.split("/");
+    
+    return parseRuleData(strippedLine);
+  }
+
+  private static BirthAndSurvivalConstraints parseRuleData(final String line) {
+    final String[] neighborLists = line.split("/");
     final String birthList = neighborLists[0].startsWith("B") ? neighborLists[0].substring(1) : neighborLists[1];
     final String survivalList = neighborLists[1].startsWith("S") ? neighborLists[1].substring(1) : neighborLists[0];
 
@@ -89,6 +100,26 @@ public class RunLengthEncodedFileAdapter {
     for (var neighborCount : neighbors) {
       if (!"".equals(neighborCount)) {
         neighborConsumer.accept(Integer.parseInt(neighborCount));
+      }
+    }
+  }
+  
+  private static void parseHeaderLine(final String line, final RunLengthEncodedData data) {
+    final String[] headerAttributes = line.split(",");
+    
+    for(var attribute : headerAttributes) {
+      attribute = attribute.trim();
+      
+      final String[] attributeParts = attribute.split("=");
+      
+      if (attribute.startsWith("x")) {
+        data.setWidth(Integer.parseInt(attributeParts[1].trim()));
+      } else if (attribute.startsWith("y")) {
+        data.setHeight(Integer.parseInt(attributeParts[1].trim()));
+      } else if (attribute.startsWith("rule")) {
+        data.setBirthAndSurvivalConstraints(parseRuleData(attributeParts[1].trim()));
+      } else {
+        throw new RuntimeException();
       }
     }
   }
