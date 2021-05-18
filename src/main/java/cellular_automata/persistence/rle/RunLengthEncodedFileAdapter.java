@@ -22,7 +22,7 @@ public class RunLengthEncodedFileAdapter {
   private RunLengthEncodedFileAdapter() {
   }
 
-  public static Cell[][] parseFile(final File fileToParse) {
+  public static RunLengthEncodedData parseFile(final File fileToParse) {
     try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
       final RunLengthEncodedData data = new RunLengthEncodedData();
 
@@ -31,6 +31,8 @@ public class RunLengthEncodedFileAdapter {
       while ((line = reader.readLine()) != null) {
         parseLine(line, data);
       }
+
+      return data;
     } catch (IOException e) {
       AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.");
     }
@@ -41,7 +43,7 @@ public class RunLengthEncodedFileAdapter {
   static void parseLine(final String line, final RunLengthEncodedData data) {
     final String lineStart = line.trim().substring(0, 2);
     final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
-    
+
     if (typeOfLineUnderInspection != null) {
       switch (typeOfLineUnderInspection) {
       case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
@@ -77,7 +79,7 @@ public class RunLengthEncodedFileAdapter {
 
   private static BirthAndSurvivalConstraints parseMarkedRuleLine(final String line) {
     final String strippedLine = parseInformationLine(line);
-    
+
     return parseRuleData(strippedLine);
   }
 
@@ -105,15 +107,15 @@ public class RunLengthEncodedFileAdapter {
       }
     }
   }
-  
+
   private static void parseHeaderLine(final String line, final RunLengthEncodedData data) {
     final String[] headerAttributes = line.split(",");
-    
-    for(var attribute : headerAttributes) {
+
+    for (var attribute : headerAttributes) {
       attribute = attribute.trim();
-      
+
       final String[] attributeParts = attribute.split("=");
-      
+
       if (attribute.startsWith("x")) {
         data.setWidth(Integer.parseInt(attributeParts[1].trim()));
       } else if (attribute.startsWith("y")) {

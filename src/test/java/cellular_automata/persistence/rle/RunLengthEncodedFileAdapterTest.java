@@ -106,41 +106,41 @@ public class RunLengthEncodedFileAdapterTest {
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
-  
+
   @Test
   void widthIsParsedFromTheHeaderLine() {
     final String header = "x = 2, y = 5";
     final RunLengthEncodedData data = new RunLengthEncodedData();
-    
+
     RunLengthEncodedFileAdapter.parseLine(header, data);
-    
+
     assertEquals(2, data.getWidth());
   }
-  
+
   @Test
   void heightIsParsedFromTheHeaderLine() {
     final String header = "x = 30, y = 20";
     final RunLengthEncodedData data = new RunLengthEncodedData();
-    
+
     RunLengthEncodedFileAdapter.parseLine(header, data);
-    
+
     assertEquals(20, data.getHeight());
   }
-  
+
   @Test
   void cellRulesAreParsedFromTheHeaderLine() {
     final String header = "x = 30, y = 20, rule = B3/S23";
     final RunLengthEncodedData data = new RunLengthEncodedData();
-    
+
     RunLengthEncodedFileAdapter.parseLine(header, data);
-    
+
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
-  
-  @Test()
+
+  @Test
   void parseCellStateLine() {
     final String cellInformation = "bo$2bo$3o!";
-    
+
     assertThrows(CellStateLineDetectedException.class, () -> {
       RunLengthEncodedFileAdapter.parseLine(cellInformation, new RunLengthEncodedData());
     });
