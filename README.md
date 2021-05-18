@@ -1,7 +1,8 @@
 # cellular_automata
 Simulates cellular automata systems.
 
-![example workflow](https://github.com/h93xv2/cellular_automata/actions/workflows/codeql-analysis.yml/badge.svg)
+![example workflow](https://github.com/h93xv2/cellular_automata/actions/workflows/codeql-analysis.yml/badge.svg) ![Coverage](.github/badges/jacoco.svg) ![Branches](.github/badges/branches.svg)
+
 
 ## Description
 
