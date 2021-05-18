@@ -136,4 +136,13 @@ public class RunLengthEncodedFileAdapterTest {
     
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
+  
+  @Test()
+  void parseCellStateLine() {
+    final String cellInformation = "bo$2bo$3o!";
+    
+    assertThrows(CellStateLineDetectedException.class, () -> {
+      RunLengthEncodedFileAdapter.parseLine(cellInformation, new RunLengthEncodedData());
+    });
+  }
 }

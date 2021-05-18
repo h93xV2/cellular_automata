@@ -56,6 +56,8 @@ public class RunLengthEncodedFileAdapter {
     } else {
       if (lineStart.startsWith("x")) {
         parseHeaderLine(line, data);
+      } else {
+        throw new CellStateLineDetectedException();
       }
     }
   }
