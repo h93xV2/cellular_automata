@@ -21,14 +21,12 @@ jobs:
       with:
         java-version: '16'
         distribution: 'adopt'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      run: gradle build
     - name: Run Tests
-      run: ./gradlew test
+      run: gradle test
     - name: Run Test Coverage
-      run: ./gradlew jacocoTestReport
+      run: gradle jacocoTestReport
     - name: Generate JaCoCo Badge
       uses: cicirello/jacoco-badge-generator@v2
       with:
