@@ -79,7 +79,7 @@ class CellTest {
   }
 
   @Test
-  void clonedCellIsNewObject() throws CloneNotSupportedException {
+  void clonedCellIsNewObject() {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
@@ -88,7 +88,7 @@ class CellTest {
   }
 
   @Test
-  void clonedCellEqualsOriginalCell() throws CloneNotSupportedException {
+  void clonedCellEqualsOriginalCell() {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
@@ -97,7 +97,7 @@ class CellTest {
   }
 
   @Test
-  void modifiedCloneIsNotEqualToOriginal() throws CloneNotSupportedException {
+  void modifiedCloneIsNotEqualToOriginal() {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
@@ -107,7 +107,7 @@ class CellTest {
   }
 
   @Test
-  void originalIsNotAffectedByCloneStateChange() throws CloneNotSupportedException {
+  void originalIsNotAffectedByCloneStateChange() {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
