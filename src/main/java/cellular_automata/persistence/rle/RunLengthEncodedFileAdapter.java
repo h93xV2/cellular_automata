@@ -33,7 +33,7 @@ public class RunLengthEncodedFileAdapter {
         try {
           parseLine(line, data);
         } catch (CellStateLineDetectedException e) {
-
+          parseRunLengthEncodedLine(line, data);
         }
       }
 
@@ -141,26 +141,26 @@ public class RunLengthEncodedFileAdapter {
     final Cell[][] cells = new Cell[data.getWidth()][data.getHeight()];
     final String[] cellRows = processedLine.split(endOfLineSplitter);
 
-    for (var x = 0; x < cellRows.length; x++) {
-      var y = 0;
+    for (var y = 0; y < cellRows.length; y++) {
+      var x = 0;
       var count = 0;
 
-      for (var i = 0; i < cellRows[x].length(); i++) {
-        var character = cellRows[x].charAt(i);
+      for (var i = 0; i < cellRows[y].length(); i++) {
+        var character = cellRows[y].charAt(i);
 
         if (Character.isDigit(character)) {
           count = (count * 10) + character;
         } else {
           if (count == 0) {
-            count ++;
+            count++;
           }
-          
+
           while (count > 0) {
             final Cell cell = new Cell();
             cell.setState(CellState.getRleCellStateSymbolToCellStateMap().get(String.valueOf(character)));
             cells[x][y] = cell;
             count--;
-            y++;
+            x++;
           }
         }
       }

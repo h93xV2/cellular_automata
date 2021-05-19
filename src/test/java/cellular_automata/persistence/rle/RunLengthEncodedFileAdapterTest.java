@@ -10,7 +10,8 @@ import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
 public class RunLengthEncodedFileAdapterTest {
-  private static final String testFilePath = "src/test/resources/testpattern.rle";
+  private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";
+  private static final String footballTestFilePath = "src/test/resources/football.rle";
 
   @Test
   void parseCommentLineTypeOne() {
@@ -153,14 +154,14 @@ public class RunLengthEncodedFileAdapterTest {
 
   @Test
   void testFileProducesSomeOutput() {
-    final File testFile = new File(testFilePath);
+    final File testFile = new File(simpleTestFilePath);
 
     assertNotNull(RunLengthEncodedFileAdapter.parseFile(testFile));
   }
 
   @Test
   void testFileIsCorrectlyParsedForName() {
-    final File testFile = new File(testFilePath);
+    final File testFile = new File(simpleTestFilePath);
 
     final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
 
@@ -173,21 +174,39 @@ public class RunLengthEncodedFileAdapterTest {
     final RunLengthEncodedData data = new RunLengthEncodedData();
     data.setWidth(1);
     data.setHeight(1);
-    
+
     RunLengthEncodedFileAdapter.parseRunLengthEncodedLine(cellString, data);
-    
+
     assertNotNull(data.getCells());
   }
-  
+
   @Test
   void testBasicRleCellsAreCorrectlyDecoded() {
     final String cellString = "o$!";
     final RunLengthEncodedData data = new RunLengthEncodedData();
     data.setWidth(1);
     data.setHeight(1);
-    
+
     RunLengthEncodedFileAdapter.parseRunLengthEncodedLine(cellString, data);
-    
+
     assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
+  }
+
+  @Test
+  void testRleFileHasCellsParsed() {
+    final File testFile = new File(simpleTestFilePath);
+
+    final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
+
+    assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
+  }
+  
+  @Test
+  void testFootballFile() {
+    final File testFile = new File(footballTestFilePath);
+    
+    final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
+    
+    assertEquals(CellState.LIVE, data.getCells()[1][3].getState());
   }
 }
