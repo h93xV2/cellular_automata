@@ -6,15 +6,21 @@ import java.util.*;
 import cellular_automata.filemanagement.app.ApplicationFileStrategy;
 import cellular_automata.filemanagement.rle.RunLengthEncodedFileStrategy;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
-public class FileStrategyMediator {
+public class FileSystemFacade {
+  private final Window ownerWindow;
   private final ApplicationFileStrategy appFileStrategy;
   private final RunLengthEncodedFileStrategy rleFileStrategy;
   private final Map<String, FileStrategy> fileExtensionToStrategyMap;
   private final FileChooser.ExtensionFilter applicationFileFilter;
   private final FileChooser.ExtensionFilter runLengthEncodedFileFilter;
+  private final FileChooser openFileChooser;
+  private final FileChooser saveFileChooser;
 
-  public FileStrategyMediator() {
+  public FileSystemFacade(final Window ownerWindow) {
+    this.ownerWindow = ownerWindow;
+
     appFileStrategy = new ApplicationFileStrategy();
     rleFileStrategy = new RunLengthEncodedFileStrategy();
 
@@ -28,33 +34,27 @@ public class FileStrategyMediator {
     fileExtensionToStrategyMap = new HashMap<>();
     fileExtensionToStrategyMap.put(appFileStrategy.getValidFileExtension(), appFileStrategy);
     fileExtensionToStrategyMap.put(rleFileStrategy.getValidFileExtension(), rleFileStrategy);
+
+    openFileChooser = new FileChooser();
+    openFileChooser.setTitle("Select file to open");
+    openFileChooser.getExtensionFilters().addAll(applicationFileFilter, runLengthEncodedFileFilter);
+
+    saveFileChooser = new FileChooser();
+    saveFileChooser.setTitle("Select file to save to");
+    saveFileChooser.getExtensionFilters().addAll(applicationFileFilter);
   }
 
-  public SimulationData openFile(final File fileToOpen) {
+  public SimulationData openFromFile() {
+    final File fileToOpen = openFileChooser.showOpenDialog(ownerWindow);
     final String filePath = fileToOpen.getPath();
     final String extension = filePath.substring(filePath.indexOf("."));
 
     return fileExtensionToStrategyMap.get(extension).openFile(fileToOpen);
   }
 
-  public void saveFile(final File fileToSaveTo, final SimulationData data) {
+  public void saveToFile(final SimulationData data) {
+    final File fileToSaveTo = openFileChooser.showSaveDialog(ownerWindow);
+
     appFileStrategy.saveFile(fileToSaveTo, data);
-  }
-
-  public List<FileChooser.ExtensionFilter> getOpenFileFilters() {
-    final List<FileChooser.ExtensionFilter> openFilters = new ArrayList<>();
-
-    openFilters.add(applicationFileFilter);
-    openFilters.add(runLengthEncodedFileFilter);
-
-    return openFilters;
-  }
-
-  public List<FileChooser.ExtensionFilter> getSaveFileFilters() {
-    final List<FileChooser.ExtensionFilter> saveFilters = new ArrayList<>();
-
-    saveFilters.add(applicationFileFilter);
-
-    return saveFilters;
   }
 }

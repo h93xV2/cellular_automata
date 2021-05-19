@@ -5,13 +5,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import cellular_automata.filemanagement.FileStrategyMediator;
+import cellular_automata.filemanagement.FileSystemFacade;
 import cellular_automata.filemanagement.SimulationData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
-import javafx.stage.FileChooser;
 
 public class CellularAutomataController {
   @FXML private MenuItem openFile;
@@ -25,9 +24,7 @@ public class CellularAutomataController {
   @FXML private Button clearGame;
   @FXML private Slider gameSpeed;
   private final Properties defaultProperties;
-  private final FileChooser openFileChooser;
-  private final FileChooser saveFileChooser;
-  private final FileStrategyMediator fileSystem;
+  private final FileSystemFacade fileSystem;
 
   public CellularAutomataController() {
     defaultProperties = new Properties();
@@ -41,15 +38,7 @@ public class CellularAutomataController {
       AlertMediator.notifyNonRecoverableError("Unable to load the default application settings.");
     }
     
-    fileSystem = new FileStrategyMediator();
-    
-    openFileChooser = new FileChooser();
-    openFileChooser.setTitle("Select file to open");
-    openFileChooser.getExtensionFilters().addAll(fileSystem.getOpenFileFilters());
-
-    saveFileChooser = new FileChooser();
-    saveFileChooser.setTitle("Select file to save to");
-    saveFileChooser.getExtensionFilters().addAll(fileSystem.getSaveFileFilters());
+    fileSystem = new FileSystemFacade(CellularAutomataApp.getPrimaryStage());
   }
 
   public void initialize() {
@@ -81,9 +70,7 @@ public class CellularAutomataController {
     openFile.setOnAction(event -> {
       loop.stop();
 
-      final File fileToOpen = openFileChooser.showOpenDialog(CellularAutomataApp.getPrimaryStage());
-
-      final SimulationData saveData = fileSystem.openFile(fileToOpen);
+      final SimulationData saveData = fileSystem.openFromFile();
 
       board.getCells().forEach((x, y) -> board.getCells().getCell(x, y).setState(saveData.getCells()[x][y].getState()));
       board.setShowGridLines(saveData.getShowGridLines());
@@ -94,11 +81,9 @@ public class CellularAutomataController {
     saveFile.setOnAction(event -> {
       loop.reset();
 
-      final File fileToSaveTo = saveFileChooser.showSaveDialog(CellularAutomataApp.getPrimaryStage());
-
       final SimulationData saveData = new SimulationData(board.getCells().getWorkingCells(), board.getShowGridLines());
 
-      fileSystem.saveFile(fileToSaveTo, saveData);
+      fileSystem.saveToFile(saveData);
     });
   }
 
