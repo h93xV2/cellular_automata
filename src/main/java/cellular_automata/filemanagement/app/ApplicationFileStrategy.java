@@ -1,4 +1,4 @@
-package cellular_automata.filemanagement.datafiles;
+package cellular_automata.filemanagement.app;
 
 import java.io.File;
 import java.io.IOException;
