@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
-public class RunLengthEncodedFileAdapterTest {
+public class RunLengthEncodedFileParserTest {
   private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";
   private static final String footballTestFilePath = "src/test/resources/football.rle";
 
@@ -18,7 +18,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String commentLine = "#C hello world";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(commentLine, data);
+    RunLengthEncodedFileParser.parseLine(commentLine, data);
 
     assertEquals("hello world", data.getComments().get(0));
   }
@@ -28,7 +28,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String commentLine = "#c this is a comment";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(commentLine, data);
+    RunLengthEncodedFileParser.parseLine(commentLine, data);
 
     assertEquals("this is a comment", data.getComments().get(0));
   }
@@ -38,7 +38,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String nameLine = "#N Gosper glider gun";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(nameLine, data);
+    RunLengthEncodedFileParser.parseLine(nameLine, data);
 
     assertEquals("Gosper glider gun", data.getPatternName());
   }
@@ -48,7 +48,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String authorInformation = "#O John Smith";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(authorInformation, data);
+    RunLengthEncodedFileParser.parseLine(authorInformation, data);
 
     assertEquals("John Smith", data.getAuthorInformation());
   }
@@ -58,7 +58,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String topLeftCorner = "#P 5 7";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(topLeftCorner, data);
+    RunLengthEncodedFileParser.parseLine(topLeftCorner, data);
 
     assertEquals(new Pair<Integer, Integer>(5, 7), data.getTopLeftCorner());
   }
@@ -68,7 +68,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String topLeftCorner = "#R -13 -20";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(topLeftCorner, data);
+    RunLengthEncodedFileParser.parseLine(topLeftCorner, data);
 
     assertEquals(new Pair<Integer, Integer>(-13, -20), data.getTopLeftCorner());
   }
@@ -78,7 +78,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String cellRules = "#r B3/S23";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+    RunLengthEncodedFileParser.parseLine(cellRules, data);
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
@@ -88,7 +88,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String cellRules = "#r B3/S9";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+    RunLengthEncodedFileParser.parseLine(cellRules, data);
 
     assertEquals(9, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
   }
@@ -98,7 +98,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String cellRules = "#r B2/S";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+    RunLengthEncodedFileParser.parseLine(cellRules, data);
 
     assertTrue(data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().isEmpty());
   }
@@ -108,7 +108,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String cellRules = "#r 23/3";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(cellRules, data);
+    RunLengthEncodedFileParser.parseLine(cellRules, data);
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
@@ -118,7 +118,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String header = "x = 2, y = 5";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(header, data);
+    RunLengthEncodedFileParser.parseLine(header, data);
 
     assertEquals(2, data.getWidth());
   }
@@ -128,7 +128,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String header = "x = 30, y = 20";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(header, data);
+    RunLengthEncodedFileParser.parseLine(header, data);
 
     assertEquals(20, data.getHeight());
   }
@@ -138,7 +138,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String header = "x = 30, y = 20, rule = B3/S23";
     final RunLengthEncodedData data = new RunLengthEncodedData();
 
-    RunLengthEncodedFileAdapter.parseLine(header, data);
+    RunLengthEncodedFileParser.parseLine(header, data);
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
@@ -148,7 +148,7 @@ public class RunLengthEncodedFileAdapterTest {
     final String cellInformation = "bo$2bo$3o!";
 
     assertThrows(CellStateLineDetectedException.class, () -> {
-      RunLengthEncodedFileAdapter.parseLine(cellInformation, new RunLengthEncodedData());
+      RunLengthEncodedFileParser.parseLine(cellInformation, new RunLengthEncodedData());
     });
   }
 
@@ -156,14 +156,14 @@ public class RunLengthEncodedFileAdapterTest {
   void testFileProducesSomeOutput() {
     final File testFile = new File(simpleTestFilePath);
 
-    assertNotNull(RunLengthEncodedFileAdapter.parseFile(testFile));
+    assertNotNull(RunLengthEncodedFileParser.parseFile(testFile));
   }
 
   @Test
   void testFileIsCorrectlyParsedForName() {
     final File testFile = new File(simpleTestFilePath);
 
-    final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
+    final RunLengthEncodedData data = RunLengthEncodedFileParser.parseFile(testFile);
 
     assertEquals("hello world", data.getPatternName());
   }
@@ -175,7 +175,7 @@ public class RunLengthEncodedFileAdapterTest {
     data.setWidth(1);
     data.setHeight(1);
 
-    RunLengthEncodedFileAdapter.parseRunLengthEncodedLine(cellString, data);
+    RunLengthEncodedFileParser.parseRunLengthEncodedLine(cellString, data);
 
     assertNotNull(data.getCells());
   }
@@ -187,7 +187,7 @@ public class RunLengthEncodedFileAdapterTest {
     data.setWidth(1);
     data.setHeight(1);
 
-    RunLengthEncodedFileAdapter.parseRunLengthEncodedLine(cellString, data);
+    RunLengthEncodedFileParser.parseRunLengthEncodedLine(cellString, data);
 
     assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
   }
@@ -196,7 +196,7 @@ public class RunLengthEncodedFileAdapterTest {
   void testRleFileHasCellsParsed() {
     final File testFile = new File(simpleTestFilePath);
 
-    final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
+    final RunLengthEncodedData data = RunLengthEncodedFileParser.parseFile(testFile);
 
     assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
   }
@@ -205,7 +205,7 @@ public class RunLengthEncodedFileAdapterTest {
   void testFootballFile() {
     final File testFile = new File(footballTestFilePath);
     
-    final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
+    final RunLengthEncodedData data = RunLengthEncodedFileParser.parseFile(testFile);
     
     assertEquals(CellState.LIVE, data.getCells()[1][3].getState());
   }

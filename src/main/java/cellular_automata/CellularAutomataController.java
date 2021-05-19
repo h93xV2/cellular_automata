@@ -5,8 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import cellular_automata.persistence.FileSystemAdapter;
+import cellular_automata.persistence.ApplicationSaveFileParser;
 import cellular_automata.persistence.SaveData;
+import cellular_automata.persistence.rle.RunLengthEncodedFileParser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -25,7 +26,8 @@ public class CellularAutomataController {
   @FXML private Button clearGame;
   @FXML private Slider gameSpeed;
   private final Properties defaultProperties;
-  private final FileChooser fileChooser;
+  private final FileChooser openFileChooser;
+  private final FileChooser saveFileChooser;
 
   public CellularAutomataController() {
     defaultProperties = new Properties();
@@ -39,12 +41,21 @@ public class CellularAutomataController {
       AlertMediator.notifyNonRecoverableError("Unable to load the default application settings.");
     }
 
-    fileChooser = new FileChooser();
+    FileChooser.ExtensionFilter appSpecificFile = new FileChooser.ExtensionFilter(
+        "App specific save files (*" + ApplicationSaveFileParser.fileNameExtension + ")",
+        "*" + ApplicationSaveFileParser.fileNameExtension);
 
-    fileChooser.setTitle("Select file");
-    fileChooser.getExtensionFilters()
-        .add(new FileChooser.ExtensionFilter("Automata custom files (*" + FileSystemAdapter.fileNameExtension + ")",
-            "*" + FileSystemAdapter.fileNameExtension));
+    FileChooser.ExtensionFilter rleFile = new FileChooser.ExtensionFilter(
+        "RLE files (*" + RunLengthEncodedFileParser.fileExtension + ")",
+        "*" + RunLengthEncodedFileParser.fileExtension);
+
+    openFileChooser = new FileChooser();
+    openFileChooser.setTitle("Select file to open");
+    openFileChooser.getExtensionFilters().addAll(appSpecificFile, rleFile);
+
+    saveFileChooser = new FileChooser();
+    saveFileChooser.setTitle("Select file to save to");
+    saveFileChooser.getExtensionFilters().add(appSpecificFile);
   }
 
   public void initialize() {
@@ -76,9 +87,9 @@ public class CellularAutomataController {
     openFile.setOnAction(event -> {
       loop.stop();
 
-      final File fileToOpen = fileChooser.showOpenDialog(CellularAutomataApp.getPrimaryStage());
+      final File fileToOpen = openFileChooser.showOpenDialog(CellularAutomataApp.getPrimaryStage());
 
-      final SaveData saveData = FileSystemAdapter.openFile(fileToOpen);
+      final SaveData saveData = ApplicationSaveFileParser.openFile(fileToOpen);
 
       board.getCells().forEach((x, y) -> board.getCells().getCell(x, y).setState(saveData.getCells()[x][y].getState()));
       board.setShowGridLines(saveData.getShowGridLines());
@@ -89,15 +100,15 @@ public class CellularAutomataController {
     saveFile.setOnAction(event -> {
       loop.reset();
 
-      var fileToSaveTo = fileChooser.showSaveDialog(CellularAutomataApp.getPrimaryStage());
+      var fileToSaveTo = saveFileChooser.showSaveDialog(CellularAutomataApp.getPrimaryStage());
 
-      if (!fileToSaveTo.getName().contains(FileSystemAdapter.fileNameExtension)) {
-        fileToSaveTo = new File(fileToSaveTo.getAbsolutePath() + FileSystemAdapter.fileNameExtension);
+      if (!fileToSaveTo.getName().contains(ApplicationSaveFileParser.fileNameExtension)) {
+        fileToSaveTo = new File(fileToSaveTo.getAbsolutePath() + ApplicationSaveFileParser.fileNameExtension);
       }
 
       final SaveData saveData = new SaveData(board.getCells().getWorkingCells(), board.getShowGridLines());
 
-      FileSystemAdapter.saveFile(saveData, fileToSaveTo);
+      ApplicationSaveFileParser.saveFile(saveData, fileToSaveTo);
     });
   }
 

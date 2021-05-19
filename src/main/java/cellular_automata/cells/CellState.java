@@ -19,7 +19,7 @@ public enum CellState {
     return rleCellStateSymbol;
   }
 
-  public static Map<String, CellState> getRleCellStateSymbolToCellStateMap() {
+  public static Map<String, CellState> getRleSymbolToCellStateMap() {
     if (symbolMap == null) {
       populateRleCellStateSymbolToCellStateMap();
     }

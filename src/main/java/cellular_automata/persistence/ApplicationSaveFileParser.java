@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cellular_automata.AlertMediator;
 
-public class FileSystemAdapter {
+public class ApplicationSaveFileParser {
   public static final String fileNameExtension = ".json";
 
   public static SaveData openFile(final File fileToOpenFrom) {

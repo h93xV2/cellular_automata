@@ -13,14 +13,16 @@ import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
-public class RunLengthEncodedFileAdapter {
+public class RunLengthEncodedFileParser {
+  public static final String fileExtension = ".rle";
+
   private static final int characterOffset = 2;
   private static final int topLeftCornerX = 0;
   private static final int topLeftCornerY = 1;
   private static final String endOfLineSplitter = "\\$";
   private static final String endOfPatternMarker = "!";
 
-  private RunLengthEncodedFileAdapter() {
+  private RunLengthEncodedFileParser() {
   }
 
   public static RunLengthEncodedData parseFile(final File fileToParse) {
@@ -157,7 +159,7 @@ public class RunLengthEncodedFileAdapter {
 
           while (count > 0) {
             final Cell cell = new Cell();
-            cell.setState(CellState.getRleCellStateSymbolToCellStateMap().get(String.valueOf(character)));
+            cell.setState(CellState.getRleSymbolToCellStateMap().get(String.valueOf(character)));
             cells[x][y] = cell;
             count--;
             x++;
