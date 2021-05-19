@@ -1,4 +1,4 @@
-package cellular_automata.persistence.rle;
+package cellular_automata.filemanagement.rle;
 
 import java.util.Collections;
 import java.util.HashMap;

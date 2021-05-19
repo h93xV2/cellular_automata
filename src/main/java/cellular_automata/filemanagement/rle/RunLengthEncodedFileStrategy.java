@@ -1,4 +1,4 @@
-package cellular_automata.persistence.rle;
+package cellular_automata.filemanagement.rle;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,23 +11,28 @@ import cellular_automata.AlertMediator;
 import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
+import cellular_automata.filemanagement.FileStrategy;
+import cellular_automata.filemanagement.SimulationData;
 import javafx.util.Pair;
 
-public class RunLengthEncodedFileParser {
-  public static final String fileExtension = ".rle";
+public class RunLengthEncodedFileStrategy implements FileStrategy {
+  private static final String fileNameExtension = ".rle";
 
   private static final int characterOffset = 2;
   private static final int topLeftCornerX = 0;
   private static final int topLeftCornerY = 1;
   private static final String endOfLineSplitter = "\\$";
   private static final String endOfPatternMarker = "!";
-
-  private RunLengthEncodedFileParser() {
+  
+  @Override
+  public String getValidFileExtension() {
+    return fileNameExtension;
   }
-
-  public static RunLengthEncodedData parseFile(final File fileToParse) {
+  
+  @Override
+  public SimulationData openFile(final File fileToParse) {
     try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
-      final RunLengthEncodedData data = new RunLengthEncodedData();
+      final SimulationData data = new SimulationData();
 
       var line = "";
 
@@ -47,7 +52,7 @@ public class RunLengthEncodedFileParser {
     return null;
   }
 
-  static void parseLine(final String line, final RunLengthEncodedData data) {
+  void parseLine(final String line, final SimulationData data) {
     final String lineStart = line.trim().substring(0, 2);
     final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
 
@@ -71,11 +76,11 @@ public class RunLengthEncodedFileParser {
     }
   }
 
-  private static String parseInformationLine(final String line) {
+  private String parseInformationLine(final String line) {
     return line.substring(characterOffset).trim();
   }
 
-  private static Pair<Integer, Integer> parseTopLeftCorner(final String line) {
+  private Pair<Integer, Integer> parseTopLeftCorner(final String line) {
     final String strippedLine = parseInformationLine(line);
     final String[] coordinates = strippedLine.split(" ");
     final int x = Integer.valueOf(coordinates[topLeftCornerX]);
@@ -84,13 +89,13 @@ public class RunLengthEncodedFileParser {
     return new Pair<Integer, Integer>(x, y);
   }
 
-  private static BirthAndSurvivalConstraints parseMarkedRuleLine(final String line) {
+  private BirthAndSurvivalConstraints parseMarkedRuleLine(final String line) {
     final String strippedLine = parseInformationLine(line);
 
     return parseRuleData(strippedLine);
   }
 
-  private static BirthAndSurvivalConstraints parseRuleData(final String line) {
+  private BirthAndSurvivalConstraints parseRuleData(final String line) {
     final String[] neighborLists = line.split("/");
     final String birthList = neighborLists[0].startsWith("B") ? neighborLists[0].substring(1) : neighborLists[1];
     final String survivalList = neighborLists[1].startsWith("S") ? neighborLists[1].substring(1) : neighborLists[0];
@@ -105,7 +110,7 @@ public class RunLengthEncodedFileParser {
     return constraints;
   }
 
-  private static void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
+  private void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
     final String[] neighbors = neighborList.split("");
 
     for (var neighborCount : neighbors) {
@@ -115,7 +120,7 @@ public class RunLengthEncodedFileParser {
     }
   }
 
-  private static void parseHeaderLine(final String line, final RunLengthEncodedData data) {
+  private void parseHeaderLine(final String line, final SimulationData data) {
     final String[] headerAttributes = line.split(",");
 
     for (var attribute : headerAttributes) {
@@ -135,7 +140,7 @@ public class RunLengthEncodedFileParser {
     }
   }
 
-  static void parseRunLengthEncodedLine(final String line, final RunLengthEncodedData data) {
+  void parseRunLengthEncodedLine(final String line, final SimulationData data) {
     var processedLine = line.trim();
     processedLine = processedLine.replace(" ", "");
     processedLine = processedLine.replace(endOfPatternMarker, "");
@@ -169,5 +174,10 @@ public class RunLengthEncodedFileParser {
     }
 
     data.setCells(cells);
+  }
+
+  @Override
+  public void saveFile(File fileToSaveTo, SimulationData data) {
+    AlertMediator.notifyRecoverableError("This operation is not supported at this time.");
   }
 }

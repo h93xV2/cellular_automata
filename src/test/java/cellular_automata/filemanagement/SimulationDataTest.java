@@ -1,4 +1,4 @@
-package cellular_automata.persistence.rle;
+package cellular_automata.filemanagement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,52 +9,91 @@ import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
-public class RunLengthEncodedDataTest {
+public class SimulationDataTest {
+  @Test
+  void showGridLinesIsFalseByDefault() {
+    final SimulationData data = new SimulationData();
+
+    assertFalse(data.getShowGridLines());
+  }
+
+  @Test
+  void cellsAreNullByDefault() {
+    final SimulationData data = new SimulationData();
+
+    assertNull(data.getCells());
+  }
+
+  @Test
+  void showGridLinesCanBeSet() {
+    final SimulationData data = new SimulationData();
+
+    data.setShowGridLines(true);
+
+    assertTrue(data.getShowGridLines());
+  }
+
+  @Test
+  void cellsCanBeSet() {
+    final SimulationData data = new SimulationData();
+
+    data.setCells(new Cell[1][1]);
+
+    assertNotNull(data.getCells());
+  }
+
+  @Test
+  void SimulationDataCanBeInitializedWithObjects() {
+    final SimulationData data = new SimulationData(new Cell[1][1], true);
+
+    assertTrue(data.getCells() != null && data.getShowGridLines());
+  }
+
   @Test
   void commentsAreEmpty() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     assertTrue(data.getComments().isEmpty());
   }
 
   @Test
   void patternNameIsNull() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     assertNull(data.getPatternName());
   }
 
   @Test
   void authorInformationIsNull() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     assertNull(data.getAuthorInformation());
   }
 
   @Test
   void topLeftCornerIsZeroedOut() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     assertEquals(new Pair<Integer, Integer>(0, 0), data.getTopLeftCorner());
   }
 
   @Test
   void widthIsZero() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     assertEquals(0, data.getWidth());
   }
 
   @Test
   void heightIsZero() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     assertEquals(0, data.getHeight());
   }
 
   @Test
   void commentCanBeAdded() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     final String comment = "hello world";
 
     data.addComment(comment);
@@ -64,7 +103,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void patternNameCanBeSet() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     final String name = "12345";
 
     data.setPatternName(name);
@@ -74,7 +113,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void authorInformationCanBeSet() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     final String info = "hello";
 
     data.setAuthorInformation(info);
@@ -84,7 +123,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void topLeftCornerCanBeSet() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     final Pair<Integer, Integer> toSet = new Pair<Integer, Integer>(3, 5);
 
     data.setTopLeftCorner(toSet);
@@ -94,7 +133,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void widthCanBeSet() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     data.setWidth(10);
 
@@ -103,7 +142,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void heightCanBeSet() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     data.setHeight(15);
 
@@ -112,7 +151,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void gitBirthAndSurvivalConstraints() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     final BirthAndSurvivalConstraints constraints = data.getBirthAndSurvivalConstraints();
 
     assertTrue(constraints.getLiveNeighborsRequiredForBirth().isEmpty()
@@ -124,7 +163,7 @@ public class RunLengthEncodedDataTest {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
     constraints.addBirthNeighborCount(20);
 
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     data.setBirthAndSurvivalConstraints(constraints);
 
     assertEquals(20, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
@@ -135,30 +174,15 @@ public class RunLengthEncodedDataTest {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
     constraints.addSurvivalNeighborCount(7);
 
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     data.setBirthAndSurvivalConstraints(constraints);
 
     assertEquals(7, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
   }
 
   @Test
-  void cellsAreNullByDefault() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
-
-    assertNull(data.getCells());
-  }
-
-  @Test
-  void cellsCanBeSet() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
-    data.setCells(new Cell[1][1]);
-
-    assertNotNull(data.getCells());
-  }
-
-  @Test
   void setCellsAreNotReferencedElsewhere() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     final Cell[][] cells = new Cell[1][1];
     cells[0][0] = new Cell();
@@ -172,7 +196,7 @@ public class RunLengthEncodedDataTest {
 
   @Test
   void encapsulatedCellsCannotBeMutated() {
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
     final Cell[][] cells = new Cell[1][1];
     cells[0][0] = new Cell();

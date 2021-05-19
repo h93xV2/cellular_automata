@@ -1,4 +1,4 @@
-package cellular_automata.persistence.rle;
+package cellular_automata.filemanagement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellArrayCopier;
 import javafx.util.Pair;
 
-public class RunLengthEncodedData {
+public class SimulationData {
   private List<String> comments;
   private String patternName;
   private String authorInformation;
@@ -17,8 +17,15 @@ public class RunLengthEncodedData {
   private int width;
   private int height;
   private Cell[][] cells;
+  private boolean showGridLines;
 
-  public RunLengthEncodedData() {
+  public SimulationData(final Cell[][] cells, final boolean showGridLines) {
+    this();
+    setCells(cells);
+    this.showGridLines = showGridLines;
+  }
+
+  public SimulationData() {
     comments = new ArrayList<>();
     topLeftCorner = new Pair<Integer, Integer>(0, 0);
     constraints = new BirthAndSurvivalConstraints();
@@ -95,5 +102,13 @@ public class RunLengthEncodedData {
 
   public void setCells(final Cell[][] cells) {
     this.cells = CellArrayCopier.createCopy(cells);
+  }
+
+  public boolean getShowGridLines() {
+    return showGridLines;
+  }
+
+  public void setShowGridLines(final boolean showGridLines) {
+    this.showGridLines = showGridLines;
   }
 }

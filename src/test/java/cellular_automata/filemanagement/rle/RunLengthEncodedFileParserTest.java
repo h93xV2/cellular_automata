@@ -1,4 +1,4 @@
-package cellular_automata.persistence.rle;
+package cellular_automata.filemanagement.rle;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,18 +7,20 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 
 import cellular_automata.cells.CellState;
+import cellular_automata.filemanagement.SimulationData;
 import javafx.util.Pair;
 
 public class RunLengthEncodedFileParserTest {
   private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";
   private static final String footballTestFilePath = "src/test/resources/football.rle";
+  private final RunLengthEncodedFileStrategy rleStrategy = new RunLengthEncodedFileStrategy();
 
   @Test
   void parseCommentLineTypeOne() {
     final String commentLine = "#C hello world";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(commentLine, data);
+    rleStrategy.parseLine(commentLine, data);
 
     assertEquals("hello world", data.getComments().get(0));
   }
@@ -26,9 +28,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseCommentLineTypeTwo() {
     final String commentLine = "#c this is a comment";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(commentLine, data);
+    rleStrategy.parseLine(commentLine, data);
 
     assertEquals("this is a comment", data.getComments().get(0));
   }
@@ -36,9 +38,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseNameLine() {
     final String nameLine = "#N Gosper glider gun";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(nameLine, data);
+    rleStrategy.parseLine(nameLine, data);
 
     assertEquals("Gosper glider gun", data.getPatternName());
   }
@@ -46,9 +48,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseAuthorInformation() {
     final String authorInformation = "#O John Smith";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(authorInformation, data);
+    rleStrategy.parseLine(authorInformation, data);
 
     assertEquals("John Smith", data.getAuthorInformation());
   }
@@ -56,9 +58,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseTopLeftCornerTypeOne() {
     final String topLeftCorner = "#P 5 7";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(topLeftCorner, data);
+    rleStrategy.parseLine(topLeftCorner, data);
 
     assertEquals(new Pair<Integer, Integer>(5, 7), data.getTopLeftCorner());
   }
@@ -66,9 +68,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseTopLeftCornerTypeTwo() {
     final String topLeftCorner = "#R -13 -20";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(topLeftCorner, data);
+    rleStrategy.parseLine(topLeftCorner, data);
 
     assertEquals(new Pair<Integer, Integer>(-13, -20), data.getTopLeftCorner());
   }
@@ -76,9 +78,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseBirthConstraints() {
     final String cellRules = "#r B3/S23";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(cellRules, data);
+    rleStrategy.parseLine(cellRules, data);
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
@@ -86,9 +88,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseSurvivalConstraints() {
     final String cellRules = "#r B3/S9";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(cellRules, data);
+    rleStrategy.parseLine(cellRules, data);
 
     assertEquals(9, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
   }
@@ -96,9 +98,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseEmptySurvivalConstraints() {
     final String cellRules = "#r B2/S";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(cellRules, data);
+    rleStrategy.parseLine(cellRules, data);
 
     assertTrue(data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().isEmpty());
   }
@@ -106,9 +108,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void parseDifferentFormatBirthConstraints() {
     final String cellRules = "#r 23/3";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(cellRules, data);
+    rleStrategy.parseLine(cellRules, data);
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
@@ -116,9 +118,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void widthIsParsedFromTheHeaderLine() {
     final String header = "x = 2, y = 5";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(header, data);
+    rleStrategy.parseLine(header, data);
 
     assertEquals(2, data.getWidth());
   }
@@ -126,9 +128,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void heightIsParsedFromTheHeaderLine() {
     final String header = "x = 30, y = 20";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(header, data);
+    rleStrategy.parseLine(header, data);
 
     assertEquals(20, data.getHeight());
   }
@@ -136,9 +138,9 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void cellRulesAreParsedFromTheHeaderLine() {
     final String header = "x = 30, y = 20, rule = B3/S23";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
 
-    RunLengthEncodedFileParser.parseLine(header, data);
+    rleStrategy.parseLine(header, data);
 
     assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
   }
@@ -148,7 +150,7 @@ public class RunLengthEncodedFileParserTest {
     final String cellInformation = "bo$2bo$3o!";
 
     assertThrows(CellStateLineDetectedException.class, () -> {
-      RunLengthEncodedFileParser.parseLine(cellInformation, new RunLengthEncodedData());
+      rleStrategy.parseLine(cellInformation, new SimulationData());
     });
   }
 
@@ -156,14 +158,14 @@ public class RunLengthEncodedFileParserTest {
   void testFileProducesSomeOutput() {
     final File testFile = new File(simpleTestFilePath);
 
-    assertNotNull(RunLengthEncodedFileParser.parseFile(testFile));
+    assertNotNull(rleStrategy.openFile(testFile));
   }
 
   @Test
   void testFileIsCorrectlyParsedForName() {
     final File testFile = new File(simpleTestFilePath);
 
-    final RunLengthEncodedData data = RunLengthEncodedFileParser.parseFile(testFile);
+    final SimulationData data = rleStrategy.openFile(testFile);
 
     assertEquals("hello world", data.getPatternName());
   }
@@ -171,11 +173,11 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void testRleCellsCanBeDecoded() {
     final String cellString = "o$!";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     data.setWidth(1);
     data.setHeight(1);
 
-    RunLengthEncodedFileParser.parseRunLengthEncodedLine(cellString, data);
+    rleStrategy.parseRunLengthEncodedLine(cellString, data);
 
     assertNotNull(data.getCells());
   }
@@ -183,11 +185,11 @@ public class RunLengthEncodedFileParserTest {
   @Test
   void testBasicRleCellsAreCorrectlyDecoded() {
     final String cellString = "o$!";
-    final RunLengthEncodedData data = new RunLengthEncodedData();
+    final SimulationData data = new SimulationData();
     data.setWidth(1);
     data.setHeight(1);
 
-    RunLengthEncodedFileParser.parseRunLengthEncodedLine(cellString, data);
+    rleStrategy.parseRunLengthEncodedLine(cellString, data);
 
     assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
   }
@@ -196,7 +198,7 @@ public class RunLengthEncodedFileParserTest {
   void testRleFileHasCellsParsed() {
     final File testFile = new File(simpleTestFilePath);
 
-    final RunLengthEncodedData data = RunLengthEncodedFileParser.parseFile(testFile);
+    final SimulationData data = rleStrategy.openFile(testFile);
 
     assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
   }
@@ -205,7 +207,7 @@ public class RunLengthEncodedFileParserTest {
   void testFootballFile() {
     final File testFile = new File(footballTestFilePath);
     
-    final RunLengthEncodedData data = RunLengthEncodedFileParser.parseFile(testFile);
+    final SimulationData data = rleStrategy.openFile(testFile);
     
     assertEquals(CellState.LIVE, data.getCells()[1][3].getState());
   }
