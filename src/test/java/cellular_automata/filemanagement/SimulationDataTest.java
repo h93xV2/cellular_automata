@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
-import javafx.util.Pair;
 
 public class SimulationDataTest {
   @Test
@@ -74,7 +73,7 @@ public class SimulationDataTest {
   void topLeftCornerIsZeroedOut() {
     final SimulationData data = new SimulationData();
 
-    assertEquals(new Pair<Integer, Integer>(0, 0), data.getTopLeftCorner());
+    assertEquals(new PatternPoint(0, 0), data.getTopLeftCorner());
   }
 
   @Test
@@ -124,11 +123,11 @@ public class SimulationDataTest {
   @Test
   void topLeftCornerCanBeSet() {
     final SimulationData data = new SimulationData();
-    final Pair<Integer, Integer> toSet = new Pair<Integer, Integer>(3, 5);
+    final PatternPoint toSet = new PatternPoint(3, 5);
 
     data.setTopLeftCorner(toSet);
 
-    assertEquals(new Pair<Integer, Integer>(3, 5), data.getTopLeftCorner());
+    assertEquals(new PatternPoint(3, 5), data.getTopLeftCorner());
   }
 
   @Test

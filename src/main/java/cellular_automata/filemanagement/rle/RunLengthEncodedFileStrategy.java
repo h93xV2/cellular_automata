@@ -12,8 +12,8 @@ import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.filemanagement.FileStrategy;
+import cellular_automata.filemanagement.PatternPoint;
 import cellular_automata.filemanagement.SimulationData;
-import javafx.util.Pair;
 
 public class RunLengthEncodedFileStrategy implements FileStrategy {
   private static final String fileNameExtension = ".rle";
@@ -80,13 +80,13 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     return line.substring(characterOffset).trim();
   }
 
-  private Pair<Integer, Integer> parseTopLeftCorner(final String line) {
+  private PatternPoint parseTopLeftCorner(final String line) {
     final String strippedLine = parseInformationLine(line);
     final String[] coordinates = strippedLine.split(" ");
     final int x = Integer.valueOf(coordinates[topLeftCornerX]);
     final int y = Integer.valueOf(coordinates[topLeftCornerY]);
 
-    return new Pair<Integer, Integer>(x, y);
+    return new PatternPoint(x, y);
   }
 
   private BirthAndSurvivalConstraints parseMarkedRuleLine(final String line) {

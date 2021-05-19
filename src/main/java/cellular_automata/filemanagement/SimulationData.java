@@ -12,7 +12,7 @@ public class SimulationData {
   private List<String> comments;
   private String patternName;
   private String authorInformation;
-  private Pair<Integer, Integer> topLeftCorner;
+  private PatternPoint topLeftCorner;
   private BirthAndSurvivalConstraints constraints;
   private int width;
   private int height;
@@ -27,7 +27,7 @@ public class SimulationData {
 
   public SimulationData() {
     comments = new ArrayList<>();
-    topLeftCorner = new Pair<Integer, Integer>(0, 0);
+    topLeftCorner = new PatternPoint(0, 0);
     constraints = new BirthAndSurvivalConstraints();
   }
 
@@ -55,11 +55,11 @@ public class SimulationData {
     this.authorInformation = authorInformation;
   }
 
-  public Pair<Integer, Integer> getTopLeftCorner() {
+  public PatternPoint getTopLeftCorner() {
     return topLeftCorner;
   }
 
-  public void setTopLeftCorner(final Pair<Integer, Integer> topLeftCorner) {
+  public void setTopLeftCorner(final PatternPoint topLeftCorner) {
     this.topLeftCorner = topLeftCorner;
   }
 

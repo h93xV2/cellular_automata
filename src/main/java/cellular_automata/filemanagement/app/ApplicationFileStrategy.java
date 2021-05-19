@@ -20,11 +20,11 @@ public class ApplicationFileStrategy implements FileStrategy {
   @Override
   public SimulationData openFile(final File fileToOpen) {
     final ObjectMapper objectMapper = new ObjectMapper();
-
+    
     try {
       return objectMapper.readValue(fileToOpen, SimulationData.class);
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to open the requested game file.");
+      AlertMediator.notifyRecoverableError("Unable to open the requested game file.\n" + e.toString());
     }
 
     return null;

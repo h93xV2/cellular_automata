@@ -7,8 +7,8 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 
 import cellular_automata.cells.CellState;
+import cellular_automata.filemanagement.PatternPoint;
 import cellular_automata.filemanagement.SimulationData;
-import javafx.util.Pair;
 
 public class RunLengthEncodedFileParserTest {
   private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";
@@ -62,7 +62,7 @@ public class RunLengthEncodedFileParserTest {
 
     rleStrategy.parseLine(topLeftCorner, data);
 
-    assertEquals(new Pair<Integer, Integer>(5, 7), data.getTopLeftCorner());
+    assertEquals(new PatternPoint(5, 7), data.getTopLeftCorner());
   }
 
   @Test
@@ -72,7 +72,7 @@ public class RunLengthEncodedFileParserTest {
 
     rleStrategy.parseLine(topLeftCorner, data);
 
-    assertEquals(new Pair<Integer, Integer>(-13, -20), data.getTopLeftCorner());
+    assertEquals(new PatternPoint(-13, -20), data.getTopLeftCorner());
   }
 
   @Test
