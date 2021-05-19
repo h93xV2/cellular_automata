@@ -5,6 +5,7 @@ import java.util.List;
 
 import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
+import cellular_automata.cells.CellArrayCopier;
 import javafx.util.Pair;
 
 public class RunLengthEncodedData {
@@ -86,5 +87,13 @@ public class RunLengthEncodedData {
     for (Integer survivalNeighbors : constraints.getLiveNeighborsRequiredForSurvival()) {
       this.constraints.getLiveNeighborsRequiredForSurvival().add(survivalNeighbors);
     }
+  }
+
+  public Cell[][] getCells() {
+    return cells == null ? cells : CellArrayCopier.createCopy(cells);
+  }
+
+  public void setCells(final Cell[][] cells) {
+    this.cells = CellArrayCopier.createCopy(cells);
   }
 }

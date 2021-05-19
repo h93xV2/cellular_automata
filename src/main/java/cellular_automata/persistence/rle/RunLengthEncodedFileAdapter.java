@@ -10,14 +10,15 @@ import java.util.function.Consumer;
 import cellular_automata.AlertMediator;
 import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
+import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
 public class RunLengthEncodedFileAdapter {
   private static final int characterOffset = 2;
   private static final int topLeftCornerX = 0;
   private static final int topLeftCornerY = 1;
-  private static final String endOfLine = "$";
-  private static final String endOfPattern = "!";
+  private static final String endOfLineSplitter = "\\$";
+  private static final String endOfPatternMarker = "!";
 
   private RunLengthEncodedFileAdapter() {
   }
@@ -29,7 +30,11 @@ public class RunLengthEncodedFileAdapter {
       var line = "";
 
       while ((line = reader.readLine()) != null) {
-        parseLine(line, data);
+        try {
+          parseLine(line, data);
+        } catch (CellStateLineDetectedException e) {
+
+        }
       }
 
       return data;
@@ -126,5 +131,41 @@ public class RunLengthEncodedFileAdapter {
         throw new RuntimeException();
       }
     }
+  }
+
+  static void parseRunLengthEncodedLine(final String line, final RunLengthEncodedData data) {
+    var processedLine = line.trim();
+    processedLine = processedLine.replace(" ", "");
+    processedLine = processedLine.replace(endOfPatternMarker, "");
+
+    final Cell[][] cells = new Cell[data.getWidth()][data.getHeight()];
+    final String[] cellRows = processedLine.split(endOfLineSplitter);
+
+    for (var x = 0; x < cellRows.length; x++) {
+      var y = 0;
+      var count = 0;
+
+      for (var i = 0; i < cellRows[x].length(); i++) {
+        var character = cellRows[x].charAt(i);
+
+        if (Character.isDigit(character)) {
+          count = (count * 10) + character;
+        } else {
+          if (count == 0) {
+            count ++;
+          }
+          
+          while (count > 0) {
+            final Cell cell = new Cell();
+            cell.setState(CellState.getRleCellStateSymbolToCellStateMap().get(String.valueOf(character)));
+            cells[x][y] = cell;
+            count--;
+            y++;
+          }
+        }
+      }
+    }
+
+    data.setCells(cells);
   }
 }

@@ -2,11 +2,16 @@ package cellular_automata.persistence.rle;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+
 import org.junit.jupiter.api.Test;
 
+import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
 public class RunLengthEncodedFileAdapterTest {
+  private static final String testFilePath = "src/test/resources/testpattern.rle";
+
   @Test
   void parseCommentLineTypeOne() {
     final String commentLine = "#C hello world";
@@ -144,5 +149,45 @@ public class RunLengthEncodedFileAdapterTest {
     assertThrows(CellStateLineDetectedException.class, () -> {
       RunLengthEncodedFileAdapter.parseLine(cellInformation, new RunLengthEncodedData());
     });
+  }
+
+  @Test
+  void testFileProducesSomeOutput() {
+    final File testFile = new File(testFilePath);
+
+    assertNotNull(RunLengthEncodedFileAdapter.parseFile(testFile));
+  }
+
+  @Test
+  void testFileIsCorrectlyParsedForName() {
+    final File testFile = new File(testFilePath);
+
+    final RunLengthEncodedData data = RunLengthEncodedFileAdapter.parseFile(testFile);
+
+    assertEquals("hello world", data.getPatternName());
+  }
+
+  @Test
+  void testRleCellsCanBeDecoded() {
+    final String cellString = "o$!";
+    final RunLengthEncodedData data = new RunLengthEncodedData();
+    data.setWidth(1);
+    data.setHeight(1);
+    
+    RunLengthEncodedFileAdapter.parseRunLengthEncodedLine(cellString, data);
+    
+    assertNotNull(data.getCells());
+  }
+  
+  @Test
+  void testBasicRleCellsAreCorrectlyDecoded() {
+    final String cellString = "o$!";
+    final RunLengthEncodedData data = new RunLengthEncodedData();
+    data.setWidth(1);
+    data.setHeight(1);
+    
+    RunLengthEncodedFileAdapter.parseRunLengthEncodedLine(cellString, data);
+    
+    assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
   }
 }

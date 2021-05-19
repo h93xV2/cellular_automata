@@ -22,7 +22,7 @@ public class CellularAutomataApp extends Application {
     setPrimaryStage(stage);
 
     final ClassLoader classLoader = getClass().getClassLoader();
-    final File fxmlFile = new File(classLoader.getResource("main.xml").getFile());
+    final File fxmlFile = new File(classLoader.getResource("fxml/main.xml").getFile());
 
     try {
       final URL fxmlUrl = fxmlFile.toURI().toURL();

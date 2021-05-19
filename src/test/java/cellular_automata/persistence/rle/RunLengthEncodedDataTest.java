@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import cellular_automata.cells.BirthAndSurvivalConstraints;
+import cellular_automata.cells.Cell;
+import cellular_automata.cells.CellState;
 import javafx.util.Pair;
 
 public class RunLengthEncodedDataTest {
@@ -137,5 +139,48 @@ public class RunLengthEncodedDataTest {
     data.setBirthAndSurvivalConstraints(constraints);
 
     assertEquals(7, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
+  }
+
+  @Test
+  void cellsAreNullByDefault() {
+    final RunLengthEncodedData data = new RunLengthEncodedData();
+
+    assertNull(data.getCells());
+  }
+
+  @Test
+  void cellsCanBeSet() {
+    final RunLengthEncodedData data = new RunLengthEncodedData();
+    data.setCells(new Cell[1][1]);
+
+    assertNotNull(data.getCells());
+  }
+
+  @Test
+  void setCellsAreNotReferencedElsewhere() {
+    final RunLengthEncodedData data = new RunLengthEncodedData();
+
+    final Cell[][] cells = new Cell[1][1];
+    cells[0][0] = new Cell();
+
+    data.setCells(cells);
+
+    cells[0][0].toggleState();
+
+    assertEquals(CellState.DEAD, data.getCells()[0][0].getState());
+  }
+
+  @Test
+  void encapsulatedCellsCannotBeMutated() {
+    final RunLengthEncodedData data = new RunLengthEncodedData();
+
+    final Cell[][] cells = new Cell[1][1];
+    cells[0][0] = new Cell();
+
+    data.setCells(cells);
+
+    data.getCells()[0][0].toggleState();
+
+    assertEquals(CellState.DEAD, data.getCells()[0][0].getState());
   }
 }
