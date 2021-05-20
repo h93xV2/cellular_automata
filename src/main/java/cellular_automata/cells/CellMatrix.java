@@ -132,6 +132,8 @@ public class CellMatrix implements Cloneable {
     forEach((x, y) -> {
       if (x < cellsToLoad.length && y < cellsToLoad[0].length) {
         getCell(x, y).setState(cellsToLoad[x][y].getState());
+      } else {
+        getCell(x, y).setState(CellState.DEAD);
       }
     });
   }
