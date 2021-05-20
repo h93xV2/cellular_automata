@@ -31,12 +31,12 @@ public class PatternPoint {
 
   @Override
   public boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-
     if (!(obj instanceof PatternPoint)) {
       return false;
+    }
+    
+    if (this == obj) {
+      return true;
     }
 
     final PatternPoint point = (PatternPoint) obj;

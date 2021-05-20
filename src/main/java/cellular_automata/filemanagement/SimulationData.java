@@ -6,7 +6,6 @@ import java.util.List;
 import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellArrayCopier;
-import javafx.util.Pair;
 
 public class SimulationData {
   private List<String> comments;
