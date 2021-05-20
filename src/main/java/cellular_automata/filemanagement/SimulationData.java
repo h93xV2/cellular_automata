@@ -28,6 +28,7 @@ public class SimulationData {
     comments = new ArrayList<>();
     topLeftCorner = new PatternPoint(0, 0);
     constraints = new BirthAndSurvivalConstraints();
+    showGridLines = true;
   }
 
   public List<String> getComments() {

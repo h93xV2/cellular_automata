@@ -73,7 +73,7 @@ public class CellularAutomataController {
       final SimulationData saveData = fileSystem.openFromFile();
 
       if (saveData != null) {
-        board.getCells().forEach((x, y) -> board.getCells().getCell(x, y).setState(saveData.getCells()[x][y].getState()));
+        board.getCells().copyCellStates(saveData.getCells());
         board.setShowGridLines(saveData.getShowGridLines());
         board.getCells().lockCurrentStateAsSeed();
         board.drawCells();

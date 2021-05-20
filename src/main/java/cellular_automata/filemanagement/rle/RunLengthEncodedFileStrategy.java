@@ -35,15 +35,18 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
       final SimulationData data = new SimulationData();
 
       var line = "";
+      var encodedCellLines = new StringBuilder();
 
       while ((line = reader.readLine()) != null) {
         try {
           parseLine(line, data);
         } catch (CellStateLineDetectedException e) {
-          parseRunLengthEncodedLine(line, data);
+          encodedCellLines.append(line);
         }
       }
 
+      parseRunLengthEncodedLine(encodedCellLines.toString(), data);
+      
       return data;
     } catch (IOException e) {
       AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.");
@@ -156,7 +159,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
         var character = cellRows[y].charAt(i);
 
         if (Character.isDigit(character)) {
-          count = (count * 10) + character;
+          count = (count * 10) + Integer.valueOf(String.valueOf(character));
         } else {
           if (count == 0) {
             count++;
@@ -169,6 +172,14 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
             count--;
             x++;
           }
+        }
+      }
+      
+      // Dead cells at the end of the line are not encoded.
+      if (x < data.getWidth()) {
+        while (x < data.getWidth()) {
+          cells[x][y] = new Cell();
+          x ++;
         }
       }
     }

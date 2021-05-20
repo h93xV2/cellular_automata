@@ -10,13 +10,6 @@ import cellular_automata.cells.CellState;
 
 public class SimulationDataTest {
   @Test
-  void showGridLinesIsFalseByDefault() {
-    final SimulationData data = new SimulationData();
-
-    assertFalse(data.getShowGridLines());
-  }
-
-  @Test
   void cellsAreNullByDefault() {
     final SimulationData data = new SimulationData();
 
@@ -205,5 +198,12 @@ public class SimulationDataTest {
     data.getCells()[0][0].toggleState();
 
     assertEquals(CellState.DEAD, data.getCells()[0][0].getState());
+  }
+  
+  @Test
+  void showGridLinesIsTrueByDefault() {
+    final SimulationData data = new SimulationData();
+    
+    assertTrue(data.getShowGridLines());
   }
 }

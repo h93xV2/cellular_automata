@@ -127,4 +127,12 @@ public class CellMatrix implements Cloneable {
   public Cell[][] getWorkingCells() {
     return workingCells;
   }
+  
+  public void copyCellStates(final Cell[][] cellsToLoad) {
+    forEach((x, y) -> {
+      if (x < cellsToLoad.length && y < cellsToLoad[0].length) {
+        getCell(x, y).setState(cellsToLoad[x][y].getState());
+      }
+    });
+  }
 }
