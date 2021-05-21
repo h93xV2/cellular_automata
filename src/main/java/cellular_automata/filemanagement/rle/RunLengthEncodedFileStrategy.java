@@ -155,30 +155,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     final String[] cellRows = getEncodedCellRowsFromEncodedCellLine(line);
 
     for (var y = 0; y < cellRows.length; y++) {
-      var x = 0;
-      var count = 0;
-
-      for (var i = 0; i < cellRows[y].length(); i++) {
-        var character = cellRows[y].charAt(i);
-
-        if (Character.isDigit(character)) {
-          count = calculateDecodedCharacterCount(count, character);
-        } else {
-          if (count == 0) {
-            count++;
-          }
-
-          while (count > 0) {
-            cells[x][y] = buildCellFromCharacterRepresentation(character);
-            count--;
-            x++;
-          }
-        }
-      }
-
-      if (x < data.getWidth()) {
-        addImpliedDeadCells(data, cells, x, y);
-      }
+      decodeEncodedCellRow(cellRows, y, cells, data);
     }
 
     data.setCells(cells);
@@ -196,6 +173,34 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     processedLine = processedLine.replace(endOfPatternMarker, "");
 
     return processedLine;
+  }
+
+  private void decodeEncodedCellRow(final String[] cellRows, final int y, final Cell[][] cells,
+      final SimulationData data) {
+    var x = 0;
+    var count = 0;
+
+    for (var i = 0; i < cellRows[y].length(); i++) {
+      var character = cellRows[y].charAt(i);
+
+      if (Character.isDigit(character)) {
+        count = calculateDecodedCharacterCount(count, character);
+      } else {
+        if (count == 0) {
+          count++;
+        }
+
+        while (count > 0) {
+          cells[x][y] = buildCellFromCharacterRepresentation(character);
+          count--;
+          x++;
+        }
+      }
+    }
+
+    if (x < data.getWidth()) {
+      addImpliedDeadCells(data, cells, x, y);
+    }
   }
 
   private int calculateDecodedCharacterCount(final int count, final char character) {
