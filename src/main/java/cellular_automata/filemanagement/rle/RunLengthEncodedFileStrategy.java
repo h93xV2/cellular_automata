@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.function.Consumer;
 
 import cellular_automata.AlertMediator;
@@ -23,12 +22,12 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   private static final int topLeftCornerY = 1;
   private static final String endOfLineSplitter = "\\$";
   private static final String endOfPatternMarker = "!";
-  
+
   @Override
   public String getValidFileExtension() {
     return fileNameExtension;
   }
-  
+
   @Override
   public SimulationData openFile(final File fileToParse) {
     try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
@@ -46,13 +45,18 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
       }
 
       parseRunLengthEncodedLine(encodedCellLines.toString(), data);
-      
+
       return data;
     } catch (IOException e) {
       AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.");
     }
 
     return null;
+  }
+
+  @Override
+  public void saveFile(File fileToSaveTo, SimulationData data) {
+    AlertMediator.notifyRecoverableError("This operation is not supported at this time.");
   }
 
   void parseLine(final String line, final SimulationData data) {
@@ -103,12 +107,15 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     final String birthList = neighborLists[0].startsWith("B") ? neighborLists[0].substring(1) : neighborLists[1];
     final String survivalList = neighborLists[1].startsWith("S") ? neighborLists[1].substring(1) : neighborLists[0];
 
-    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
-    final List<Integer> neighborsRequiredForBirth = constraints.getLiveNeighborsRequiredForBirth();
-    final List<Integer> neighborsRequiredForSurvival = constraints.getLiveNeighborsRequiredForSurvival();
+    return buildConstraintsFromBirthAndSurvivalLists(birthList, survivalList);
+  }
 
-    parseNeighborList(birthList, neighborsRequiredForBirth::add);
-    parseNeighborList(survivalList, neighborsRequiredForSurvival::add);
+  private BirthAndSurvivalConstraints buildConstraintsFromBirthAndSurvivalLists(final String birthList,
+      final String survivalList) {
+    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+
+    parseNeighborList(birthList, constraints.getLiveNeighborsRequiredForBirth()::add);
+    parseNeighborList(survivalList, constraints.getLiveNeighborsRequiredForSurvival()::add);
 
     return constraints;
   }
@@ -144,12 +151,8 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   }
 
   void parseRunLengthEncodedLine(final String line, final SimulationData data) {
-    var processedLine = line.trim();
-    processedLine = processedLine.replace(" ", "");
-    processedLine = processedLine.replace(endOfPatternMarker, "");
-
     final Cell[][] cells = new Cell[data.getWidth()][data.getHeight()];
-    final String[] cellRows = processedLine.split(endOfLineSplitter);
+    final String[] cellRows = getEncodedCellRowsFromEncodedCellLine(line);
 
     for (var y = 0; y < cellRows.length; y++) {
       var x = 0;
@@ -159,36 +162,57 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
         var character = cellRows[y].charAt(i);
 
         if (Character.isDigit(character)) {
-          count = (count * 10) + Integer.valueOf(String.valueOf(character));
+          count = calculateDecodedCharacterCount(count, character);
         } else {
           if (count == 0) {
             count++;
           }
 
           while (count > 0) {
-            final Cell cell = new Cell();
-            cell.setState(CellState.getRleSymbolToCellStateMap().get(String.valueOf(character)));
-            cells[x][y] = cell;
+            cells[x][y] = buildCellFromCharacterRepresentation(character);
             count--;
             x++;
           }
         }
       }
-      
-      // Dead cells at the end of the line are not encoded.
+
       if (x < data.getWidth()) {
-        while (x < data.getWidth()) {
-          cells[x][y] = new Cell();
-          x ++;
-        }
+        addImpliedDeadCells(data, cells, x, y);
       }
     }
 
     data.setCells(cells);
   }
 
-  @Override
-  public void saveFile(File fileToSaveTo, SimulationData data) {
-    AlertMediator.notifyRecoverableError("This operation is not supported at this time.");
+  private String[] getEncodedCellRowsFromEncodedCellLine(final String line) {
+    final String processedLine = prepareCellLineForProcessing(line);
+
+    return processedLine.split(endOfLineSplitter);
+  }
+
+  private String prepareCellLineForProcessing(final String line) {
+    var processedLine = line.trim();
+    processedLine = processedLine.replace(" ", "");
+    processedLine = processedLine.replace(endOfPatternMarker, "");
+
+    return processedLine;
+  }
+
+  private int calculateDecodedCharacterCount(final int count, final char character) {
+    return (count * 10) + Integer.valueOf(String.valueOf(character));
+  }
+
+  private Cell buildCellFromCharacterRepresentation(final char character) {
+    final Cell cell = new Cell();
+    cell.setState(CellState.getRleSymbolToCellStateMap().get(String.valueOf(character)));
+
+    return cell;
+  }
+
+  private void addImpliedDeadCells(final SimulationData data, final Cell[][] cells, int x, final int y) {
+    while (x < data.getWidth()) {
+      cells[x][y] = new Cell();
+      x++;
+    }
   }
 }
