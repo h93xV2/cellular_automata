@@ -64,22 +64,27 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
 
     if (typeOfLineUnderInspection != null) {
-      switch (typeOfLineUnderInspection) {
-      case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
-      case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
-      case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
-      case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
-      case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
-      case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
-      case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseMarkedRuleLine(line));
-      default -> throw new RuntimeException();
-      }
+      populateDataFromMarkedLine(line, typeOfLineUnderInspection, data);
     } else {
       if (lineStart.startsWith("x")) {
         parseHeaderLine(line, data);
       } else {
         throw new CellStateLineDetectedException();
       }
+    }
+  }
+
+  private void populateDataFromMarkedLine(final String line, final LineType typeOfLineUnderInspection,
+      final SimulationData data) {
+    switch (typeOfLineUnderInspection) {
+    case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
+    case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
+    case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
+    case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
+    case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
+    case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
+    case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseMarkedRuleLine(line));
+    default -> throw new RuntimeException();
     }
   }
 
@@ -155,7 +160,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     final String[] cellRows = getEncodedCellRowsFromEncodedCellLine(line);
 
     for (var y = 0; y < cellRows.length; y++) {
-      decodeEncodedCellRow(cellRows, y, cells, data);
+      decodeEncodedCellRow(cellRows[y], y, cells, data);
     }
 
     data.setCells(cells);
@@ -175,14 +180,12 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     return processedLine;
   }
 
-  private void decodeEncodedCellRow(final String[] cellRows, final int y, final Cell[][] cells,
+  private void decodeEncodedCellRow(final String cellRow, final int y, final Cell[][] cells,
       final SimulationData data) {
     var x = 0;
     var count = 0;
 
-    for (var i = 0; i < cellRows[y].length(); i++) {
-      var character = cellRows[y].charAt(i);
-
+    for (var character : cellRow.toCharArray()) {
       if (Character.isDigit(character)) {
         count = calculateDecodedCharacterCount(count, character);
       } else {
