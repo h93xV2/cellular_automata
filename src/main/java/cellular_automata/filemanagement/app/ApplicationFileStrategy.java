@@ -24,7 +24,7 @@ public class ApplicationFileStrategy implements FileStrategy {
     try {
       return objectMapper.readValue(fileToOpen, SimulationData.class);
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to open the requested game file.\n" + e.toString());
+      AlertMediator.notifyRecoverableError("Unable to open the requested game file.", e);
     }
 
     return null;
@@ -37,7 +37,7 @@ public class ApplicationFileStrategy implements FileStrategy {
     try {
       objectMapper.writeValue(fileToSaveTo, data);
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to save the game data to the requested file.");
+      AlertMediator.notifyRecoverableError("Unable to save the game data to the requested file.", e);
     }
   }
 }

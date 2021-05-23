@@ -35,9 +35,9 @@ public class CellularAutomataController {
     try (final FileInputStream in = new FileInputStream(defaultPropertiesFile)) {
       defaultProperties.load(in);
     } catch (IOException e) {
-      AlertMediator.notifyNonRecoverableError("Unable to load the default application settings.");
+      AlertMediator.notifyNonRecoverableError("Unable to load the default application settings.", e);
     }
-    
+
     fileSystem = new FileSystemFacade(CellularAutomataApp.getPrimaryStage());
   }
 
@@ -51,7 +51,7 @@ public class CellularAutomataController {
     try {
       setUpBoardDimensions();
     } catch (NumberFormatException nfe) {
-      AlertMediator.notifyNonRecoverableError("Unable to establish the size of the window.");
+      AlertMediator.notifyNonRecoverableError("Unable to establish the size of the window.", nfe);
     }
 
     setUpBoardControls();
@@ -117,7 +117,7 @@ public class CellularAutomataController {
     try {
       initializeGameSpeedSlider();
     } catch (NumberFormatException nfe) {
-      AlertMediator.notifyNonRecoverableError("Unable to create the slider used to control speed.");
+      AlertMediator.notifyNonRecoverableError("Unable to create the slider used to control speed.", nfe);
     }
 
     gameSpeed.valueProperty().addListener((observableValue, oldValue, newValue) -> {

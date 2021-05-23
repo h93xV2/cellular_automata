@@ -48,15 +48,10 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
 
       return data;
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.");
+      AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.", e);
     }
 
     return null;
-  }
-
-  @Override
-  public void saveFile(File fileToSaveTo, SimulationData data) {
-    AlertMediator.notifyRecoverableError("This operation is not supported at this time.");
   }
 
   void parseLine(final String line, final SimulationData data) {
@@ -222,5 +217,10 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
       cells[x][y] = new Cell();
       x++;
     }
+  }
+
+  @Override
+  public void saveFile(File fileToSaveTo, SimulationData data) {
+    AlertMediator.notifyRecoverableError("This operation is not supported at this time.");
   }
 }

@@ -34,7 +34,8 @@ public class CellularAutomataApp extends Application {
       stage.setResizable(false);
       stage.show();
     } catch (IllegalArgumentException | IOException exception) {
-      AlertMediator.notifyNonRecoverableError("An error occurred while building the graphical user interface.");
+      AlertMediator.notifyNonRecoverableError("An error occurred while building the graphical user interface.",
+          exception);
     }
   }
 
