@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import cellular_automata.board.Board;
 import cellular_automata.filemanagement.FileSystemFacade;
 import cellular_automata.filemanagement.SimulationData;
 import javafx.fxml.FXML;

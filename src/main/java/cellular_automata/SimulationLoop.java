@@ -1,5 +1,6 @@
 package cellular_automata;
 
+import cellular_automata.board.Board;
 import cellular_automata.cells.CellMatrix;
 import javafx.animation.AnimationTimer;
 

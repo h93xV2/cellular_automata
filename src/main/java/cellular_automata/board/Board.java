@@ -1,4 +1,4 @@
-package cellular_automata;
+package cellular_automata.board;
 
 import cellular_automata.cells.CellMatrix;
 import cellular_automata.cells.CellState;
@@ -14,6 +14,7 @@ public class Board extends Canvas {
   private double workingCellWidth;
   private double workingCellHeight;
   private boolean showGridLines;
+  private boolean boardSetUp;
   private static final double lineWidth = 1.0;
 
   public void setUp(final int boardWidth, final int boardHeight, final int cellWidth, final int cellHeight) {
@@ -39,19 +40,22 @@ public class Board extends Canvas {
     });
 
     showGridLines = true;
-
+    boardSetUp = true;
+    
     drawCells();
   }
 
-  public int computeCellMatrixWidth() {
+  private int computeCellMatrixWidth() {
     return (int) (getHeight() / workingCellWidth);
   }
 
-  public int computeCellMatrixHeight() {
+  private int computeCellMatrixHeight() {
     return (int) (getWidth() / workingCellHeight);
   }
 
   public void drawCells() {
+    if (!boardSetUp) throw new BoardNotSetUpRuntimeException();
+    
     final GraphicsContext gc = getGraphicsContext2D();
 
     gc.setFill(Color.WHITE);
