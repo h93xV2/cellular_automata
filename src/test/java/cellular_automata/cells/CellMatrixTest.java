@@ -113,4 +113,25 @@ public class CellMatrixTest {
 
     assertTrue(aliveBeforeNext && deadAfterNext);
   }
+
+  @Test
+  void setCellOutOfBoundsNegativeX() {
+    final CellMatrix matrix = new CellMatrix(1, 1);
+
+    assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(-1, 0, new Cell()));
+  }
+
+  @Test
+  void setCellOutOfBoundsOverPositiveX() {
+    final CellMatrix matrix = new CellMatrix(1, 1);
+
+    assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(2, 0, new Cell()));
+  }
+
+  @Test
+  void setCellOutOfBoundsNegativeY() {
+    final CellMatrix matrix = new CellMatrix(1, 1);
+
+    assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(0, -1, new Cell()));
+  }
 }
