@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum LineType {
+enum LineType {
   COMMENT_TYPE_ONE("#C"),
   COMMENT_TYPE_TWO("#c"),
   PATTERN_NAME("#N"),
