@@ -134,4 +134,34 @@ public class CellMatrixTest {
 
     assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(0, -1, new Cell()));
   }
+
+  @Test
+  void createMatrixFromCellularArray() {
+    final Cell[][] sourceCells = new Cell[1][1];
+    sourceCells[0][0] = new Cell();
+    sourceCells[0][0].toggleState();
+
+    final CellState sourceState = sourceCells[0][0].getState();
+
+    final CellMatrix matrix = new CellMatrix(sourceCells);
+
+    assertEquals(sourceState, matrix.getCell(0, 0).getState());
+  }
+
+  @Test
+  void cellStatesCanBeCopied() {
+    final Cell[][] sourceCells = new Cell[1][1];
+    sourceCells[0][0] = new Cell();
+    sourceCells[0][0].setState(CellState.LIVE);
+
+    final CellMatrix matrix = new CellMatrix(1, 1);
+
+    final boolean matrixCellIsInitiallyDead = CellState.DEAD.equals(matrix.getCell(0, 0).getState());
+
+    matrix.copyCellStates(sourceCells);
+
+    final boolean matrixCellBecomesAlive = CellState.LIVE.equals(matrix.getCell(0, 0).getState());
+
+    assertTrue(matrixCellIsInitiallyDead && matrixCellBecomesAlive);
+  }
 }
