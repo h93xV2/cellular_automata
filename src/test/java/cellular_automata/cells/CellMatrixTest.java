@@ -206,4 +206,33 @@ public class CellMatrixTest {
 
     assertEquals(CellState.DEAD, matrix.getCell(0, 1).getState());
   }
+
+  @Test
+  void threeCellsCauseBirth() {
+    final CellMatrix matrix = new CellMatrix(2, 2);
+    matrix.getCell(0, 0).toggleState();
+    matrix.getCell(0, 1).toggleState();
+    matrix.getCell(1, 0).toggleState();
+
+    final boolean cellIsDeadInitially = CellState.DEAD.equals(matrix.getCell(1, 1).getState());
+
+    matrix.next();
+
+    final boolean cellIsAlive = CellState.LIVE.equals(matrix.getCell(1, 1).getState());
+
+    assertTrue(cellIsDeadInitially && cellIsAlive);
+  }
+
+  @Test
+  void cellDiesFromOverPopulation() {
+    final CellMatrix matrix = new CellMatrix(2, 3);
+    matrix.getCell(0, 0).toggleState();
+    matrix.getCell(0, 1).toggleState();
+    matrix.getCell(1, 0).toggleState();
+    matrix.getCell(1, 1).toggleState();
+    matrix.getCell(0, 2).toggleState();
+    matrix.next();
+
+    assertEquals(CellState.DEAD, matrix.getCell(0, 1).getState());
+  }
 }
