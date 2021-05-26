@@ -39,4 +39,20 @@ public class SimulationLoopTest {
 
     assertTrue(cellIsAliveBeforeLoop && cellIsDeadAfterLoop && cellIsAliveAfterReset);
   }
+  
+  @Test
+  void theLoopCanBeCleared() {
+    final Board board = new Board();
+    board.setUp(1, 1, 1, 1);
+    board.getCells().getCell(0, 0).toggleState();
+    
+    final boolean cellIsAliveBefore = CellState.LIVE.equals(board.getCells().getCell(0, 0).getState());
+    
+    final SimulationLoop loop = new SimulationLoop(board, 1);
+    loop.clear();
+    
+    final boolean cellIsDeadAfterClear = CellState.DEAD.equals(board.getCells().getCell(0, 0).getState());
+    
+    assertTrue(cellIsAliveBefore && cellIsDeadAfterClear);
+  }
 }
