@@ -186,4 +186,24 @@ public class CellMatrixTest {
 
     assertEquals(CellState.DEAD, matrix.getCell(0, 0).getState());
   }
+
+  @Test
+  void matrixIsHorizontallyBiggerThanArray() {
+    final Cell[][] sourceCells = new Cell[1][1];
+
+    final CellMatrix matrix = new CellMatrix(2, 1);
+    matrix.copyCellStates(sourceCells);
+
+    assertEquals(CellState.DEAD, matrix.getCell(1, 0).getState());
+  }
+
+  @Test
+  void matrixIsVerticallyBiggerThanArray() {
+    final Cell[][] sourceCells = new Cell[1][1];
+
+    final CellMatrix matrix = new CellMatrix(1, 2);
+    matrix.copyCellStates(sourceCells);
+
+    assertEquals(CellState.DEAD, matrix.getCell(0, 1).getState());
+  }
 }
