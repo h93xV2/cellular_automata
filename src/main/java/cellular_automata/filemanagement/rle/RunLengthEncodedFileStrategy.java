@@ -145,7 +145,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
       } else if (attribute.startsWith("rule")) {
         data.setBirthAndSurvivalConstraints(parseRuleData(attributeParts[1].trim()));
       } else {
-        throw new RuntimeException();
+        throw new UnknownHeaderAttributeException();
       }
     }
   }

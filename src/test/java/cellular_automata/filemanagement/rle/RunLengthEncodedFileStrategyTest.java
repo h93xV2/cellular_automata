@@ -6,11 +6,12 @@ import java.io.File;
 
 import org.junit.jupiter.api.Test;
 
+import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.filemanagement.PatternPoint;
 import cellular_automata.filemanagement.SimulationData;
 
-public class RunLengthEncodedFileParserTest {
+public class RunLengthEncodedFileStrategyTest {
   private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";
   private static final String footballTestFilePath = "src/test/resources/football.rle";
   private final RunLengthEncodedFileStrategy rleStrategy = new RunLengthEncodedFileStrategy();
@@ -202,13 +203,55 @@ public class RunLengthEncodedFileParserTest {
 
     assertEquals(CellState.LIVE, data.getCells()[0][0].getState());
   }
-  
+
   @Test
   void testFootballFile() {
     final File testFile = new File(footballTestFilePath);
-    
+
     final SimulationData data = rleStrategy.openFile(testFile);
-    
+
     assertEquals(CellState.LIVE, data.getCells()[1][3].getState());
   }
+
+  @Test
+  void parseHeaderLineWithUnrecognizedAttribute() {
+    final String headerString = "x = 3, y=4, rule=B3/S23, wasd=wasd";
+
+    assertThrows(UnknownHeaderAttributeException.class,
+        () -> rleStrategy.parseLine(headerString, new SimulationData()));
+  }
+
+  @Test
+  void parseEncodedCellLine() {
+    final String cellLine = "3o!";
+    final SimulationData data = new SimulationData();
+    data.setWidth(3);
+    data.setHeight(1);
+
+    rleStrategy.parseRunLengthEncodedLine(cellLine, data);
+
+    final Cell[][] cells = data.getCells();
+    var cellsAreAlive = true;
+
+    for (var i = 0; i < cells.length; i++) {
+      cellsAreAlive &= CellState.LIVE.equals(cells[i][0].getState());
+    }
+
+    assertTrue(cellsAreAlive);
+  }
+
+  @Test
+  void impliedDeadCellsAreCreated() {
+    final String cellLine = "3o!";
+    final SimulationData data = new SimulationData();
+    data.setWidth(4);
+    data.setHeight(1);
+
+    rleStrategy.parseRunLengthEncodedLine(cellLine, data);
+
+    assertEquals(CellState.DEAD, data.getCells()[3][0].getState());
+  }
+
+  // TODO: Test data that has no width/height.
+  // TODO: Test data that has implied dead cells.
 }
