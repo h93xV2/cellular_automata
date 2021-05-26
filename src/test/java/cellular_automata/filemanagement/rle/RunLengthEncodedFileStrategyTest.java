@@ -251,7 +251,4 @@ public class RunLengthEncodedFileStrategyTest {
 
     assertEquals(CellState.DEAD, data.getCells()[3][0].getState());
   }
-
-  // TODO: Test data that has no width/height.
-  // TODO: Test data that has implied dead cells.
 }
