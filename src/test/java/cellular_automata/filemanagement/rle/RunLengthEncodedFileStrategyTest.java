@@ -6,6 +6,7 @@ import java.io.File;
 
 import org.junit.jupiter.api.Test;
 
+import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.filemanagement.PatternPoint;
@@ -106,7 +107,6 @@ public class RunLengthEncodedFileStrategyTest {
     assertTrue(data.getBirthAndSurvivalConstraints().getTotalSurvivalNeighborCounts() == 0);
   }
 
-  
   @Test
   void parseDifferentFormatBirthConstraints() {
     final String cellRules = "#r 35/7";
@@ -263,5 +263,16 @@ public class RunLengthEncodedFileStrategyTest {
     rleStrategy.parseRunLengthEncodedLine(cellLine, data);
 
     assertEquals(CellState.DEAD, data.getCells()[0][0].getState());
+  }
+
+  @Test
+  void fileWithoutRulesDefaultsToConwaysGameOfLife() {
+    final File testFile = new File(simpleTestFilePath);
+    final SimulationData data = rleStrategy.openFile(testFile);
+    final BirthAndSurvivalConstraints constraints = data.getBirthAndSurvivalConstraints();
+
+    assertTrue(constraints.getTotalBirthNeighborCounts() == 1 && constraints.getTotalSurvivalNeighborCounts() == 2
+        && constraints.isCountWithinBirthSet(3) && constraints.isCountWithinSurvivalSet(2)
+        && constraints.isCountWithinSurvivalSet(3));
   }
 }
