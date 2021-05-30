@@ -182,7 +182,8 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
       if (Character.isDigit(character)) {
         count = calculateDecodedCharacterCount(count, character);
       } else {
-        if (count == 0) count++;
+        if (count == 0)
+          count++;
 
         while (count > 0) {
           cells[x][y] = buildCellFromCharacterRepresentation(character);
@@ -192,7 +193,8 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
       }
     }
 
-    if (x < data.getWidth()) addImpliedDeadCells(data, cells, x, y);
+    if (x < data.getWidth())
+      addImpliedDeadCells(data, cells, x, y);
   }
 
   private int calculateDecodedCharacterCount(final int count, final char character) {
