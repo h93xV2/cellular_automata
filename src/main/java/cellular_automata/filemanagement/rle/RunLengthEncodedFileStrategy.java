@@ -206,8 +206,12 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   }
 
   private Cell buildCellFromCharacterRepresentation(final char character) {
+    final String stateSymbol = String.valueOf(character);
     final Cell cell = new Cell();
-    cell.setState(CellState.getRleSymbolToCellStateMap().get(String.valueOf(character)));
+    
+    if (CellState.getRleSymbolToCellStateMap().containsKey(stateSymbol)) {
+      cell.setState(CellState.getRleSymbolToCellStateMap().get(stateSymbol));
+    }
 
     return cell;
   }

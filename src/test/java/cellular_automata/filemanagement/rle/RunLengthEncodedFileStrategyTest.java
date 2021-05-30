@@ -241,7 +241,7 @@ public class RunLengthEncodedFileStrategyTest {
   }
 
   @Test
-  void impliedDeadCellsAreCreated() {
+  void impliedDeadCellsAtEndOfPatternLine() {
     final String cellLine = "3o!";
     final SimulationData data = new SimulationData();
     data.setWidth(4);
@@ -250,5 +250,17 @@ public class RunLengthEncodedFileStrategyTest {
     rleStrategy.parseRunLengthEncodedLine(cellLine, data);
 
     assertEquals(CellState.DEAD, data.getCells()[3][0].getState());
+  }
+
+  @Test
+  void unknownCellStatesAreDefaultedToDead() {
+    final String cellLine = "abo!";
+    final SimulationData data = new SimulationData();
+    data.setWidth(3);
+    data.setHeight(1);
+
+    rleStrategy.parseRunLengthEncodedLine(cellLine, data);
+
+    assertEquals(CellState.DEAD, data.getCells()[0][0].getState());
   }
 }
