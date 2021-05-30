@@ -142,37 +142,6 @@ public class SimulationDataTest {
   }
 
   @Test
-  void gitBirthAndSurvivalConstraints() {
-    final SimulationData data = new SimulationData();
-    final BirthAndSurvivalConstraints constraints = data.getBirthAndSurvivalConstraints();
-
-    assertTrue(constraints.getLiveNeighborsRequiredForBirth().isEmpty()
-        && constraints.getLiveNeighborsRequiredForSurvival().isEmpty());
-  }
-
-  @Test
-  void birthConstraintsCanBeSet() {
-    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
-    constraints.addBirthNeighborCount(20);
-
-    final SimulationData data = new SimulationData();
-    data.setBirthAndSurvivalConstraints(constraints);
-
-    assertEquals(20, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
-  }
-
-  @Test
-  void survivalConstraintsCanBeSet() {
-    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
-    constraints.addSurvivalNeighborCount(7);
-
-    final SimulationData data = new SimulationData();
-    data.setBirthAndSurvivalConstraints(constraints);
-
-    assertEquals(7, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
-  }
-
-  @Test
   void setCellsAreNotReferencedElsewhere() {
     final SimulationData data = new SimulationData();
 
@@ -199,11 +168,23 @@ public class SimulationDataTest {
 
     assertEquals(CellState.DEAD, data.getCells()[0][0].getState());
   }
-  
+
   @Test
   void showGridLinesIsTrueByDefault() {
     final SimulationData data = new SimulationData();
-    
+
     assertTrue(data.getShowGridLines());
+  }
+
+  @Test
+  void birthAndSurvivalConstraintsCanBeSet() {
+    final SimulationData data = new SimulationData();
+    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+    constraints.clearBirthNeighborCounts();
+    constraints.addBirthNeighborCount(5);
+    data.setBirthAndSurvivalConstraints(constraints);
+
+    assertTrue(data.getBirthAndSurvivalConstraints().getTotalBirthNeighborCounts() == 1
+        && data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(5));
   }
 }

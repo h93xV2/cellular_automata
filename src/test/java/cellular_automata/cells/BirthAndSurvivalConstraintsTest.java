@@ -6,17 +6,31 @@ import org.junit.jupiter.api.Test;
 
 public class BirthAndSurvivalConstraintsTest {
   @Test
-  void birthNeighborsEmpty() {
+  void birthNeighborSizeIsOne() {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
 
-    assertTrue(constraints.getLiveNeighborsRequiredForBirth().isEmpty());
+    assertEquals(1, constraints.getTotalBirthNeighborCounts());
   }
 
   @Test
-  void survivalNeighborsEmpty() {
+  void neighborsRequiredForBirthIsThree() {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
 
-    assertTrue(constraints.getLiveNeighborsRequiredForSurvival().isEmpty());
+    assertTrue(constraints.isCountWithinBirthSet(3));
+  }
+
+  @Test
+  void survivalNeighborSizeIsTwo() {
+    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+
+    assertEquals(2, constraints.getTotalSurvivalNeighborCounts());
+  }
+
+  @Test
+  void liveNeighborsRequiredForSurvivalIsTwoOrThree() {
+    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+
+    assertTrue(constraints.isCountWithinSurvivalSet(2) && constraints.isCountWithinSurvivalSet(3));
   }
 
   @Test
@@ -24,7 +38,7 @@ public class BirthAndSurvivalConstraintsTest {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
     constraints.addBirthNeighborCount(10);
 
-    assertEquals(10, constraints.getLiveNeighborsRequiredForBirth().get(0));
+    assertTrue(constraints.isCountWithinBirthSet(10));
   }
 
   @Test
@@ -32,6 +46,22 @@ public class BirthAndSurvivalConstraintsTest {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
     constraints.addSurvivalNeighborCount(13);
 
-    assertEquals(13, constraints.getLiveNeighborsRequiredForSurvival().get(0));
+    assertTrue(constraints.isCountWithinSurvivalSet(13));
+  }
+
+  @Test
+  void birthCountsCanBeCleared() {
+    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+    constraints.clearBirthNeighborCounts();
+
+    assertEquals(0, constraints.getTotalBirthNeighborCounts());
+  }
+
+  @Test
+  void survivalCountsCanBeCleared() {
+    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+    constraints.clearSurvivalNeighborCounts();
+
+    assertEquals(0, constraints.getTotalSurvivalNeighborCounts());
   }
 }

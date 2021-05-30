@@ -78,12 +78,12 @@ public class RunLengthEncodedFileStrategyTest {
 
   @Test
   void parseBirthConstraints() {
-    final String cellRules = "#r B3/S23";
+    final String cellRules = "#r B7/S23";
     final SimulationData data = new SimulationData();
 
     rleStrategy.parseLine(cellRules, data);
 
-    assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
+    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(7));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class RunLengthEncodedFileStrategyTest {
 
     rleStrategy.parseLine(cellRules, data);
 
-    assertEquals(9, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().get(0));
+    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinSurvivalSet(9));
   }
 
   @Test
@@ -103,17 +103,18 @@ public class RunLengthEncodedFileStrategyTest {
 
     rleStrategy.parseLine(cellRules, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForSurvival().isEmpty());
+    assertTrue(data.getBirthAndSurvivalConstraints().getTotalSurvivalNeighborCounts() == 0);
   }
 
+  
   @Test
   void parseDifferentFormatBirthConstraints() {
-    final String cellRules = "#r 23/3";
+    final String cellRules = "#r 35/7";
     final SimulationData data = new SimulationData();
 
     rleStrategy.parseLine(cellRules, data);
 
-    assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
+    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(7));
   }
 
   @Test
@@ -138,12 +139,12 @@ public class RunLengthEncodedFileStrategyTest {
 
   @Test
   void cellRulesAreParsedFromTheHeaderLine() {
-    final String header = "x = 30, y = 20, rule = B3/S23";
+    final String header = "x = 30, y = 20, rule = B2/S45";
     final SimulationData data = new SimulationData();
 
     rleStrategy.parseLine(header, data);
 
-    assertEquals(3, data.getBirthAndSurvivalConstraints().getLiveNeighborsRequiredForBirth().get(0));
+    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(2));
   }
 
   @Test

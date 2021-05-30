@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import cellular_automata.AlertMediator;
@@ -72,14 +73,14 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   private void populateDataFromMarkedLine(final String line, final LineType typeOfLineUnderInspection,
       final SimulationData data) {
     switch (typeOfLineUnderInspection) {
-    case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
-    case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
-    case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
-    case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
-    case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
-    case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
-    case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseMarkedRuleLine(line));
-    default -> throw new RuntimeException();
+      case COMMENT_TYPE_ONE -> data.addComment(parseInformationLine(line));
+      case COMMENT_TYPE_TWO -> data.addComment(parseInformationLine(line));
+      case PATTERN_NAME -> data.setPatternName(parseInformationLine(line));
+      case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
+      case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
+      case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
+      case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseMarkedRuleLine(line));
+      default -> throw new RuntimeException();
     }
   }
 
@@ -113,21 +114,18 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   private BirthAndSurvivalConstraints buildConstraintsFromBirthAndSurvivalLists(final String birthList,
       final String survivalList) {
     final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
+    constraints.clearBirthNeighborCounts();
+    constraints.clearSurvivalNeighborCounts();
 
-    parseNeighborList(birthList, constraints.getLiveNeighborsRequiredForBirth()::add);
-    parseNeighborList(survivalList, constraints.getLiveNeighborsRequiredForSurvival()::add);
+    parseNeighborList(birthList, constraints::addBirthNeighborCount);
+    parseNeighborList(survivalList, constraints::addSurvivalNeighborCount);
 
     return constraints;
   }
 
   private void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
-    final String[] neighbors = neighborList.split("");
-
-    for (var neighborCount : neighbors) {
-      if (!"".equals(neighborCount)) {
-        neighborConsumer.accept(Integer.parseInt(neighborCount));
-      }
-    }
+    Arrays.asList(neighborList.split("")).stream().filter(neighborString -> !neighborString.isBlank())
+        .map(Integer::parseInt).forEach(neighborConsumer::accept);
   }
 
   private void parseHeaderLine(final String line, final SimulationData data) {
@@ -208,7 +206,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   private Cell buildCellFromCharacterRepresentation(final char character) {
     final String stateSymbol = String.valueOf(character);
     final Cell cell = new Cell();
-    
+
     if (CellState.getRleSymbolToCellStateMap().containsKey(stateSymbol)) {
       cell.setState(CellState.getRleSymbolToCellStateMap().get(stateSymbol));
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cellular_automata.cells.BirthAndSurvivalConstraints;
+import cellular_automata.cells.BirthAndSurvivalConstraintsCopier;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellArrayCopier;
 
@@ -84,16 +85,7 @@ public class SimulationData {
   }
 
   public void setBirthAndSurvivalConstraints(final BirthAndSurvivalConstraints constraints) {
-    this.constraints.getLiveNeighborsRequiredForBirth().clear();
-    this.constraints.getLiveNeighborsRequiredForSurvival().clear();
-
-    for (Integer birthNeighbors : constraints.getLiveNeighborsRequiredForBirth()) {
-      this.constraints.getLiveNeighborsRequiredForBirth().add(birthNeighbors);
-    }
-
-    for (Integer survivalNeighbors : constraints.getLiveNeighborsRequiredForSurvival()) {
-      this.constraints.getLiveNeighborsRequiredForSurvival().add(survivalNeighbors);
-    }
+    BirthAndSurvivalConstraintsCopier.copy(constraints, this.constraints);
   }
 
   public Cell[][] getCells() {
