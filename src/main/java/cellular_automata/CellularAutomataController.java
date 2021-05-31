@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import cellular_automata.board.Board;
-import cellular_automata.filemanagement.FileSystemFacade;
+import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.SimulationData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,7 +25,7 @@ public class CellularAutomataController {
   @FXML private Button clearGame;
   @FXML private Slider gameSpeed;
   private final Properties defaultProperties;
-  private final FileSystemFacade fileSystem;
+  private final FileSystemCoordinator fileSystem;
 
   public CellularAutomataController() {
     defaultProperties = new Properties();
@@ -39,7 +39,7 @@ public class CellularAutomataController {
       AlertMediator.notifyNonRecoverableError("Unable to load the default application settings.", e);
     }
 
-    fileSystem = new FileSystemFacade(CellularAutomataApp.getPrimaryStage());
+    fileSystem = new FileSystemCoordinator(CellularAutomataApp.getPrimaryStage());
   }
 
   public void initialize() {

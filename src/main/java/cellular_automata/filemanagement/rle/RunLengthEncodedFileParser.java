@@ -11,11 +11,11 @@ import cellular_automata.AlertMediator;
 import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
-import cellular_automata.filemanagement.FileStrategy;
+import cellular_automata.filemanagement.FileParser;
 import cellular_automata.filemanagement.PatternPoint;
 import cellular_automata.filemanagement.SimulationData;
 
-public class RunLengthEncodedFileStrategy implements FileStrategy {
+public class RunLengthEncodedFileParser implements FileParser {
   private static final String fileNameExtension = ".rle";
 
   private static final int characterOffset = 2;
@@ -23,6 +23,8 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
   private static final int topLeftCornerY = 1;
   private static final String endOfLineSplitter = "\\$";
   private static final String endOfPatternMarker = "!";
+  private static final String startOfHeaderLineCharacter = "x";
+  private static final String coordinateComponentSeparator = " ";
 
   @Override
   public String getValidFileExtension() {
@@ -71,7 +73,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
     if (typeOfLineUnderInspection != null) {
       populateDataFromMarkedLine(line, typeOfLineUnderInspection, data);
     } else {
-      if (lineStart.startsWith("x")) {
+      if (lineStart.startsWith(startOfHeaderLineCharacter)) {
         parseHeaderLine(line, data);
       } else {
         throw new CellStateLineDetectedException();
@@ -99,7 +101,7 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
 
   private PatternPoint parseTopLeftCorner(final String line) {
     final String strippedLine = parseInformationLine(line);
-    final String[] coordinates = strippedLine.split(" ");
+    final String[] coordinates = strippedLine.split(coordinateComponentSeparator);
     final int x = Integer.valueOf(coordinates[topLeftCornerX]);
     final int y = Integer.valueOf(coordinates[topLeftCornerY]);
 

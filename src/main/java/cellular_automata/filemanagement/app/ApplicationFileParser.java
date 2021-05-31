@@ -6,10 +6,10 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cellular_automata.AlertMediator;
-import cellular_automata.filemanagement.FileStrategy;
+import cellular_automata.filemanagement.FileParser;
 import cellular_automata.filemanagement.SimulationData;
 
-public class ApplicationFileStrategy implements FileStrategy {
+public class ApplicationFileParser implements FileParser {
   private static final String fileNameExtension = ".json";
   
   @Override

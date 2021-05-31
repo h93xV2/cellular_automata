@@ -3,26 +3,26 @@ package cellular_automata.filemanagement;
 import java.io.File;
 import java.util.*;
 
-import cellular_automata.filemanagement.app.ApplicationFileStrategy;
-import cellular_automata.filemanagement.rle.RunLengthEncodedFileStrategy;
+import cellular_automata.filemanagement.app.ApplicationFileParser;
+import cellular_automata.filemanagement.rle.RunLengthEncodedFileParser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
-public class FileSystemFacade {
+public class FileSystemCoordinator {
   private final Window ownerWindow;
-  private final ApplicationFileStrategy appFileStrategy;
-  private final RunLengthEncodedFileStrategy rleFileStrategy;
-  private final Map<String, FileStrategy> fileExtensionToStrategyMap;
+  private final ApplicationFileParser appFileStrategy;
+  private final RunLengthEncodedFileParser rleFileStrategy;
+  private final Map<String, FileParser> fileExtensionToStrategyMap;
   private final FileChooser.ExtensionFilter applicationFileFilter;
   private final FileChooser.ExtensionFilter runLengthEncodedFileFilter;
   private final FileChooser openFileChooser;
   private final FileChooser saveFileChooser;
 
-  public FileSystemFacade(final Window ownerWindow) {
+  public FileSystemCoordinator(final Window ownerWindow) {
     this.ownerWindow = ownerWindow;
 
-    appFileStrategy = new ApplicationFileStrategy();
-    rleFileStrategy = new RunLengthEncodedFileStrategy();
+    appFileStrategy = new ApplicationFileParser();
+    rleFileStrategy = new RunLengthEncodedFileParser();
 
     applicationFileFilter = new FileChooser.ExtensionFilter(
         "App specific save files (*" + appFileStrategy.getValidFileExtension() + ")",
