@@ -36,12 +36,21 @@ public class RunLengthEncodedFileStrategy implements FileStrategy {
 
       var line = "";
       var encodedCellLines = new StringBuilder();
+      var endOfPatternReached = false;
 
       while ((line = reader.readLine()) != null) {
         try {
           parseLine(line, data);
         } catch (CellStateLineDetectedException e) {
-          encodedCellLines.append(line);
+          if (!endOfPatternReached) {
+            encodedCellLines.append(line);
+            
+            if (line.contains(endOfPatternMarker)) {
+              endOfPatternReached = true;
+            }
+          } else {
+            data.getComments().add(line);
+          }
         }
       }
 

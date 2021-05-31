@@ -3,6 +3,7 @@ package cellular_automata.filemanagement.rle;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +16,7 @@ import cellular_automata.filemanagement.SimulationData;
 public class RunLengthEncodedFileStrategyTest {
   private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";
   private static final String footballTestFilePath = "src/test/resources/football.rle";
+  private static final String commentsAfterPatternFilePath = "src/test/resources/commentsafterpattern.rle";
   private final RunLengthEncodedFileStrategy rleStrategy = new RunLengthEncodedFileStrategy();
 
   @Test
@@ -274,5 +276,14 @@ public class RunLengthEncodedFileStrategyTest {
     assertTrue(constraints.getTotalBirthNeighborCounts() == 1 && constraints.getTotalSurvivalNeighborCounts() == 2
         && constraints.isCountWithinBirthSet(3) && constraints.isCountWithinSurvivalSet(2)
         && constraints.isCountWithinSurvivalSet(3));
+  }
+
+  @Test
+  void linesAfterThePatternEndAreTreatedAsComments() {
+    final File testFile = new File(commentsAfterPatternFilePath);
+    final SimulationData data = rleStrategy.openFile(testFile);
+    final List<String> comments = data.getComments();
+
+    assertEquals("This is a comment", comments.get(0));
   }
 }
