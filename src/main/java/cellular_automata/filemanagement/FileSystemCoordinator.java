@@ -53,7 +53,7 @@ public class FileSystemCoordinator {
   }
 
   public void saveToFile(final SimulationData data) {
-    final File fileToSaveTo = openFileChooser.showSaveDialog(ownerWindow);
+    final File fileToSaveTo = saveFileChooser.showSaveDialog(ownerWindow);
 
     appFileStrategy.saveFile(fileToSaveTo, data);
   }
