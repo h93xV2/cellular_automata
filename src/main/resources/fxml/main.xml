@@ -22,7 +22,7 @@
       <MenuItem fx:id="saveFile" text="Save" />
     </Menu>
     <Menu text="Board">
-      <MenuItem fx:id="showGridLines" text="Show grid lines" />
+      <MenuItem fx:id="showGridLines" text="Toggle grid lines" />
     </Menu>
   </MenuBar>
   <ToolBar>
