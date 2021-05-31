@@ -16,7 +16,7 @@ import javafx.scene.control.Slider;
 public class CellularAutomataController {
   @FXML private MenuItem openFile;
   @FXML private MenuItem saveFile;
-  @FXML private MenuItem showGridLines;
+  @FXML private MenuItem toggleGridLines;
   @FXML private Board board;
   @FXML private Button startGame;
   @FXML private Button stopGame;
@@ -101,7 +101,7 @@ public class CellularAutomataController {
   }
 
   private void setUpBoardControls() {
-    showGridLines.setOnAction(event -> {
+    toggleGridLines.setOnAction(event -> {
       board.toggleGridLines();
       board.drawCells();
     });
