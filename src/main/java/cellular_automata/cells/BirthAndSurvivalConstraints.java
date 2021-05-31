@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "totalBirthNeighborCounts", "totalSurvivalNeighborCounts" })
 public class BirthAndSurvivalConstraints {
   private Set<Integer> neighborsRequiredForBirth;
   private Set<Integer> neighborsRequiredForSurvival;

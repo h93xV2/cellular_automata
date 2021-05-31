@@ -10,6 +10,7 @@ public class CellMatrix implements Cloneable {
   private Cell[][] workingCells;
   private int width;
   private int height;
+  private BirthAndSurvivalConstraints constraints;
 
   public CellMatrix(final int width, final int height) {
     this(new Cell[width][height]);
@@ -21,6 +22,7 @@ public class CellMatrix implements Cloneable {
     seedCells = new Cell[this.width][this.height];
     tempCells = new Cell[this.width][this.height];
     workingCells = new Cell[this.width][this.height];
+    constraints = new BirthAndSurvivalConstraints();
 
     forEach((x, y) -> {
       final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
@@ -84,11 +86,11 @@ public class CellMatrix implements Cloneable {
   }
 
   private boolean resurrect(final Cell currentCell, final int liveNeighbors) {
-    return CellState.DEAD.equals(currentCell.getState()) && liveNeighbors == 3;
+    return CellState.DEAD.equals(currentCell.getState()) && constraints.isCountWithinBirthSet(liveNeighbors);
   }
 
   private boolean kill(final Cell currentCell, final int liveNeighbors) {
-    return CellState.LIVE.equals(currentCell.getState()) && !(liveNeighbors == 3 || liveNeighbors == 2);
+    return CellState.LIVE.equals(currentCell.getState()) && !constraints.isCountWithinSurvivalSet(liveNeighbors);
   }
 
   private int countLiveNeighbors(final int x, final int y) {
@@ -127,7 +129,7 @@ public class CellMatrix implements Cloneable {
   public Cell[][] getWorkingCells() {
     return workingCells;
   }
-  
+
   public void copyCellStates(final Cell[][] cellsToLoad) {
     forEach((x, y) -> {
       if (x < cellsToLoad.length && y < cellsToLoad[0].length && cellsToLoad[x][y] != null) {
@@ -136,5 +138,9 @@ public class CellMatrix implements Cloneable {
         getCell(x, y).setState(CellState.DEAD);
       }
     });
+  }
+
+  public void copyConstraints(final BirthAndSurvivalConstraints constraints) {
+    BirthAndSurvivalConstraintsCopier.copy(constraints, this.constraints);
   }
 }

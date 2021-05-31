@@ -75,6 +75,7 @@ public class CellularAutomataController {
 
       if (saveData != null) {
         board.getCells().copyCellStates(saveData.getCells());
+        board.getCells().copyConstraints(saveData.getBirthAndSurvivalConstraints());
         board.setShowGridLines(saveData.getShowGridLines());
         board.getCells().lockCurrentStateAsSeed();
         board.drawCells();
