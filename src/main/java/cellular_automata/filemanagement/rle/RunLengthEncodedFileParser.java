@@ -34,31 +34,7 @@ public class RunLengthEncodedFileParser implements FileParser {
   @Override
   public SimulationData openFile(final File fileToParse) {
     try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
-      final SimulationData data = new SimulationData();
-
-      var line = "";
-      var encodedCellLines = new StringBuilder();
-      var endOfPatternReached = false;
-
-      while ((line = reader.readLine()) != null) {
-        try {
-          parseLine(line, data);
-        } catch (CellStateLineDetectedException e) {
-          if (!endOfPatternReached) {
-            encodedCellLines.append(line);
-            
-            if (line.contains(endOfPatternMarker)) {
-              endOfPatternReached = true;
-            }
-          } else {
-            data.getComments().add(line);
-          }
-        }
-      }
-
-      parseRunLengthEncodedLine(encodedCellLines.toString(), data);
-
-      return data;
+      return parseFileData(reader);
     } catch (IOException e) {
       AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.", e);
     }
@@ -66,6 +42,34 @@ public class RunLengthEncodedFileParser implements FileParser {
     return null;
   }
 
+  private SimulationData parseFileData(final BufferedReader reader) throws IOException {
+    final SimulationData data = new SimulationData();
+
+    var line = "";
+    var encodedCellLines = new StringBuilder();
+    var endOfPatternReached = false;
+
+    while ((line = reader.readLine()) != null) {
+      try {
+        parseLine(line, data);
+      } catch (CellStateLineDetectedException e) {
+        if (!endOfPatternReached) {
+          encodedCellLines.append(line);
+          
+          if (line.contains(endOfPatternMarker)) {
+            endOfPatternReached = true;
+          }
+        } else {
+          data.getComments().add(line);
+        }
+      }
+    }
+
+    parseRunLengthEncodedLine(encodedCellLines.toString(), data);
+
+    return data;
+  }
+  
   void parseLine(final String line, final SimulationData data) {
     final String lineStart = line.trim().substring(0, 2);
     final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
