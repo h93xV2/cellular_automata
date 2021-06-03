@@ -220,8 +220,7 @@ public class RunLengthEncodedFileParserTest {
   void parseHeaderLineWithUnrecognizedAttribute() {
     final String headerString = "x = 3, y=4, rule=B3/S23, wasd=wasd";
 
-    assertThrows(UnknownHeaderAttributeException.class,
-        () -> rleParser.parseLine(headerString, new SimulationData()));
+    assertThrows(UnknownHeaderAttributeException.class, () -> rleParser.parseLine(headerString, new SimulationData()));
   }
 
   @Test
@@ -285,5 +284,15 @@ public class RunLengthEncodedFileParserTest {
     final List<String> comments = data.getComments();
 
     assertEquals("This is a comment", comments.get(0));
+  }
+
+  @Test
+  void lowerCaseRulesEncoded() {
+    final String ruleLine = "x = 3, y=4, rule=b3/s29";
+    final SimulationData data = new SimulationData();
+
+    rleParser.parseLine(ruleLine, data);
+
+    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinSurvivalSet(9));
   }
 }

@@ -120,8 +120,8 @@ public class RunLengthEncodedFileParser implements FileParser {
 
   private BirthAndSurvivalConstraints parseRuleData(final String line) {
     final String[] neighborLists = line.split("/");
-    final String birthList = neighborLists[0].startsWith("B") ? neighborLists[0].substring(1) : neighborLists[1];
-    final String survivalList = neighborLists[1].startsWith("S") ? neighborLists[1].substring(1) : neighborLists[0];
+    final String birthList = neighborLists[0].toLowerCase().startsWith("b") ? neighborLists[0].substring(1) : neighborLists[1];
+    final String survivalList = neighborLists[1].toLowerCase().startsWith("s") ? neighborLists[1].substring(1) : neighborLists[0];
 
     return buildConstraintsFromBirthAndSurvivalLists(birthList, survivalList);
   }
