@@ -1,4 +1,8 @@
-package cellular_automata.cells;
+package cellular_automata.cells.copiers;
+
+import cellular_automata.cells.Cell;
+import cellular_automata.cells.CellMatrix;
+import cellular_automata.cells.CellState;
 
 public class CenteredCellMatrixCopier implements CellMatrixCopier {
 

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cellular_automata.cells.BirthAndSurvivalConstraints;
-import cellular_automata.cells.BirthAndSurvivalConstraintsCopier;
 import cellular_automata.cells.Cell;
-import cellular_automata.cells.CellArrayCopier;
+import cellular_automata.cells.copiers.CellArrayCopier;
 
 public class SimulationData {
   private List<String> comments;
@@ -85,7 +84,7 @@ public class SimulationData {
   }
 
   public void setBirthAndSurvivalConstraints(final BirthAndSurvivalConstraints constraints) {
-    BirthAndSurvivalConstraintsCopier.copy(constraints, this.constraints);
+    this.constraints = (BirthAndSurvivalConstraints) constraints;
   }
 
   public Cell[][] getCells() {

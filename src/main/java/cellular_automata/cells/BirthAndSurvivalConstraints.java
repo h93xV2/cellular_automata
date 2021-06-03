@@ -1,6 +1,5 @@
 package cellular_automata.cells;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,12 +51,19 @@ public class BirthAndSurvivalConstraints {
   public boolean isCountWithinSurvivalSet(final int neighborCount) {
     return neighborsRequiredForSurvival.contains(neighborCount);
   }
-  
-  Set<Integer> getBirthNeighborsCounts() {
-    return Collections.unmodifiableSet(neighborsRequiredForBirth);
-  }
-  
-  Set<Integer> getSurvivalNeighborCounts() {
-    return Collections.unmodifiableSet(neighborsRequiredForSurvival);
+
+  @Override
+  public Object clone() {
+    final BirthAndSurvivalConstraints newConstraints = new BirthAndSurvivalConstraints();
+
+    for (Integer birthCount : neighborsRequiredForBirth) {
+      newConstraints.addBirthNeighborCount(birthCount);
+    }
+
+    for (Integer survivalCount : neighborsRequiredForSurvival) {
+      newConstraints.addSurvivalNeighborCount(survivalCount);
+    }
+
+    return newConstraints;
   }
 }

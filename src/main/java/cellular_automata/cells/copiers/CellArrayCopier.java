@@ -1,4 +1,6 @@
-package cellular_automata.cells;
+package cellular_automata.cells.copiers;
+
+import cellular_automata.cells.Cell;
 
 public class CellArrayCopier {
   private CellArrayCopier() {

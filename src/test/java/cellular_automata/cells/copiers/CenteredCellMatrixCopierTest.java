@@ -1,4 +1,4 @@
-package cellular_automata.cells;
+package cellular_automata.cells.copiers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -7,6 +7,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+
+import cellular_automata.cells.Cell;
+import cellular_automata.cells.CellMatrix;
+import cellular_automata.cells.CellState;
+import cellular_automata.cells.copiers.CellMatrixCopier;
+import cellular_automata.cells.copiers.CenteredCellMatrixCopier;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class CenteredCellMatrixCopierTest {

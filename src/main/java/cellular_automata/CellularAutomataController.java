@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import cellular_automata.board.Board;
-import cellular_automata.cells.CellMatrixCopier;
-import cellular_automata.cells.CenteredCellMatrixCopier;
+import cellular_automata.cells.copiers.CellMatrixCopier;
+import cellular_automata.cells.copiers.CenteredCellMatrixCopier;
 import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.SimulationData;
 import javafx.fxml.FXML;

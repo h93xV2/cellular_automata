@@ -27,35 +27,6 @@ public class CellMatrixTest {
   }
 
   @Test
-  void matrixCanBeCloned() throws CloneNotSupportedException {
-    final CellMatrix matrix = new CellMatrix(1, 1);
-
-    final CellMatrix clone = (CellMatrix) matrix.clone();
-
-    assertTrue(matrix != clone);
-  }
-
-  @Test
-  void clonedMatrixContentsAreNotTheOriginal() throws CloneNotSupportedException {
-    final Cell originalCell = new Cell();
-    final CellMatrix matrix = new CellMatrix(1, 1);
-
-    final CellMatrix clone = (CellMatrix) matrix.clone();
-
-    assertTrue(originalCell != clone.getCell(0, 0));
-  }
-
-  @Test
-  void clonedMatrixCellsAreEqualToOriginal() throws CloneNotSupportedException {
-    final Cell originalCell = new Cell();
-    final CellMatrix matrix = new CellMatrix(1, 1);
-
-    final CellMatrix clone = (CellMatrix) matrix.clone();
-
-    assertEquals(originalCell, clone.getCell(0, 0));
-  }
-
-  @Test
   void checkMatrixCanBeReset() {
     final CellMatrix matrix = new CellMatrix(1, 2);
     matrix.getCell(0, 1).toggleState();
