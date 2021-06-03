@@ -66,11 +66,11 @@ public class Board extends Canvas {
     final double cellDrawWidth = computedCellDimensions.getKey();
     final double cellDrawHeight = computedCellDimensions.getValue();
 
-    cells.forEach((cellX, cellY) -> {
-      final double boardX = computeBoardX(cellX);
-      final double boardY = computeBoardY(cellY);
+    cells.forEach((x, y, cell) -> {
+      final double boardX = computeBoardX(x);
+      final double boardY = computeBoardY(y);
 
-      if (CellState.DEAD.equals(cells.getCell(cellX, cellY).getState())) {
+      if (CellState.DEAD.equals(cell.getState())) {
         gc.setFill(Color.WHITE);
       } else {
         gc.setFill(Color.BLACK);

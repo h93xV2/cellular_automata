@@ -33,16 +33,20 @@ public class CellMatrix implements Cloneable {
     });
   }
 
+  public void forEach(final CellTriConsumer consumer) {
+    forEach((x, y) -> consumer.accept(x, y, workingCells[x][y]));
+  }
+
+  public void forEach(final Consumer<Cell> consumer) {
+    forEach((x, y) -> consumer.accept(workingCells[x][y]));
+  }
+
   public void forEach(final BiConsumer<Integer, Integer> consumer) {
     for (var x = cellRowStartIndex; x < width; x++) {
       for (var y = cellColumnStartIndex; y < height; y++) {
         consumer.accept(x, y);
       }
     }
-  }
-
-  public void forEach(final Consumer<Cell> consumer) {
-    forEach((x, y) -> consumer.accept(workingCells[x][y]));
   }
 
   public Cell getCell(final int x, final int y) {
@@ -74,18 +78,17 @@ public class CellMatrix implements Cloneable {
   }
 
   public void lockCurrentStateAsSeed() {
-    forEach((x, y) -> seedCells[x][y].setState(workingCells[x][y].getState()));
+    forEach((x, y, cell) -> seedCells[x][y].setState(cell.getState()));
   }
 
   public void next() {
-    forEach((x, y) -> tempCells[x][y].setState(workingCells[x][y].getState()));
+    forEach((x, y, cell) -> tempCells[x][y].setState(cell.getState()));
 
-    forEach((x, y) -> {
-      final Cell currentCell = workingCells[x][y];
+    forEach((x, y, cell) -> {
       final int liveNeighbors = countLiveNeighbors(x, y);
 
-      if (resurrect(currentCell, liveNeighbors) || kill(currentCell, liveNeighbors)) {
-        currentCell.toggleState();
+      if (resurrect(cell, liveNeighbors) || kill(cell, liveNeighbors)) {
+        cell.toggleState();
       }
     });
   }
@@ -115,7 +118,7 @@ public class CellMatrix implements Cloneable {
   }
 
   public void reset() {
-    forEach((i, j) -> workingCells[i][j].setState(seedCells[i][j].getState()));
+    forEach((x, y, cell) -> cell.setState(seedCells[x][y].getState()));
   }
 
   public void clear() {
