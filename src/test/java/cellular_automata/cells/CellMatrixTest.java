@@ -149,65 +149,6 @@ public class CellMatrixTest {
   }
 
   @Test
-  void cellStatesCanBeCopiedInSameSizedObjects() {
-    final Cell[][] sourceCells = new Cell[1][1];
-    sourceCells[0][0] = new Cell();
-    sourceCells[0][0].setState(CellState.LIVE);
-
-    final CellMatrix matrix = new CellMatrix(1, 1);
-
-    final boolean matrixCellIsInitiallyDead = CellState.DEAD.equals(matrix.getCell(0, 0).getState());
-
-    matrix.copyCellStates(sourceCells);
-
-    final boolean matrixCellBecomesAlive = CellState.LIVE.equals(matrix.getCell(0, 0).getState());
-
-    assertTrue(matrixCellIsInitiallyDead && matrixCellBecomesAlive);
-  }
-
-  @Test
-  void cellStatesAreNotCopiedFromHorizontallyOversizedArrays() {
-    final Cell[][] sourceCells = new Cell[2][1];
-    sourceCells[0][0] = new Cell();
-    sourceCells[1][0] = new Cell();
-
-    final CellMatrix matrix = new CellMatrix(1, 1);
-    matrix.copyCellStates(sourceCells);
-
-    assertEquals(1, matrix.getWidth());
-  }
-
-  @Test
-  void deadStateIsSetWhenCellArrayHasNullEntry() {
-    final Cell[][] sourceCells = new Cell[1][1];
-
-    final CellMatrix matrix = new CellMatrix(1, 1);
-    matrix.copyCellStates(sourceCells);
-
-    assertEquals(CellState.DEAD, matrix.getCell(0, 0).getState());
-  }
-
-  @Test
-  void matrixIsHorizontallyBiggerThanArray() {
-    final Cell[][] sourceCells = new Cell[1][1];
-
-    final CellMatrix matrix = new CellMatrix(2, 1);
-    matrix.copyCellStates(sourceCells);
-
-    assertEquals(CellState.DEAD, matrix.getCell(1, 0).getState());
-  }
-
-  @Test
-  void matrixIsVerticallyBiggerThanArray() {
-    final Cell[][] sourceCells = new Cell[1][1];
-
-    final CellMatrix matrix = new CellMatrix(1, 2);
-    matrix.copyCellStates(sourceCells);
-
-    assertEquals(CellState.DEAD, matrix.getCell(0, 1).getState());
-  }
-
-  @Test
   void threeCellsCauseBirth() {
     final CellMatrix matrix = new CellMatrix(2, 2);
     matrix.getCell(0, 0).toggleState();

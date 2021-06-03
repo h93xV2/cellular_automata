@@ -1,4 +1,4 @@
-package cellular_automata.cells;
+  package cellular_automata.cells;
 
 import java.util.function.BiConsumer;
 
@@ -128,16 +128,6 @@ public class CellMatrix implements Cloneable {
 
   public Cell[][] getWorkingCells() {
     return workingCells;
-  }
-
-  public void copyCellStates(final Cell[][] cellsToLoad) {
-    forEach((x, y) -> {
-      if (x < cellsToLoad.length && y < cellsToLoad[0].length && cellsToLoad[x][y] != null) {
-        getCell(x, y).setState(cellsToLoad[x][y].getState());
-      } else {
-        getCell(x, y).setState(CellState.DEAD);
-      }
-    });
   }
 
   public void copyConstraints(final BirthAndSurvivalConstraints constraints) {

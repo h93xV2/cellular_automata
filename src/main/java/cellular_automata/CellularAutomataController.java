@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 import cellular_automata.board.Board;
+import cellular_automata.cells.CellMatrixCopier;
+import cellular_automata.cells.CenteredCellMatrixCopier;
 import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.SimulationData;
 import javafx.fxml.FXML;
@@ -26,6 +28,7 @@ public class CellularAutomataController {
   @FXML private Slider gameSpeed;
   private final Properties defaultProperties;
   private final FileSystemCoordinator fileSystem;
+  private CellMatrixCopier matrixCopier;
 
   public CellularAutomataController() {
     defaultProperties = new Properties();
@@ -40,6 +43,8 @@ public class CellularAutomataController {
     }
 
     fileSystem = new FileSystemCoordinator(CellularAutomataApp.getPrimaryStage());
+    
+    matrixCopier = new CenteredCellMatrixCopier();
   }
 
   public void initialize() {
@@ -74,7 +79,7 @@ public class CellularAutomataController {
       final SimulationData saveData = fileSystem.openFromFile();
 
       if (saveData != null) {
-        board.getCells().copyCellStates(saveData.getCells());
+        matrixCopier.copyCellStates(saveData.getCells(), board.getCells());
         board.getCells().copyConstraints(saveData.getBirthAndSurvivalConstraints());
         board.setShowGridLines(saveData.getShowGridLines());
         board.getCells().lockCurrentStateAsSeed();
