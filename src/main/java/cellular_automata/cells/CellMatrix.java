@@ -1,6 +1,7 @@
 package cellular_automata.cells;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class CellMatrix implements Cloneable {
   private static final int cellRowStartIndex = 0;
@@ -17,11 +18,11 @@ public class CellMatrix implements Cloneable {
   }
 
   public CellMatrix(final Cell[][] sourceCells) {
-    this.width = sourceCells.length;
-    this.height = sourceCells[0].length;
-    seedCells = new Cell[this.width][this.height];
-    tempCells = new Cell[this.width][this.height];
-    workingCells = new Cell[this.width][this.height];
+    width = sourceCells.length;
+    height = sourceCells[0].length;
+    seedCells = new Cell[width][height];
+    tempCells = new Cell[width][height];
+    workingCells = new Cell[width][height];
     constraints = new BirthAndSurvivalConstraints();
 
     forEach((x, y) -> {
@@ -38,6 +39,10 @@ public class CellMatrix implements Cloneable {
         consumer.accept(x, y);
       }
     }
+  }
+
+  public void forEach(final Consumer<Cell> consumer) {
+    forEach((x, y) -> consumer.accept(workingCells[x][y]));
   }
 
   public Cell getCell(final int x, final int y) {
@@ -114,7 +119,7 @@ public class CellMatrix implements Cloneable {
   }
 
   public void clear() {
-    forEach((i, j) -> workingCells[i][j].setState(CellState.DEAD));
+    forEach(cell -> cell.setState(CellState.DEAD));
   }
 
   public Cell[][] getWorkingCells() {

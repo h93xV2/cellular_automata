@@ -8,7 +8,7 @@ public class CenteredCellMatrixCopier implements CellMatrixCopier {
 
   @Override
   public void copyCellStates(Cell[][] source, CellMatrix destination) {
-    destination.forEach((x, y) -> destination.getCell(x, y).setState(CellState.DEAD));
+    destination.forEach(cell -> cell.setState(CellState.DEAD));
 
     final int sourceWidth = source.length;
     final int sourceHeight = source[0].length;
