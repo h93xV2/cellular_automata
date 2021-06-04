@@ -295,4 +295,16 @@ public class RunLengthEncodedFileParserTest {
 
     assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinSurvivalSet(9));
   }
+
+  @Test
+  void encodedEndOfLine() {
+    final String pattern = "3o2$3o!";
+    final SimulationData data = new SimulationData();
+    data.setWidth(3);
+    data.setHeight(3);
+
+    rleParser.parseRunLengthEncodedLine(pattern, data);
+
+    assertEquals(CellState.DEAD, data.getCells()[1][1].getState());
+  }
 }

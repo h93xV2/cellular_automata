@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 import cellular_automata.AlertMediator;
@@ -165,10 +167,25 @@ public class RunLengthEncodedFileParser implements FileParser {
 
   void parseRunLengthEncodedLine(final String line, final SimulationData data) {
     final Cell[][] cells = new Cell[data.getWidth()][data.getHeight()];
-    final String[] cellRows = getEncodedCellRowsFromEncodedCellLine(line);
+    final List<String> cellRows = new ArrayList<>(Arrays.asList(getEncodedCellRowsFromEncodedCellLine(line)));
 
-    for (var y = 0; y < cellRows.length; y++) {
-      decodeEncodedCellRow(cellRows[y], y, cells, data);
+    var encodedRows = cellRows.size();
+    var y = 0;
+    var skips = 0;
+    
+    while (y < encodedRows) {
+      if (skips == 0) {
+        final int count = decodeEncodedCellRow(cellRows.get(y), y, cells, data);
+        
+        if (count != 0) skips = count - 1;
+      } else {
+        addImpliedDeadCells(data, cells, 0, y);
+        skips --;
+        encodedRows ++;
+        cellRows.add(y, "");
+      }
+      
+      y ++;
     }
 
     data.setCells(cells);
@@ -188,7 +205,7 @@ public class RunLengthEncodedFileParser implements FileParser {
     return processedLine;
   }
 
-  private void decodeEncodedCellRow(final String cellRow, final int y, final Cell[][] cells,
+  private int decodeEncodedCellRow(final String cellRow, final int y, final Cell[][] cells,
       final SimulationData data) {
     var x = 0;
     var count = 0;
@@ -210,6 +227,8 @@ public class RunLengthEncodedFileParser implements FileParser {
 
     if (x < data.getWidth())
       addImpliedDeadCells(data, cells, x, y);
+    
+    return count;
   }
 
   private int calculateDecodedCharacterCount(final int count, final char character) {
