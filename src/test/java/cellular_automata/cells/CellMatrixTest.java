@@ -8,8 +8,13 @@ public class CellMatrixTest {
   @Test
   void cellsCanBeSet() {
     final CellMatrix matrix = new CellMatrix(1, 1);
+    final Cell initialCell = matrix.getCell(0, 0);
+    final Cell newCell = new Cell();
+    newCell.setState(CellState.LIVE);
 
-    assertNotNull(matrix.getCell(0, 0));
+    matrix.set(0, 0, newCell);
+
+    assertNotEquals(initialCell, matrix.getCell(0, 0));
   }
 
   @Test
