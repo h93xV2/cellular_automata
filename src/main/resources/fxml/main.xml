@@ -40,7 +40,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="/icons/outline_stop_circle_black_18dp.png" />
+            <Image url="/google_fonts_icons/outline_stop_circle_black_18dp.png" />
           </image>
         </ImageView>
       </graphic>
@@ -49,7 +49,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="/icons/outline_skip_next_black_18dp.png" />
+            <Image url="/google_fonts_icons/outline_skip_next_black_18dp.png" />
           </image>
         </ImageView>
       </graphic>
@@ -58,7 +58,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="/icons/outline_restart_alt_black_18dp.png" />
+            <Image url="/google_fonts_icons/outline_restart_alt_black_18dp.png" />
           </image>
         </ImageView>
       </graphic>
@@ -67,7 +67,7 @@
       <graphic>
         <ImageView>
           <image>
-            <Image url="/icons/outline_clear_black_18dp.png" />
+            <Image url="/google_fonts_iconss/outline_clear_black_18dp.png" />
           </image>
         </ImageView>
       </graphic>
