@@ -3,6 +3,8 @@ package cellular_automata.cells;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import cellular_automata.cells.rules.CellRules;
+
 public class CellMatrix implements Cloneable {
   private static final int cellRowStartIndex = 0;
   private static final int cellColumnStartIndex = 0;
@@ -11,7 +13,7 @@ public class CellMatrix implements Cloneable {
   private Cell[][] workingCells;
   private int width;
   private int height;
-  private BirthAndSurvivalConstraints constraints;
+  private CellRules cellRules;
 
   public CellMatrix(final int width, final int height) {
     this(new Cell[width][height]);
@@ -23,7 +25,7 @@ public class CellMatrix implements Cloneable {
     seedCells = new Cell[width][height];
     tempCells = new Cell[width][height];
     workingCells = new Cell[width][height];
-    constraints = new BirthAndSurvivalConstraints();
+    cellRules = new CellRules();
 
     forEach((x, y) -> {
       final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
@@ -94,11 +96,11 @@ public class CellMatrix implements Cloneable {
   }
 
   private boolean resurrect(final Cell currentCell, final int liveNeighbors) {
-    return CellState.DEAD.equals(currentCell.getState()) && constraints.isCountWithinBirthSet(liveNeighbors);
+    return CellState.DEAD.equals(currentCell.getState()) && cellRules.isCountWithinBirthSet(liveNeighbors);
   }
 
   private boolean kill(final Cell currentCell, final int liveNeighbors) {
-    return CellState.LIVE.equals(currentCell.getState()) && !constraints.isCountWithinSurvivalSet(liveNeighbors);
+    return CellState.LIVE.equals(currentCell.getState()) && !cellRules.isCountWithinSurvivalSet(liveNeighbors);
   }
 
   private int countLiveNeighbors(final int x, final int y) {
@@ -129,7 +131,11 @@ public class CellMatrix implements Cloneable {
     return workingCells;
   }
 
-  public void copyConstraints(final BirthAndSurvivalConstraints constraints) {
-    this.constraints = (BirthAndSurvivalConstraints) constraints.clone();
+  public void copyRules(final CellRules cellRules) {
+    this.cellRules = (CellRules) cellRules.clone();
+  }
+
+  public CellRules getRules() {
+    return cellRules;
   }
 }

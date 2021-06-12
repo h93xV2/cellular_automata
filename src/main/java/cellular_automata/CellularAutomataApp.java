@@ -7,7 +7,7 @@ import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class CellularAutomataApp extends Application {
@@ -27,14 +27,14 @@ public class CellularAutomataApp extends Application {
     try {
       final URL fxmlUrl = fxmlFile.toURI().toURL();
       final FXMLLoader loader = new FXMLLoader(fxmlUrl);
-      final VBox vbox = loader.<VBox>load();
-      final Scene scene = new Scene(vbox);
+      final BorderPane container = loader.<BorderPane>load();
+      final Scene scene = new Scene(container);
 
       stage.setScene(scene);
       stage.setResizable(false);
       stage.show();
     } catch (IllegalArgumentException | IOException exception) {
-      AlertMediator.notifyNonRecoverableError("An error occurred while building the graphical user interface.",
+      Alerts.notifyNonRecoverableError("An error occurred while building the graphical user interface.",
           exception);
     }
   }

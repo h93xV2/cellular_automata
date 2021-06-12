@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import cellular_automata.board.Board;
 import cellular_automata.cells.CellState;
+import cellular_automata.cells.Generations;
+import cellular_automata.graphics.board.Board;
 
 public class SimulationLoopTest {
   @Test
@@ -13,7 +14,7 @@ public class SimulationLoopTest {
     final Board board = new Board();
     board.setUp(1, 1, 1, 1);
 
-    final SimulationLoop loop = new SimulationLoop(board, 1);
+    final SimulationLoop loop = new SimulationLoop(board, 1, new Generations());
     loop.next();
 
     assertEquals(CellState.DEAD, board.getCells().getCell(0, 0).getState());
@@ -28,7 +29,7 @@ public class SimulationLoopTest {
 
     final boolean cellIsAliveBeforeLoop = CellState.LIVE.equals(board.getCells().getCell(0, 0).getState());
 
-    final SimulationLoop loop = new SimulationLoop(board, 1);
+    final SimulationLoop loop = new SimulationLoop(board, 1, new Generations());
     loop.next();
 
     final boolean cellIsDeadAfterLoop = CellState.DEAD.equals(board.getCells().getCell(0, 0).getState());
@@ -39,20 +40,20 @@ public class SimulationLoopTest {
 
     assertTrue(cellIsAliveBeforeLoop && cellIsDeadAfterLoop && cellIsAliveAfterReset);
   }
-  
+
   @Test
   void theLoopCanBeCleared() {
     final Board board = new Board();
     board.setUp(1, 1, 1, 1);
     board.getCells().getCell(0, 0).toggleState();
-    
+
     final boolean cellIsAliveBefore = CellState.LIVE.equals(board.getCells().getCell(0, 0).getState());
-    
-    final SimulationLoop loop = new SimulationLoop(board, 1);
+
+    final SimulationLoop loop = new SimulationLoop(board, 1, new Generations());
     loop.clear();
-    
+
     final boolean cellIsDeadAfterClear = CellState.DEAD.equals(board.getCells().getCell(0, 0).getState());
-    
+
     assertTrue(cellIsAliveBefore && cellIsDeadAfterClear);
   }
 }

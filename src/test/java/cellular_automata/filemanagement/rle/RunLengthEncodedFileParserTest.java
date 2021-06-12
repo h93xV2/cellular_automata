@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
+import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.PatternPoint;
 import cellular_automata.filemanagement.SimulationData;
 
@@ -80,43 +80,43 @@ public class RunLengthEncodedFileParserTest {
   }
 
   @Test
-  void parseBirthConstraints() {
+  void parseBirthRules() {
     final String cellRules = "#r B7/S23";
     final SimulationData data = new SimulationData();
 
     rleParser.parseLine(cellRules, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(7));
+    assertTrue(data.getCellRules().isCountWithinBirthSet(7));
   }
 
   @Test
-  void parseSurvivalConstraints() {
+  void parseSurvivalRules() {
     final String cellRules = "#r B3/S9";
     final SimulationData data = new SimulationData();
 
     rleParser.parseLine(cellRules, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinSurvivalSet(9));
+    assertTrue(data.getCellRules().isCountWithinSurvivalSet(9));
   }
 
   @Test
-  void parseEmptySurvivalConstraints() {
+  void parseEmptySurvivalRules() {
     final String cellRules = "#r B2/S";
     final SimulationData data = new SimulationData();
 
     rleParser.parseLine(cellRules, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().getTotalSurvivalNeighborCounts() == 0);
+    assertTrue(data.getCellRules().getTotalSurvivalNeighborCounts() == 0);
   }
 
   @Test
-  void parseDifferentFormatBirthConstraints() {
+  void parseDifferentFormatBirthRules() {
     final String cellRules = "#r 35/7";
     final SimulationData data = new SimulationData();
 
     rleParser.parseLine(cellRules, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(7));
+    assertTrue(data.getCellRules().isCountWithinBirthSet(7));
   }
 
   @Test
@@ -146,7 +146,7 @@ public class RunLengthEncodedFileParserTest {
 
     rleParser.parseLine(header, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(2));
+    assertTrue(data.getCellRules().isCountWithinBirthSet(2));
   }
 
   @Test
@@ -270,11 +270,11 @@ public class RunLengthEncodedFileParserTest {
   void fileWithoutRulesDefaultsToConwaysGameOfLife() {
     final File testFile = new File(simpleTestFilePath);
     final SimulationData data = rleParser.openFile(testFile);
-    final BirthAndSurvivalConstraints constraints = data.getBirthAndSurvivalConstraints();
+    final CellRules cellRules = data.getCellRules();
 
-    assertTrue(constraints.getTotalBirthNeighborCounts() == 1 && constraints.getTotalSurvivalNeighborCounts() == 2
-        && constraints.isCountWithinBirthSet(3) && constraints.isCountWithinSurvivalSet(2)
-        && constraints.isCountWithinSurvivalSet(3));
+    assertTrue(cellRules.getTotalBirthNeighborCounts() == 1 && cellRules.getTotalSurvivalNeighborCounts() == 2
+        && cellRules.isCountWithinBirthSet(3) && cellRules.isCountWithinSurvivalSet(2)
+        && cellRules.isCountWithinSurvivalSet(3));
   }
 
   @Test
@@ -293,7 +293,7 @@ public class RunLengthEncodedFileParserTest {
 
     rleParser.parseLine(ruleLine, data);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().isCountWithinSurvivalSet(9));
+    assertTrue(data.getCellRules().isCountWithinSurvivalSet(9));
   }
 
   @Test

@@ -3,31 +3,32 @@ package cellular_automata.filemanagement;
 import java.util.ArrayList;
 import java.util.List;
 
-import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.copiers.CellArrayCopier;
+import cellular_automata.cells.rules.CellRules;
 
 public class SimulationData {
   private List<String> comments;
   private String patternName;
   private String authorInformation;
   private PatternPoint topLeftCorner;
-  private BirthAndSurvivalConstraints constraints;
+  private CellRules cellRules;
   private int width;
   private int height;
   private Cell[][] cells;
   private boolean showGridLines;
 
-  public SimulationData(final Cell[][] cells, final boolean showGridLines) {
+  public SimulationData(final Cell[][] cells, final boolean showGridLines, final CellRules cellRules) {
     this();
     setCells(cells);
+    setRules(cellRules);
     this.showGridLines = showGridLines;
   }
 
   public SimulationData() {
     comments = new ArrayList<>();
     topLeftCorner = new PatternPoint(0, 0);
-    constraints = new BirthAndSurvivalConstraints();
+    cellRules = new CellRules();
     showGridLines = true;
   }
 
@@ -79,12 +80,12 @@ public class SimulationData {
     this.height = height;
   }
 
-  public BirthAndSurvivalConstraints getBirthAndSurvivalConstraints() {
-    return constraints;
+  public CellRules getCellRules() {
+    return cellRules;
   }
 
-  public void setBirthAndSurvivalConstraints(final BirthAndSurvivalConstraints constraints) {
-    this.constraints = (BirthAndSurvivalConstraints) constraints;
+  public void setRules(final CellRules cellRules) {
+    this.cellRules = (CellRules) cellRules.clone();
   }
 
   public Cell[][] getCells() {

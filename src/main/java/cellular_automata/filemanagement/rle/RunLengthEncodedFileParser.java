@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import cellular_automata.AlertMediator;
-import cellular_automata.cells.BirthAndSurvivalConstraints;
+import cellular_automata.Alerts;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
+import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.FileParser;
 import cellular_automata.filemanagement.PatternPoint;
 import cellular_automata.filemanagement.SimulationData;
@@ -38,7 +38,7 @@ public class RunLengthEncodedFileParser implements FileParser {
     try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
       return parseFileData(reader);
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to open the requested RLE file.", e);
+      Alerts.notifyRecoverableError("Unable to open the requested RLE file.", e);
     }
 
     return null;
@@ -96,7 +96,7 @@ public class RunLengthEncodedFileParser implements FileParser {
       case AUTHOR_INFORMATION -> data.setAuthorInformation(parseInformationLine(line));
       case TOP_LEFT_CORNER_TYPE_ONE -> data.setTopLeftCorner(parseTopLeftCorner(line));
       case TOP_LEFT_CORNER_TYPE_TWO -> data.setTopLeftCorner(parseTopLeftCorner(line));
-      case CELL_RULES -> data.setBirthAndSurvivalConstraints(parseMarkedRuleLine(line));
+      case CELL_RULES -> data.setRules(parseMarkedRuleLine(line));
       default -> throw new RuntimeException();
     }
   }
@@ -114,30 +114,30 @@ public class RunLengthEncodedFileParser implements FileParser {
     return new PatternPoint(x, y);
   }
 
-  private BirthAndSurvivalConstraints parseMarkedRuleLine(final String line) {
+  private CellRules parseMarkedRuleLine(final String line) {
     final String strippedLine = parseInformationLine(line);
 
     return parseRuleData(strippedLine);
   }
 
-  private BirthAndSurvivalConstraints parseRuleData(final String line) {
+  private CellRules parseRuleData(final String line) {
     final String[] neighborLists = line.split("/");
     final String birthList = neighborLists[0].toLowerCase().startsWith("b") ? neighborLists[0].substring(1) : neighborLists[1];
     final String survivalList = neighborLists[1].toLowerCase().startsWith("s") ? neighborLists[1].substring(1) : neighborLists[0];
 
-    return buildConstraintsFromBirthAndSurvivalLists(birthList, survivalList);
+    return buildRulesFromBirthAndSurvivalLists(birthList, survivalList);
   }
 
-  private BirthAndSurvivalConstraints buildConstraintsFromBirthAndSurvivalLists(final String birthList,
+  private CellRules buildRulesFromBirthAndSurvivalLists(final String birthList,
       final String survivalList) {
-    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
-    constraints.clearBirthNeighborCounts();
-    constraints.clearSurvivalNeighborCounts();
+    final CellRules cellRules = new CellRules();
+    cellRules.clearBirthNeighborCounts();
+    cellRules.clearSurvivalNeighborCounts();
 
-    parseNeighborList(birthList, constraints::addBirthNeighborCount);
-    parseNeighborList(survivalList, constraints::addSurvivalNeighborCount);
+    parseNeighborList(birthList, cellRules::addBirthNeighborCount);
+    parseNeighborList(survivalList, cellRules::addSurvivalNeighborCount);
 
-    return constraints;
+    return cellRules;
   }
 
   private void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
@@ -158,7 +158,7 @@ public class RunLengthEncodedFileParser implements FileParser {
       } else if (attribute.startsWith("y")) {
         data.setHeight(Integer.parseInt(attributeParts[1].trim()));
       } else if (attribute.startsWith("rule")) {
-        data.setBirthAndSurvivalConstraints(parseRuleData(attributeParts[1].trim()));
+        data.setRules(parseRuleData(attributeParts[1].trim()));
       } else {
         throw new UnknownHeaderAttributeException();
       }
@@ -255,6 +255,6 @@ public class RunLengthEncodedFileParser implements FileParser {
 
   @Override
   public void saveFile(File fileToSaveTo, SimulationData data) {
-    AlertMediator.notifyRecoverableError("This operation is not supported at this time.");
+    Alerts.notifyRecoverableError("This operation is not supported at this time.");
   }
 }

@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import cellular_automata.cells.BirthAndSurvivalConstraints;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
+import cellular_automata.cells.rules.CellRules;
 
 public class SimulationDataTest {
   @Test
@@ -35,8 +35,8 @@ public class SimulationDataTest {
   }
 
   @Test
-  void SimulationDataCanBeInitializedWithObjects() {
-    final SimulationData data = new SimulationData(new Cell[1][1], true);
+  void simulationDataCanBeInitializedWithObjects() {
+    final SimulationData data = new SimulationData(new Cell[1][1], true, new CellRules());
 
     assertTrue(data.getCells() != null && data.getShowGridLines());
   }
@@ -177,14 +177,14 @@ public class SimulationDataTest {
   }
 
   @Test
-  void birthAndSurvivalConstraintsCanBeSet() {
+  void birthAndSurvivalRulesCanBeSet() {
     final SimulationData data = new SimulationData();
-    final BirthAndSurvivalConstraints constraints = new BirthAndSurvivalConstraints();
-    constraints.clearBirthNeighborCounts();
-    constraints.addBirthNeighborCount(5);
-    data.setBirthAndSurvivalConstraints(constraints);
+    final CellRules cellRules = new CellRules();
+    cellRules.clearBirthNeighborCounts();
+    cellRules.addBirthNeighborCount(5);
+    data.setRules(cellRules);
 
-    assertTrue(data.getBirthAndSurvivalConstraints().getTotalBirthNeighborCounts() == 1
-        && data.getBirthAndSurvivalConstraints().isCountWithinBirthSet(5));
+    assertTrue(data.getCellRules().getTotalBirthNeighborCounts() == 1
+        && data.getCellRules().isCountWithinBirthSet(5));
   }
 }

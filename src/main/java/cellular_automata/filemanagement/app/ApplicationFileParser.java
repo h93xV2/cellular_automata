@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cellular_automata.AlertMediator;
+import cellular_automata.Alerts;
 import cellular_automata.filemanagement.FileParser;
 import cellular_automata.filemanagement.SimulationData;
 
@@ -24,7 +24,7 @@ public class ApplicationFileParser implements FileParser {
     try {
       return objectMapper.readValue(fileToOpen, SimulationData.class);
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to open the requested game file.", e);
+      Alerts.notifyRecoverableError("Unable to open the requested game file.", e);
     }
 
     return null;
@@ -37,7 +37,7 @@ public class ApplicationFileParser implements FileParser {
     try {
       objectMapper.writeValue(fileToSaveTo, data);
     } catch (IOException e) {
-      AlertMediator.notifyRecoverableError("Unable to save the game data to the requested file.", e);
+      Alerts.notifyRecoverableError("Unable to save the game data to the requested file.", e);
     }
   }
 }

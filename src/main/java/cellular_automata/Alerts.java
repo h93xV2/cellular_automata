@@ -5,7 +5,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 
-public class AlertMediator {
+public class Alerts {
   private static final int errorExitCode = 1;
 
   public static void notifyNonRecoverableError(final String message, final Exception e) {

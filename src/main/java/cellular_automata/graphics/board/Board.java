@@ -1,4 +1,4 @@
-package cellular_automata.board;
+package cellular_automata.graphics.board;
 
 import cellular_automata.cells.CellMatrix;
 import cellular_automata.cells.CellState;

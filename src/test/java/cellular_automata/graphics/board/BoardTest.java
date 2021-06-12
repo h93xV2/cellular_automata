@@ -1,4 +1,4 @@
-package cellular_automata.board;
+package cellular_automata.graphics.board;
 
 import static org.junit.jupiter.api.Assertions.*;
 
