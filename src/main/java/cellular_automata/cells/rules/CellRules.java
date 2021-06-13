@@ -52,6 +52,8 @@ public class CellRules {
   @Override
   public Object clone() {
     final CellRules newCopy = new CellRules();
+    newCopy.clearBirthNeighborCounts();
+    newCopy.clearSurvivalNeighborCounts();
 
     for (var birthCount : neighborsRequiredForBirth) {
       newCopy.addBirthNeighborCount(birthCount);

@@ -181,10 +181,16 @@ public class SimulationDataTest {
     final SimulationData data = new SimulationData();
     final CellRules cellRules = new CellRules();
     cellRules.clearBirthNeighborCounts();
+
+    assertEquals(0, cellRules.getTotalBirthNeighborCounts());
+
     cellRules.addBirthNeighborCount(5);
+    
+    assertEquals(1, cellRules.getTotalBirthNeighborCounts());
+    
     data.setRules(cellRules);
 
-    assertTrue(data.getCellRules().getTotalBirthNeighborCounts() == 1
-        && data.getCellRules().isCountWithinBirthSet(5));
+    assertTrue(data.getCellRules().isCountWithinBirthSet(5));
+    assertEquals(1, data.getCellRules().getTotalBirthNeighborCounts());
   }
 }
