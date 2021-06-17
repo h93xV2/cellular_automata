@@ -152,4 +152,28 @@ public class CellMatrixTest {
 
     assertEquals(CellState.DEAD, matrix.getCell(0, 1).getState());
   }
+
+  @Test
+  void cellsCanBeSteppedBack() {
+    final CellMatrix matrix = new CellMatrix(1, 1);
+    matrix.getCell(0, 0).setState(CellState.LIVE);
+    matrix.next();
+    matrix.last();
+
+    assertEquals(CellState.LIVE, matrix.getCell(0, 0).getState());
+  }
+
+  @Test
+  void cellsCanBeSteppedBackMultipleTimes() {
+    final CellMatrix matrix = new CellMatrix(3, 2);
+    matrix.getCell(0, 1).setState(CellState.LIVE);
+    matrix.getCell(1, 1).setState(CellState.LIVE);
+    matrix.getCell(2, 0).setState(CellState.LIVE);
+    matrix.next();
+    matrix.next();
+    matrix.last();
+    matrix.last();
+
+    assertEquals(CellState.LIVE, matrix.getCell(0, 1).getState());
+  }
 }

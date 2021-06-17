@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 
 public class Generations {
   private static final String generationsPropertyName = "generations";
+  private static final int minimumGenerations = 0;
   private int generations;
   private final PropertyChangeSupport changeSupport;
 
@@ -24,6 +25,14 @@ public class Generations {
     final int oldGenerations = generations;
     generations++;
     changeSupport.firePropertyChange(generationsPropertyName, oldGenerations, generations);
+  }
+
+  public void decrement() {
+    if (minimumGenerations < generations) {
+      final int oldGenerations = generations;
+      generations--;
+      changeSupport.firePropertyChange(generationsPropertyName, oldGenerations, generations);
+    }
   }
 
   public void reset() {

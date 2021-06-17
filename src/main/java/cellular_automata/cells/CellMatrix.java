@@ -1,5 +1,7 @@
 package cellular_automata.cells;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -14,6 +16,7 @@ public class CellMatrix implements Cloneable {
   private int width;
   private int height;
   private CellRules cellRules;
+  private Deque<Cell[][]> history;
 
   public CellMatrix(final int width, final int height) {
     this(new Cell[width][height]);
@@ -26,6 +29,7 @@ public class CellMatrix implements Cloneable {
     tempCells = new Cell[width][height];
     workingCells = new Cell[width][height];
     cellRules = new CellRules();
+    history = new ArrayDeque<>();
 
     forEach((x, y) -> {
       final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
@@ -84,7 +88,14 @@ public class CellMatrix implements Cloneable {
   }
 
   public void next() {
-    forEach((x, y, cell) -> tempCells[x][y].setState(cell.getState()));
+    final Cell[][] currentFrame = new Cell[width][height];
+
+    forEach((x, y, cell) -> {
+      tempCells[x][y].setState(cell.getState());
+      currentFrame[x][y] = (Cell) cell.clone();
+    });
+
+    history.push(currentFrame);
 
     forEach((x, y, cell) -> {
       final int liveNeighbors = countLiveNeighbors(x, y);
@@ -119,12 +130,22 @@ public class CellMatrix implements Cloneable {
     return neighbors;
   }
 
+  public void last() {
+    if (!history.isEmpty()) {
+      final Cell[][] lastFrame = history.pop();
+
+      forEach((x, y, cell) -> cell.setState(lastFrame[x][y].getState()));
+    }
+  }
+
   public void reset() {
     forEach((x, y, cell) -> cell.setState(seedCells[x][y].getState()));
+    history.clear();
   }
 
   public void clear() {
     forEach(cell -> cell.setState(CellState.DEAD));
+    history.clear();
   }
 
   public Cell[][] getWorkingCells() {

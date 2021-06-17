@@ -35,6 +35,12 @@ public class SimulationLoop extends AnimationTimer {
     }
   }
 
+  public void last() {
+    cells.last();
+    generations.decrement();
+    board.drawCells();
+  }
+  
   public void next() {
     cells.next();
     generations.increment();

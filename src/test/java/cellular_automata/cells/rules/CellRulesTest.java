@@ -1,10 +1,8 @@
-package cellular_automata.cells;
+package cellular_automata.cells.rules;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
-import cellular_automata.cells.rules.CellRules;
 
 public class CellRulesTest {
   @Test

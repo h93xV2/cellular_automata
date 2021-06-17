@@ -51,6 +51,15 @@
             </ImageView>
           </graphic>
         </Button>
+        <Button fx:id="lastStep">
+          <graphic>
+            <ImageView>
+              <image>
+                <Image url="/google_fonts_icons/outline_skip_previous_black_18dp.png" />
+              </image>
+            </ImageView>
+          </graphic>
+        </Button>
         <Button fx:id="nextStep">
           <graphic>
             <ImageView>

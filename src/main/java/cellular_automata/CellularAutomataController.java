@@ -27,6 +27,7 @@ public class CellularAutomataController {
   @FXML private Board board;
   @FXML private Button start;
   @FXML private Button stop;
+  @FXML private Button lastStep;
   @FXML private Button nextStep;
   @FXML private Button reset;
   @FXML private Button clear;
@@ -137,6 +138,7 @@ public class CellularAutomataController {
   private void setUpGameControlButtons(final SimulationLoop loop) {
     start.setOnAction(event -> loop.start());
     stop.setOnAction(event -> loop.stop());
+    lastStep.setOnAction(event -> loop.last());
     nextStep.setOnAction(event -> loop.next());
     reset.setOnAction(event -> loop.reset());
     clear.setOnAction(event -> loop.clear());
