@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cellular_automata.cells.Cell;
-import cellular_automata.cells.copiers.CellArrayCopier;
 import cellular_automata.cells.rules.CellRules;
 
 public class SimulationData {
@@ -89,11 +88,25 @@ public class SimulationData {
   }
 
   public Cell[][] getCells() {
-    return cells == null ? cells : CellArrayCopier.createCopy(cells);
+    return cells == null ? cells : createCellCopy(cells);
   }
 
   public void setCells(final Cell[][] cells) {
-    this.cells = CellArrayCopier.createCopy(cells);
+    this.cells = createCellCopy(cells);
+  }
+  
+  private Cell[][] createCellCopy(final Cell[][] cellsToCopy) {
+    final Cell[][] copyCells = new Cell[cellsToCopy.length][cellsToCopy[0].length];
+
+    for (var x = 0; x < cellsToCopy.length; x++) {
+      for (var y = 0; y < cellsToCopy[0].length; y++) {
+        if (cellsToCopy[x][y] != null) {
+          copyCells[x][y] = (Cell) cellsToCopy[x][y].clone();
+        }
+      }
+    }
+
+    return copyCells;
   }
 
   public boolean getShowGridLines() {
