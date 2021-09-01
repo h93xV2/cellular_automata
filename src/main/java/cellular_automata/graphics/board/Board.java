@@ -36,13 +36,13 @@ public class Board extends Canvas {
       final int convertedY = (int) (event.getY() / workingCellHeight);
       cells.getCell(convertedX, convertedY).toggleState();
       cells.lockCurrentStateAsSeed();
-      drawCells();
+      draw();
     });
 
     showGridLines = true;
     boardSetUp = true;
-    
-    drawCells();
+
+    draw();
   }
 
   private int computeCellMatrixWidth() {
@@ -53,18 +53,26 @@ public class Board extends Canvas {
     return (int) (getWidth() / workingCellHeight);
   }
 
-  public void drawCells() {
-    if (!boardSetUp) throw new BoardNotSetUpRuntimeException();
-    
+  public void draw() {
+    if (!boardSetUp)
+      throw new BoardNotSetUpRuntimeException();
+
+    clearBoard();
+
+    drawCells();
+  }
+
+  private void clearBoard() {
     final GraphicsContext gc = getGraphicsContext2D();
 
     gc.setFill(Color.WHITE);
     gc.fillRect(0.0, 0.0, getWidth(), getHeight());
+  }
+
+  private void drawCells() {
+    final GraphicsContext gc = getGraphicsContext2D();
 
     final Pair<Double, Double> computedCellDimensions = drawConditionalGridAndGetCellDimensions();
-
-    final double cellDrawWidth = computedCellDimensions.getKey();
-    final double cellDrawHeight = computedCellDimensions.getValue();
 
     cells.forEach((x, y, cell) -> {
       final double boardX = computeBoardX(x);
@@ -76,7 +84,7 @@ public class Board extends Canvas {
         gc.setFill(Color.BLACK);
       }
 
-      gc.fillRect(boardX, boardY, cellDrawWidth, cellDrawHeight);
+      gc.fillRect(boardX, boardY, computedCellDimensions.getKey(), computedCellDimensions.getValue());
     });
   }
 

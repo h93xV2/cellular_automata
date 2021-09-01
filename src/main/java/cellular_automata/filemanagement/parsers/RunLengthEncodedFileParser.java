@@ -9,14 +9,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import cellular_automata.alerts.Alerts;
+import cellular_automata.alerts.Alertable;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.data.PatternPoint;
 import cellular_automata.filemanagement.data.SimulationData;
 
-public class RunLengthEncodedFileParser implements FileParser {
+public class RunLengthEncodedFileParser implements Alertable, FileParser {
   private static final String fileNameExtension = ".rle";
 
   private static final int characterOffset = 2;
@@ -37,7 +37,7 @@ public class RunLengthEncodedFileParser implements FileParser {
     try (final BufferedReader reader = new BufferedReader(new FileReader(fileToParse))) {
       return parseFileData(reader);
     } catch (IOException e) {
-      Alerts.notifyRecoverableError("Unable to open the requested RLE file.", e);
+      notifyRecoverableError("Unable to open the requested RLE file.", e);
     }
 
     return null;
@@ -52,11 +52,11 @@ public class RunLengthEncodedFileParser implements FileParser {
 
     while ((line = reader.readLine()) != null) {
       try {
-        parseLine(line, data);
+        parseMarkedLine(line, data);
       } catch (CellStateLineDetectedException e) {
         if (!endOfPatternReached) {
           encodedCellLines.append(line);
-          
+
           if (line.contains(endOfPatternMarker)) {
             endOfPatternReached = true;
           }
@@ -70,8 +70,8 @@ public class RunLengthEncodedFileParser implements FileParser {
 
     return data;
   }
-  
-  void parseLine(final String line, final SimulationData data) {
+
+  void parseMarkedLine(final String line, final SimulationData data) {
     final String lineStart = line.trim().substring(0, 2);
     final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
 
@@ -85,7 +85,7 @@ public class RunLengthEncodedFileParser implements FileParser {
       }
     }
   }
-
+  
   private void populateDataFromMarkedLine(final String line, final LineType typeOfLineUnderInspection,
       final SimulationData data) {
     switch (typeOfLineUnderInspection) {
@@ -121,14 +121,15 @@ public class RunLengthEncodedFileParser implements FileParser {
 
   private CellRules parseRuleData(final String line) {
     final String[] neighborLists = line.split("/");
-    final String birthList = neighborLists[0].toLowerCase().startsWith("b") ? neighborLists[0].substring(1) : neighborLists[1];
-    final String survivalList = neighborLists[1].toLowerCase().startsWith("s") ? neighborLists[1].substring(1) : neighborLists[0];
+    final String birthList = neighborLists[0].toLowerCase().startsWith("b") ? neighborLists[0].substring(1)
+        : neighborLists[1];
+    final String survivalList = neighborLists[1].toLowerCase().startsWith("s") ? neighborLists[1].substring(1)
+        : neighborLists[0];
 
     return buildRulesFromBirthAndSurvivalLists(birthList, survivalList);
   }
 
-  private CellRules buildRulesFromBirthAndSurvivalLists(final String birthList,
-      final String survivalList) {
+  private CellRules buildRulesFromBirthAndSurvivalLists(final String birthList, final String survivalList) {
     final CellRules cellRules = new CellRules();
     cellRules.clearBirthNeighborCounts();
     cellRules.clearSurvivalNeighborCounts();
@@ -171,20 +172,21 @@ public class RunLengthEncodedFileParser implements FileParser {
     var encodedRows = cellRows.size();
     var y = 0;
     var skips = 0;
-    
+
     while (y < encodedRows) {
       if (skips == 0) {
         final int count = decodeEncodedCellRow(cellRows.get(y), y, cells, data);
-        
-        if (count != 0) skips = count - 1;
+
+        if (count != 0)
+          skips = count - 1;
       } else {
         addImpliedDeadCells(data, cells, 0, y);
-        skips --;
-        encodedRows ++;
+        skips--;
+        encodedRows++;
         cellRows.add(y, "");
       }
-      
-      y ++;
+
+      y++;
     }
 
     data.setCells(cells);
@@ -204,8 +206,7 @@ public class RunLengthEncodedFileParser implements FileParser {
     return processedLine;
   }
 
-  private int decodeEncodedCellRow(final String cellRow, final int y, final Cell[][] cells,
-      final SimulationData data) {
+  private int decodeEncodedCellRow(final String cellRow, final int y, final Cell[][] cells, final SimulationData data) {
     var x = 0;
     var count = 0;
 
@@ -226,7 +227,7 @@ public class RunLengthEncodedFileParser implements FileParser {
 
     if (x < data.getWidth())
       addImpliedDeadCells(data, cells, x, y);
-    
+
     return count;
   }
 
@@ -254,6 +255,6 @@ public class RunLengthEncodedFileParser implements FileParser {
 
   @Override
   public void saveFile(File fileToSaveTo, SimulationData data) {
-    Alerts.notifyRecoverableError("This operation is not supported at this time.");
+    notifyRecoverableError("This operation is not supported at this time.");
   }
 }

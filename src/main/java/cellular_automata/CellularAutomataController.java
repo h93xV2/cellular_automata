@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import cellular_automata.alerts.Alerts;
+import cellular_automata.alerts.Alertable;
 import cellular_automata.cells.Generations;
 import cellular_automata.cells.rules.CellRulesEditor;
 import cellular_automata.filemanagement.FileSystemCoordinator;
@@ -18,7 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 
-public class CellularAutomataController {
+public class CellularAutomataController implements Alertable {
   @FXML private MenuItem openFile;
   @FXML private MenuItem saveFile;
   @FXML private MenuItem toggleGridLines;
@@ -46,7 +46,7 @@ public class CellularAutomataController {
     try (final FileInputStream in = new FileInputStream(defaultPropertiesFile)) {
       defaultProperties.load(in);
     } catch (IOException e) {
-      Alerts.notifyNonRecoverableError("Unable to load the default application settings.", e);
+      notifyNonRecoverableError("Unable to load the default application settings.", e);
     }
 
     fileSystem = new FileSystemCoordinator(CellularAutomataApp.getPrimaryStage());
@@ -72,7 +72,7 @@ public class CellularAutomataController {
     try {
       setUpBoardDimensions();
     } catch (NumberFormatException nfe) {
-      Alerts.notifyNonRecoverableError("Unable to establish the size of the window.", nfe);
+      notifyNonRecoverableError("Unable to establish the size of the window.", nfe);
     }
 
     setUpBoardControls();
@@ -101,7 +101,7 @@ public class CellularAutomataController {
         board.setShowGridLines(saveData.getShowGridLines());
         board.getCells().lockCurrentStateAsSeed();
         rules.setText(board.getCells().getRules().toString());
-        board.drawCells();
+        board.draw();
       }
     });
 
@@ -127,7 +127,7 @@ public class CellularAutomataController {
   private void setUpBoardControls() {
     toggleGridLines.setOnAction(event -> {
       board.toggleGridLines();
-      board.drawCells();
+      board.draw();
     });
   }
 
@@ -144,7 +144,7 @@ public class CellularAutomataController {
     try {
       initializeGameSpeedSlider();
     } catch (NumberFormatException nfe) {
-      Alerts.notifyNonRecoverableError("Unable to create the slider used to control speed.", nfe);
+      notifyNonRecoverableError("Unable to create the slider used to control speed.", nfe);
     }
 
     speed.valueProperty().addListener((observableValue, oldValue, newValue) -> {

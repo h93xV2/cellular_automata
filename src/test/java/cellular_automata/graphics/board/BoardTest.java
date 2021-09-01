@@ -11,7 +11,7 @@ public class BoardTest {
   void drawingIsNotAllowedUntilTheBoardIsSetUp() {
     final Board board = new Board();
 
-    assertThrows(BoardNotSetUpRuntimeException.class, board::drawCells);
+    assertThrows(BoardNotSetUpRuntimeException.class, board::draw);
   }
 
   @Test
@@ -27,7 +27,7 @@ public class BoardTest {
     final Board board = new Board();
     board.setUp(1, 1, 1, 1);
     board.getCells().getCell(0, 0).toggleState();
-    board.drawCells();
+    board.draw();
 
     assertEquals(CellState.LIVE, board.getCells().getCell(0, 0).getState());
   }

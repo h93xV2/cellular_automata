@@ -24,7 +24,7 @@ public class RunLengthEncodedFileParserTest {
     final String commentLine = "#C hello world";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(commentLine, data);
+    rleParser.parseMarkedLine(commentLine, data);
 
     assertEquals("hello world", data.getComments().get(0));
   }
@@ -34,7 +34,7 @@ public class RunLengthEncodedFileParserTest {
     final String commentLine = "#c this is a comment";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(commentLine, data);
+    rleParser.parseMarkedLine(commentLine, data);
 
     assertEquals("this is a comment", data.getComments().get(0));
   }
@@ -44,7 +44,7 @@ public class RunLengthEncodedFileParserTest {
     final String nameLine = "#N Gosper glider gun";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(nameLine, data);
+    rleParser.parseMarkedLine(nameLine, data);
 
     assertEquals("Gosper glider gun", data.getPatternName());
   }
@@ -54,7 +54,7 @@ public class RunLengthEncodedFileParserTest {
     final String authorInformation = "#O John Smith";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(authorInformation, data);
+    rleParser.parseMarkedLine(authorInformation, data);
 
     assertEquals("John Smith", data.getAuthorInformation());
   }
@@ -64,7 +64,7 @@ public class RunLengthEncodedFileParserTest {
     final String topLeftCorner = "#P 5 7";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(topLeftCorner, data);
+    rleParser.parseMarkedLine(topLeftCorner, data);
 
     assertEquals(new PatternPoint(5, 7), data.getTopLeftCorner());
   }
@@ -74,7 +74,7 @@ public class RunLengthEncodedFileParserTest {
     final String topLeftCorner = "#R -13 -20";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(topLeftCorner, data);
+    rleParser.parseMarkedLine(topLeftCorner, data);
 
     assertEquals(new PatternPoint(-13, -20), data.getTopLeftCorner());
   }
@@ -84,7 +84,7 @@ public class RunLengthEncodedFileParserTest {
     final String cellRules = "#r B7/S23";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(cellRules, data);
+    rleParser.parseMarkedLine(cellRules, data);
 
     assertTrue(data.getCellRules().isCountWithinBirthSet(7));
   }
@@ -94,7 +94,7 @@ public class RunLengthEncodedFileParserTest {
     final String cellRules = "#r B3/S9";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(cellRules, data);
+    rleParser.parseMarkedLine(cellRules, data);
 
     assertTrue(data.getCellRules().isCountWithinSurvivalSet(9));
   }
@@ -104,7 +104,7 @@ public class RunLengthEncodedFileParserTest {
     final String cellRules = "#r B2/S";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(cellRules, data);
+    rleParser.parseMarkedLine(cellRules, data);
 
     assertTrue(data.getCellRules().getTotalSurvivalNeighborCounts() == 0);
   }
@@ -114,7 +114,7 @@ public class RunLengthEncodedFileParserTest {
     final String cellRules = "#r 35/7";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(cellRules, data);
+    rleParser.parseMarkedLine(cellRules, data);
 
     assertTrue(data.getCellRules().isCountWithinBirthSet(7));
   }
@@ -124,7 +124,7 @@ public class RunLengthEncodedFileParserTest {
     final String header = "x = 2, y = 5";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(header, data);
+    rleParser.parseMarkedLine(header, data);
 
     assertEquals(2, data.getWidth());
   }
@@ -134,7 +134,7 @@ public class RunLengthEncodedFileParserTest {
     final String header = "x = 30, y = 20";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(header, data);
+    rleParser.parseMarkedLine(header, data);
 
     assertEquals(20, data.getHeight());
   }
@@ -144,7 +144,7 @@ public class RunLengthEncodedFileParserTest {
     final String header = "x = 30, y = 20, rule = B2/S45";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(header, data);
+    rleParser.parseMarkedLine(header, data);
 
     assertTrue(data.getCellRules().isCountWithinBirthSet(2));
   }
@@ -154,7 +154,7 @@ public class RunLengthEncodedFileParserTest {
     final String cellInformation = "bo$2bo$3o!";
 
     assertThrows(CellStateLineDetectedException.class, () -> {
-      rleParser.parseLine(cellInformation, new SimulationData());
+      rleParser.parseMarkedLine(cellInformation, new SimulationData());
     });
   }
 
@@ -220,7 +220,7 @@ public class RunLengthEncodedFileParserTest {
   void parseHeaderLineWithUnrecognizedAttribute() {
     final String headerString = "x = 3, y=4, rule=B3/S23, wasd=wasd";
 
-    assertThrows(UnknownHeaderAttributeException.class, () -> rleParser.parseLine(headerString, new SimulationData()));
+    assertThrows(UnknownHeaderAttributeException.class, () -> rleParser.parseMarkedLine(headerString, new SimulationData()));
   }
 
   @Test
@@ -291,7 +291,7 @@ public class RunLengthEncodedFileParserTest {
     final String ruleLine = "x = 3, y=4, rule=b3/s29";
     final SimulationData data = new SimulationData();
 
-    rleParser.parseLine(ruleLine, data);
+    rleParser.parseMarkedLine(ruleLine, data);
 
     assertTrue(data.getCellRules().isCountWithinSurvivalSet(9));
   }

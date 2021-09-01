@@ -38,20 +38,20 @@ public class SimulationLoop extends AnimationTimer {
   public void last() {
     cells.last();
     generations.decrement();
-    board.drawCells();
+    board.draw();
   }
   
   public void next() {
     cells.next();
     generations.increment();
-    board.drawCells();
+    board.draw();
   }
 
   public void reset() {
     stop();
     cells.reset();
     generations.reset();
-    board.drawCells();
+    board.draw();
   }
 
   public void clear() {
@@ -59,7 +59,7 @@ public class SimulationLoop extends AnimationTimer {
     cells.clear();
     generations.reset();
     cells.lockCurrentStateAsSeed();
-    board.drawCells();
+    board.draw();
   }
 
   @Override

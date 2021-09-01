@@ -5,10 +5,10 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cellular_automata.alerts.Alerts;
+import cellular_automata.alerts.Alertable;
 import cellular_automata.filemanagement.data.SimulationData;
 
-public class ApplicationFileParser implements FileParser {
+public class ApplicationFileParser implements Alertable, FileParser {
   private static final String fileNameExtension = ".json";
   
   @Override
@@ -23,7 +23,7 @@ public class ApplicationFileParser implements FileParser {
     try {
       return objectMapper.readValue(fileToOpen, SimulationData.class);
     } catch (IOException e) {
-      Alerts.notifyRecoverableError("Unable to open the requested game file.", e);
+      notifyRecoverableError("Unable to open the requested game file.", e);
     }
 
     return null;
@@ -36,7 +36,7 @@ public class ApplicationFileParser implements FileParser {
     try {
       objectMapper.writeValue(fileToSaveTo, data);
     } catch (IOException e) {
-      Alerts.notifyRecoverableError("Unable to save the game data to the requested file.", e);
+      notifyRecoverableError("Unable to save the game data to the requested file.", e);
     }
   }
 }
