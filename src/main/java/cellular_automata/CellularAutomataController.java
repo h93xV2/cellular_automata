@@ -19,20 +19,34 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 
 public class CellularAutomataController implements Alertable {
-  @FXML private MenuItem openFile;
-  @FXML private MenuItem saveFile;
-  @FXML private MenuItem toggleGridLines;
-  @FXML private MenuItem editRules;
-  @FXML private Board board;
-  @FXML private Button start;
-  @FXML private Button stop;
-  @FXML private Button lastStep;
-  @FXML private Button nextStep;
-  @FXML private Button reset;
-  @FXML private Button clear;
-  @FXML private Slider speed;
-  @FXML private Label rules;
-  @FXML private GenerationsLabel generationsLabel;
+  @FXML
+  private MenuItem openFile;
+  @FXML
+  private MenuItem saveFile;
+  @FXML
+  private MenuItem toggleGridLines;
+  @FXML
+  private MenuItem editRules;
+  @FXML
+  private Board board;
+  @FXML
+  private Button start;
+  @FXML
+  private Button stop;
+  @FXML
+  private Button lastStep;
+  @FXML
+  private Button nextStep;
+  @FXML
+  private Button reset;
+  @FXML
+  private Button clear;
+  @FXML
+  private Slider speed;
+  @FXML
+  private Label rules;
+  @FXML
+  private GenerationsLabel generationsLabel;
   private final Properties defaultProperties;
   private final FileSystemCoordinator fileSystem;
   private Generations generations;
@@ -79,8 +93,8 @@ public class CellularAutomataController implements Alertable {
   }
 
   private SimulationLoop setUpSimulation() {
-    final SimulationLoop simulation = new SimulationLoop(board, Long.valueOf((String) defaultProperties.get("timeStep")),
-        generations);
+    final SimulationLoop simulation = new SimulationLoop(board,
+        Long.valueOf((String) defaultProperties.get("timeStep")), generations);
 
     setUpControlButtons(simulation);
     setupSpeedSlider(simulation);
@@ -89,6 +103,11 @@ public class CellularAutomataController implements Alertable {
   }
 
   private void setUpFileControls(final SimulationLoop loop) {
+    setUpOpenFile(loop);
+    setUpSaveFile(loop);
+  }
+
+  private void setUpOpenFile(final SimulationLoop loop) {
     openFile.setOnAction(event -> {
       loop.stop();
 
@@ -104,7 +123,9 @@ public class CellularAutomataController implements Alertable {
         board.draw();
       }
     });
+  }
 
+  private void setUpSaveFile(final SimulationLoop loop) {
     saveFile.setOnAction(event -> {
       loop.reset();
 
