@@ -1,13 +1,12 @@
-package cellular_automata.filemanagement.app;
+package cellular_automata.filemanagement.parsers;
 
 import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cellular_automata.Alerts;
-import cellular_automata.filemanagement.FileParser;
-import cellular_automata.filemanagement.SimulationData;
+import cellular_automata.alerts.Alerts;
+import cellular_automata.filemanagement.data.SimulationData;
 
 public class ApplicationFileParser implements FileParser {
   private static final String fileNameExtension = ".json";

@@ -1,4 +1,4 @@
-package cellular_automata.filemanagement.rle;
+package cellular_automata.filemanagement.parsers;
 
 import java.util.Collections;
 import java.util.HashMap;

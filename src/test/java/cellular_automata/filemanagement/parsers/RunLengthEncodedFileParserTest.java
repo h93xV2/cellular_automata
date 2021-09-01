@@ -1,4 +1,4 @@
-package cellular_automata.filemanagement.rle;
+package cellular_automata.filemanagement.parsers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.cells.rules.CellRules;
-import cellular_automata.filemanagement.PatternPoint;
-import cellular_automata.filemanagement.SimulationData;
+import cellular_automata.filemanagement.data.PatternPoint;
+import cellular_automata.filemanagement.data.SimulationData;
 
 public class RunLengthEncodedFileParserTest {
   private static final String simpleTestFilePath = "src/test/resources/testpattern.rle";

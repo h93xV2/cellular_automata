@@ -159,4 +159,27 @@ public class CellMatrix implements Cloneable {
   public CellRules getRules() {
     return cellRules;
   }
+
+  public void copyCellStates(final Cell[][] source) {
+    forEach(cell -> cell.setState(CellState.DEAD));
+
+    final int sourceWidth = source.length;
+    final int sourceHeight = source[0].length;
+    final int xOffset = (getWidth() - sourceWidth) / 2;
+    final int yOffset = (getHeight() - sourceHeight) / 2;
+
+    for (var x = 0; x < sourceWidth; x++) {
+      for (var y = 0; y < sourceHeight; y++) {
+        final int xDestination = x + xOffset;
+        final int yDestination = y + yOffset;
+
+        if (0 <= xDestination && xDestination < getWidth() && 0 <= yDestination
+            && yDestination < getHeight()) {
+          if (source[x][y] != null) {
+            getCell(xDestination, yDestination).setState(source[x][y].getState());
+          }
+        }
+      }
+    }
+  }
 }

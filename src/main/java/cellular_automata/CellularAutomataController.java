@@ -5,12 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import cellular_automata.alerts.Alerts;
 import cellular_automata.cells.Generations;
-import cellular_automata.cells.copiers.CellMatrixCopier;
-import cellular_automata.cells.copiers.CenteredCellMatrixCopier;
 import cellular_automata.cells.rules.CellRulesEditor;
 import cellular_automata.filemanagement.FileSystemCoordinator;
-import cellular_automata.filemanagement.SimulationData;
+import cellular_automata.filemanagement.data.SimulationData;
 import cellular_automata.graphics.GenerationsLabel;
 import cellular_automata.graphics.board.Board;
 import javafx.fxml.FXML;
@@ -36,7 +35,6 @@ public class CellularAutomataController {
   @FXML private GenerationsLabel generationsLabel;
   private final Properties defaultProperties;
   private final FileSystemCoordinator fileSystem;
-  private CellMatrixCopier matrixCopier;
   private Generations generations;
 
   public CellularAutomataController() {
@@ -52,8 +50,6 @@ public class CellularAutomataController {
     }
 
     fileSystem = new FileSystemCoordinator(CellularAutomataApp.getPrimaryStage());
-
-    matrixCopier = new CenteredCellMatrixCopier();
 
     generations = new Generations();
   }
@@ -100,7 +96,7 @@ public class CellularAutomataController {
 
       if (saveData != null) {
         loop.reset();
-        matrixCopier.copyCellStates(saveData.getCells(), board.getCells());
+        board.getCells().copyCellStates(saveData.getCells());
         board.getCells().copyRules(saveData.getCellRules());
         board.setShowGridLines(saveData.getShowGridLines());
         board.getCells().lockCurrentStateAsSeed();

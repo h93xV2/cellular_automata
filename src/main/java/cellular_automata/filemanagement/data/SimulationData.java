@@ -1,4 +1,4 @@
-package cellular_automata.filemanagement;
+package cellular_automata.filemanagement.data;
 
 import java.util.ArrayList;
 import java.util.List;

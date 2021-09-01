@@ -1,4 +1,4 @@
-package cellular_automata.filemanagement;
+package cellular_automata.filemanagement.data;
 
 public class PatternPoint {
   private int x;

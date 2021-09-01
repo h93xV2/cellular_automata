@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.cells.rules.CellRules;
+import cellular_automata.filemanagement.data.PatternPoint;
+import cellular_automata.filemanagement.data.SimulationData;
 
 public class SimulationDataTest {
   @Test

@@ -3,8 +3,10 @@ package cellular_automata.filemanagement;
 import java.io.File;
 import java.util.*;
 
-import cellular_automata.filemanagement.app.ApplicationFileParser;
-import cellular_automata.filemanagement.rle.RunLengthEncodedFileParser;
+import cellular_automata.filemanagement.data.SimulationData;
+import cellular_automata.filemanagement.parsers.ApplicationFileParser;
+import cellular_automata.filemanagement.parsers.FileParser;
+import cellular_automata.filemanagement.parsers.RunLengthEncodedFileParser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 

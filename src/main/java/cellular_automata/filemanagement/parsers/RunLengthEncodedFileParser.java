@@ -1,4 +1,4 @@
-package cellular_automata.filemanagement.rle;
+package cellular_automata.filemanagement.parsers;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,13 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import cellular_automata.Alerts;
+import cellular_automata.alerts.Alerts;
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.cells.rules.CellRules;
-import cellular_automata.filemanagement.FileParser;
-import cellular_automata.filemanagement.PatternPoint;
-import cellular_automata.filemanagement.SimulationData;
+import cellular_automata.filemanagement.data.PatternPoint;
+import cellular_automata.filemanagement.data.SimulationData;
 
 public class RunLengthEncodedFileParser implements FileParser {
   private static final String fileNameExtension = ".rle";

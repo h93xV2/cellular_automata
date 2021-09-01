@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import cellular_automata.filemanagement.data.PatternPoint;
+
 public class PatternPointTest {
   @Test
   void pointIsZeroedOutByDefault() {

@@ -1,4 +1,4 @@
-package cellular_automata;
+package cellular_automata.alerts;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
