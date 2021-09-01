@@ -176,4 +176,24 @@ public class CellMatrixTest {
 
     assertEquals(CellState.LIVE, matrix.getCell(0, 1).getState());
   }
+
+  @Test
+  void cellStatesCanBeCopied() {
+    final Cell[][] source = new Cell[1][2];
+    source[0][0] = new Cell();
+    source[0][0].toggleState();
+    source[0][1] = new Cell();
+    source[0][1].toggleState();
+
+    final CellMatrix destination = new CellMatrix(1, 2);
+    final boolean deadBefore = CellState.DEAD.equals(destination.getCell(0, 0).getState())
+        && CellState.DEAD.equals(destination.getCell(0, 1).getState());
+
+    destination.copyCellStates(source);
+
+    final boolean aliveAfter = CellState.LIVE.equals(destination.getCell(0, 0).getState())
+        && CellState.LIVE.equals(destination.getCell(0, 1).getState());
+
+    assertTrue(deadBefore && aliveAfter);
+  }
 }
