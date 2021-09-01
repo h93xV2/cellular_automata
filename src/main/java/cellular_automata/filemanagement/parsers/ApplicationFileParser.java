@@ -23,7 +23,7 @@ public class ApplicationFileParser implements Alertable, FileParser {
     try {
       return objectMapper.readValue(fileToOpen, SimulationData.class);
     } catch (IOException e) {
-      notifyRecoverableError("Unable to open the requested game file.", e);
+      notifyRecoverableError("Unable to open the requested file.", e);
     }
 
     return null;
@@ -36,7 +36,7 @@ public class ApplicationFileParser implements Alertable, FileParser {
     try {
       objectMapper.writeValue(fileToSaveTo, data);
     } catch (IOException e) {
-      notifyRecoverableError("Unable to save the game data to the requested file.", e);
+      notifyRecoverableError("Unable to save data to the requested file.", e);
     }
   }
 }

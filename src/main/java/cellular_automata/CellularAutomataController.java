@@ -57,7 +57,7 @@ public class CellularAutomataController implements Alertable {
   public void initialize() {
     setUpBoard();
     rules.setText(board.getCells().getRules().toString());
-    final SimulationLoop loop = setUpGame();
+    final SimulationLoop loop = setUpSimulation();
     setUpFileControls(loop);
     generations.addGenerationsChangeListener(generationsLabel);
     generationsLabel.setText(Integer.toString(generations.getValue()));
@@ -78,14 +78,14 @@ public class CellularAutomataController implements Alertable {
     setUpBoardControls();
   }
 
-  private SimulationLoop setUpGame() {
-    final SimulationLoop game = new SimulationLoop(board, Long.valueOf((String) defaultProperties.get("timeStep")),
+  private SimulationLoop setUpSimulation() {
+    final SimulationLoop simulation = new SimulationLoop(board, Long.valueOf((String) defaultProperties.get("timeStep")),
         generations);
 
-    setUpGameControlButtons(game);
-    setupGameSpeedSlider(game);
+    setUpControlButtons(simulation);
+    setupSpeedSlider(simulation);
 
-    return game;
+    return simulation;
   }
 
   private void setUpFileControls(final SimulationLoop loop) {
@@ -131,7 +131,7 @@ public class CellularAutomataController implements Alertable {
     });
   }
 
-  private void setUpGameControlButtons(final SimulationLoop loop) {
+  private void setUpControlButtons(final SimulationLoop loop) {
     start.setOnAction(event -> loop.start());
     stop.setOnAction(event -> loop.stop());
     lastStep.setOnAction(event -> loop.last());
@@ -140,7 +140,7 @@ public class CellularAutomataController implements Alertable {
     clear.setOnAction(event -> loop.clear());
   }
 
-  private void setupGameSpeedSlider(final SimulationLoop loop) {
+  private void setupSpeedSlider(final SimulationLoop loop) {
     try {
       initializeGameSpeedSlider();
     } catch (NumberFormatException nfe) {
