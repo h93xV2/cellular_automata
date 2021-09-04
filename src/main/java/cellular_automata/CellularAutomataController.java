@@ -1,11 +1,12 @@
 package cellular_automata;
 
-import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import static cellular_automata.CellularAutomataApp.getPrimaryStage;
+import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
 
 import cellular_automata.cells.Generations;
 import cellular_automata.filemanagement.FileSystemCoordinator;
@@ -65,36 +66,25 @@ public class CellularAutomataController implements Controller, FxmlLoader {
       notifyNonRecoverableError("Unable to load the default application settings.", e);
     }
 
-    fileSystem = new FileSystemCoordinator(CellularAutomataApp.getPrimaryStage());
+    fileSystem = new FileSystemCoordinator(getPrimaryStage());
 
     generations = new Generations();
   }
 
   public void initialize() {
     setUpBoard();
-    rules.setText(board.getCells().getRules().toString());
-    final SimulationLoop loop = setUpSimulation();
-    setUpFileControls(loop);
-    generations.addGenerationsChangeListener(generationsLabel);
-    generationsLabel.setText(Integer.toString(generations.getValue()));
+    setRuleLabelText();
+    connectSimulationLoopToFileSystem(setUpAndRetrieveSimulationLoop());
+    setUpGenerationsLabel();
+
     editRules.setOnAction(event -> {
-      // final CellRulesEditor editor = new
-      // CellRulesEditor(board.getCells().getRules());
-      // editor.showAndWait();
-      // rules.setText(board.getCells().getRules().toString());
-      final Stage editorStage = new Stage();
-      editorStage.setTitle("Edit cell rules");
-      editorStage.initModality(Modality.APPLICATION_MODAL);
-      final Controller editorController = loadFxml(editorStage, "fxml/cellruleseditor.xml");
-      editorController.setShareableData(getShareableData());
+      final Stage editorStage = setUpAndRetrieveEditorStage();
+      final Controller editorController = getEditorController(editorStage);
+
       editorStage.showAndWait();
-      board.getCells().getRules().clearBirthNeighborCounts();
-      board.getCells().getRules().clearSurvivalNeighborCounts();
-      board.getCells().getRules().setNeighborsRequiredForBirth(
-          editorController.getShareableData().getCellRules().getNeighborsRequiredForBirth());
-      board.getCells().getRules().setNeighborsRequiredForSurvival(
-          editorController.getShareableData().getCellRules().getNeighborsRequiredForSurvival());
-      rules.setText(board.getCells().getRules().toString());
+
+      updateBoardUsingDataFromEditor(editorController.getShareableData());
+      setRuleLabelText();
     });
   }
 
@@ -108,7 +98,11 @@ public class CellularAutomataController implements Controller, FxmlLoader {
     setUpBoardControls();
   }
 
-  private SimulationLoop setUpSimulation() {
+  private void setRuleLabelText() {
+    rules.setText(board.getCells().getRules().toString());
+  }
+
+  private SimulationLoop setUpAndRetrieveSimulationLoop() {
     final SimulationLoop simulation = new SimulationLoop(board,
         Long.valueOf((String) defaultProperties.get("timeStep")), generations);
 
@@ -118,7 +112,7 @@ public class CellularAutomataController implements Controller, FxmlLoader {
     return simulation;
   }
 
-  private void setUpFileControls(final SimulationLoop loop) {
+  private void connectSimulationLoopToFileSystem(final SimulationLoop loop) {
     setUpOpenFile(loop);
     setUpSaveFile(loop);
   }
@@ -150,6 +144,36 @@ public class CellularAutomataController implements Controller, FxmlLoader {
 
       fileSystem.saveToFile(saveData);
     });
+  }
+
+  private void setUpGenerationsLabel() {
+    generations.addGenerationsChangeListener(generationsLabel);
+    generationsLabel.setText(Integer.toString(generations.getValue()));
+  }
+
+  private Stage setUpAndRetrieveEditorStage() {
+    final Stage editorStage = new Stage();
+
+    editorStage.setTitle("Edit cell rules");
+    editorStage.initModality(Modality.APPLICATION_MODAL);
+
+    return editorStage;
+  }
+
+  private Controller getEditorController(final Stage editorStage) {
+    final Controller editorController = loadFxml(editorStage, "fxml/cellruleseditor.xml");
+
+    editorController.setShareableData(getShareableData());
+
+    return editorController;
+  }
+
+  private void updateBoardUsingDataFromEditor(final ControllerData editorData) {
+    board.getCells().getRules().clearBirthNeighborCounts();
+    board.getCells().getRules().clearSurvivalNeighborCounts();
+    board.getCells().getRules().setNeighborsRequiredForBirth(editorData.getCellRules().getNeighborsRequiredForBirth());
+    board.getCells().getRules()
+        .setNeighborsRequiredForSurvival(editorData.getCellRules().getNeighborsRequiredForSurvival());
   }
 
   private void setUpBoardDimensions() {

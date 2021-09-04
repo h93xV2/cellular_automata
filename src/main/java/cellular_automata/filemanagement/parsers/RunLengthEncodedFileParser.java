@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static cellular_automata.alerts.Alerts.notifyRecoverableError;
+import static cellular_automata.cells.CellState.getRleSymbolToCellStateMap;
+import static cellular_automata.filemanagement.parsers.LineType.getRleLineMarkerToLineTypeMap;
 
 import cellular_automata.cells.Cell;
-import cellular_automata.cells.CellState;
 import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.data.PatternPoint;
 import cellular_automata.filemanagement.data.SimulationData;
@@ -74,7 +75,7 @@ public class RunLengthEncodedFileParser implements FileParser {
 
   void parseMarkedLine(final String line, final SimulationData data) {
     final String lineStart = line.trim().substring(0, 2);
-    final LineType typeOfLineUnderInspection = LineType.getRleLineMarkerToLineTypeMap().get(lineStart);
+    final LineType typeOfLineUnderInspection = getRleLineMarkerToLineTypeMap().get(lineStart);
 
     if (typeOfLineUnderInspection != null) {
       populateDataFromMarkedLine(line, typeOfLineUnderInspection, data);
@@ -240,8 +241,8 @@ public class RunLengthEncodedFileParser implements FileParser {
     final String stateSymbol = String.valueOf(character);
     final Cell cell = new Cell();
 
-    if (CellState.getRleSymbolToCellStateMap().containsKey(stateSymbol)) {
-      cell.setState(CellState.getRleSymbolToCellStateMap().get(stateSymbol));
+    if (getRleSymbolToCellStateMap().containsKey(stateSymbol)) {
+      cell.setState(getRleSymbolToCellStateMap().get(stateSymbol));
     }
 
     return cell;
