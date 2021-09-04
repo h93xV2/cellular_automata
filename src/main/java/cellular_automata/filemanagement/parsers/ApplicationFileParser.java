@@ -5,12 +5,13 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cellular_automata.alerts.Alertable;
+import static cellular_automata.alerts.Alerts.notifyRecoverableError;
+
 import cellular_automata.filemanagement.data.SimulationData;
 
-public class ApplicationFileParser implements Alertable, FileParser {
+public class ApplicationFileParser implements FileParser {
   private static final String fileNameExtension = ".json";
-  
+
   @Override
   public String getValidFileExtension() {
     return fileNameExtension;
@@ -19,7 +20,7 @@ public class ApplicationFileParser implements Alertable, FileParser {
   @Override
   public SimulationData openFile(final File fileToOpen) {
     final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     try {
       return objectMapper.readValue(fileToOpen, SimulationData.class);
     } catch (IOException e) {

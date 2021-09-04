@@ -9,14 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import cellular_automata.alerts.Alertable;
+import static cellular_automata.alerts.Alerts.notifyRecoverableError;
+
 import cellular_automata.cells.Cell;
 import cellular_automata.cells.CellState;
 import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.data.PatternPoint;
 import cellular_automata.filemanagement.data.SimulationData;
 
-public class RunLengthEncodedFileParser implements Alertable, FileParser {
+public class RunLengthEncodedFileParser implements FileParser {
   private static final String fileNameExtension = ".rle";
 
   private static final int characterOffset = 2;
@@ -85,7 +86,7 @@ public class RunLengthEncodedFileParser implements Alertable, FileParser {
       }
     }
   }
-  
+
   private void populateDataFromMarkedLine(final String line, final LineType typeOfLineUnderInspection,
       final SimulationData data) {
     switch (typeOfLineUnderInspection) {

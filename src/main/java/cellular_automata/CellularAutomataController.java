@@ -1,5 +1,7 @@
 package cellular_automata;
 
+import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -1,17 +1,18 @@
 package cellular_automata;
 
+import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import cellular_automata.alerts.Alertable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-public interface FxmlLoader extends Alertable {
+public interface FxmlLoader {
   public default Controller loadFxml(final Stage stage, final String filePath) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File fxmlFile = new File(classLoader.getResource(filePath).getFile());
