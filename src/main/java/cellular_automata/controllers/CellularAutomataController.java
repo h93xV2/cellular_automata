@@ -1,4 +1,4 @@
-package cellular_automata;
+package cellular_automata.controllers;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +8,8 @@ import java.util.Properties;
 import static cellular_automata.CellularAutomataApp.getPrimaryStage;
 import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
 
+import cellular_automata.FxmlLoader;
+import cellular_automata.SimulationLoop;
 import cellular_automata.cells.Generations;
 import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.data.SimulationData;

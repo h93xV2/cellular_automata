@@ -17,7 +17,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="cellular_automata.CellularAutomataController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="cellular_automata.controllers.CellularAutomataController">
   <top>
     <VBox>
       <MenuBar>

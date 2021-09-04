@@ -1,7 +1,8 @@
-package cellular_automata.cells.rules;
+package cellular_automata.controllers;
 
-import cellular_automata.Controller;
-import cellular_automata.ControllerData;
+import cellular_automata.cells.rules.CellRules;
+import cellular_automata.cells.rules.NeighborCounts;
+import cellular_automata.cells.rules.NumberField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

@@ -23,7 +23,7 @@ public class CellularAutomataApp extends Application implements FxmlLoader {
     stage.show();
   }
 
-  static Stage getPrimaryStage() {
+  public static Stage getPrimaryStage() {
     return primaryStage;
   }
 

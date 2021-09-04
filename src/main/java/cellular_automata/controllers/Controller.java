@@ -1,4 +1,4 @@
-package cellular_automata;
+package cellular_automata.controllers;
 
 public interface Controller {
   public ControllerData getShareableData();

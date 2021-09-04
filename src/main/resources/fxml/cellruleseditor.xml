@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="cellular_automata.cells.rules.CellRulesEditorController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="cellular_automata.controllers.CellRulesEditorController">
   <center>
     <VBox spacing="5">
       <HBox spacing="5">
