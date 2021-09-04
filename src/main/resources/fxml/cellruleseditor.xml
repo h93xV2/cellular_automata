@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import cellular_automata.cells.rules.NumberField?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="cellular_automata.cells.rules.CellRulesEditorController">
+  <center>
+    <VBox spacing="5">
+      <HBox spacing="5">
+        <Label>
+          Birth neighbors
+        </Label>
+        <NumberField fx:id="birthNeighbors"/>
+      </HBox>
+      <HBox spacing="5">
+        <Label>
+          Survival neighbors
+        </Label>
+        <NumberField fx:id="survivalNeighbors"/>
+      </HBox>
+    </VBox>
+  </center>
+  <bottom>
+    <Separator />
+    <HBox alignment="CENTER_RIGHT" spacing="5">
+      <Button fx:id="apply">
+        Apply
+      </Button>
+      <Button fx:id="cancel">
+        Cancel
+      </Button>
+    </HBox>
+  </bottom>
+</BorderPane>

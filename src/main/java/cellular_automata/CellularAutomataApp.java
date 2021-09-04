@@ -1,17 +1,10 @@
 package cellular_automata;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import cellular_automata.alerts.Alertable;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
-public class CellularAutomataApp extends Application implements Alertable {
+public class CellularAutomataApp extends Application implements FxmlLoader {
   private static Stage primaryStage;
 
   public static void main(String[] args) {
@@ -20,32 +13,14 @@ public class CellularAutomataApp extends Application implements Alertable {
 
   @Override
   public void start(final Stage stage) {
+    stage.setOnHiding(event -> Platform.exit());
+    stage.setResizable(false);
+
     setPrimaryStage(stage);
 
-    final ClassLoader classLoader = getClass().getClassLoader();
-    final File fxmlFile = new File(classLoader.getResource("fxml/main.xml").getFile());
-
-    setStageAndShow(stage, fxmlFile);
-  }
-  
-  private void setStageAndShow(final Stage stage, final File fxmlFile) {
-    try {
-      stage.setScene(buildScene(fxmlFile));
-      stage.setResizable(false);
-      stage.show();
-    } catch (IOException exception) {
-      notifyNonRecoverableError("An error occurred while building the graphical user interface.",
-          exception);
-    }
-  }
-  
-  private Scene buildScene(final File fxmlFile) throws IOException {
-    final URL fxmlUrl = fxmlFile.toURI().toURL();
-    final FXMLLoader loader = new FXMLLoader(fxmlUrl);
-    final BorderPane container = loader.<BorderPane>load();
-    final Scene scene = new Scene(container);
+    loadFxml(stage, "fxml/main.xml");
     
-    return scene;
+    stage.show();
   }
 
   static Stage getPrimaryStage() {

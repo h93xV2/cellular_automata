@@ -5,9 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import cellular_automata.alerts.Alertable;
 import cellular_automata.cells.Generations;
-import cellular_automata.cells.rules.CellRulesEditor;
 import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.data.SimulationData;
 import cellular_automata.graphics.GenerationsLabel;
@@ -17,8 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-public class CellularAutomataController implements Alertable {
+public class CellularAutomataController implements Controller, FxmlLoader {
   @FXML
   private MenuItem openFile;
   @FXML
@@ -76,8 +76,22 @@ public class CellularAutomataController implements Alertable {
     generations.addGenerationsChangeListener(generationsLabel);
     generationsLabel.setText(Integer.toString(generations.getValue()));
     editRules.setOnAction(event -> {
-      final CellRulesEditor editor = new CellRulesEditor(board.getCells().getRules());
-      editor.showAndWait();
+      // final CellRulesEditor editor = new
+      // CellRulesEditor(board.getCells().getRules());
+      // editor.showAndWait();
+      // rules.setText(board.getCells().getRules().toString());
+      final Stage editorStage = new Stage();
+      editorStage.setTitle("Edit cell rules");
+      editorStage.initModality(Modality.APPLICATION_MODAL);
+      final Controller editorController = loadFxml(editorStage, "fxml/cellruleseditor.xml");
+      editorController.setShareableData(getShareableData());
+      editorStage.showAndWait();
+      board.getCells().getRules().clearBirthNeighborCounts();
+      board.getCells().getRules().clearSurvivalNeighborCounts();
+      board.getCells().getRules().setNeighborsRequiredForBirth(
+          editorController.getShareableData().getCellRules().getNeighborsRequiredForBirth());
+      board.getCells().getRules().setNeighborsRequiredForSurvival(
+          editorController.getShareableData().getCellRules().getNeighborsRequiredForSurvival());
       rules.setText(board.getCells().getRules().toString());
     });
   }
@@ -181,5 +195,19 @@ public class CellularAutomataController implements Alertable {
     speed.setMin(minimumSpeed);
     speed.setValue(initialSpeed);
     speed.setMax(maximumSpeed);
+  }
+
+  @Override
+  public ControllerData getShareableData() {
+    // TODO: Rewrite this.
+    final ControllerData data = new ControllerData();
+    data.setCellRules(board.getCells().getRules());
+    return data;
+  }
+
+  @Override
+  public void setShareableData(ControllerData data) {
+    // TODO Auto-generated method stub
+
   }
 }
