@@ -1,4 +1,4 @@
-package cellular_automata;
+package cellular_automata.fxml;
 
 import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
 
@@ -13,16 +13,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-public interface FxmlLoader {
-  public default Controller loadFxml(final Stage stage, final String filePath) {
+public class FxmlLoader {
+  private Stage stage;
+
+  public FxmlLoader(final Stage stage) {
+    this.stage = stage;
+  }
+
+  public Controller loadFxml(final String filePath) {
     final ClassLoader classLoader = getClass().getClassLoader();
     final File fxmlFile = new File(classLoader.getResource(filePath).getFile());
-    final Controller controller = setStage(stage, fxmlFile);
+    final Controller controller = connectStageAndController(stage, fxmlFile);
 
     return controller;
   }
 
-  private Controller setStage(final Stage stage, final File fxmlFile) {
+  private Controller connectStageAndController(final Stage stage, final File fxmlFile) {
     Pair<Scene, Controller> sceneAndController = null;
 
     try {
@@ -33,7 +39,10 @@ public interface FxmlLoader {
       notifyNonRecoverableError("An error occurred while building the graphical user interface.", exception);
     }
 
-    return sceneAndController.getValue();
+    final Controller controller = sceneAndController.getValue();
+    controller.setStage(stage);
+
+    return controller;
   }
 
   private Pair<Scene, Controller> buildScene(final File fxmlFile) throws IOException {
@@ -43,5 +52,9 @@ public interface FxmlLoader {
     final Scene scene = new Scene(container);
 
     return new Pair<>(scene, loader.getController());
+  }
+
+  public Stage getStage() {
+    return stage;
   }
 }

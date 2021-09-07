@@ -9,7 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class CellRulesEditorController implements Controller {
+public class CellRulesEditorController extends Controller {
   @FXML
   private NumberField birthNeighbors;
   @FXML

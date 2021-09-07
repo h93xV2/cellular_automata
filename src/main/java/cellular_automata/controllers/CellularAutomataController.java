@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static cellular_automata.CellularAutomataApp.getPrimaryStage;
 import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
 
-import cellular_automata.FxmlLoader;
 import cellular_automata.SimulationLoop;
 import cellular_automata.cells.Generations;
 import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.data.SimulationData;
+import cellular_automata.fxml.FxmlLoader;
 import cellular_automata.graphics.GenerationsLabel;
 import cellular_automata.graphics.board.Board;
 import javafx.fxml.FXML;
@@ -23,7 +22,7 @@ import javafx.scene.control.Slider;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CellularAutomataController implements Controller, FxmlLoader {
+public class CellularAutomataController extends Controller {
   @FXML
   private MenuItem openFile;
   @FXML
@@ -53,8 +52,9 @@ public class CellularAutomataController implements Controller, FxmlLoader {
   @FXML
   private GenerationsLabel generationsLabel;
   private final Properties defaultProperties;
-  private final FileSystemCoordinator fileSystem;
+  private FileSystemCoordinator fileSystem;
   private Generations generations;
+  private FxmlLoader editorLoader;
 
   public CellularAutomataController() {
     defaultProperties = new Properties();
@@ -68,8 +68,6 @@ public class CellularAutomataController implements Controller, FxmlLoader {
       notifyNonRecoverableError("Unable to load the default application settings.", e);
     }
 
-    fileSystem = new FileSystemCoordinator(getPrimaryStage());
-
     generations = new Generations();
   }
 
@@ -80,10 +78,12 @@ public class CellularAutomataController implements Controller, FxmlLoader {
     setUpGenerationsLabel();
 
     editRules.setOnAction(event -> {
-      final Stage editorStage = setUpAndRetrieveEditorStage();
-      final Controller editorController = getEditorController(editorStage);
+      if (editorLoader == null)
+        editorLoader = new FxmlLoader(setUpAndRetrieveEditorStage());
 
-      editorStage.showAndWait();
+      final Controller editorController = getEditorController(editorLoader.getStage());
+
+      editorLoader.getStage().showAndWait();
 
       updateBoardUsingDataFromEditor(editorController.getShareableData());
       setRuleLabelText();
@@ -163,7 +163,7 @@ public class CellularAutomataController implements Controller, FxmlLoader {
   }
 
   private Controller getEditorController(final Stage editorStage) {
-    final Controller editorController = loadFxml(editorStage, "fxml/cellruleseditor.xml");
+    final Controller editorController = editorLoader.loadFxml("fxml/cellruleseditor.xml");
 
     editorController.setShareableData(getShareableData());
 
@@ -227,15 +227,13 @@ public class CellularAutomataController implements Controller, FxmlLoader {
 
   @Override
   public ControllerData getShareableData() {
-    // TODO: Rewrite this.
     final ControllerData data = new ControllerData();
     data.setCellRules(board.getCells().getRules());
     return data;
   }
 
   @Override
-  public void setShareableData(ControllerData data) {
-    // TODO Auto-generated method stub
-
+  public void setStage(final Stage stage) {
+    fileSystem = new FileSystemCoordinator(getStage());
   }
 }

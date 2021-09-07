@@ -1,11 +1,12 @@
 package cellular_automata;
 
+import cellular_automata.fxml.FxmlLoader;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-public class CellularAutomataApp extends Application implements FxmlLoader {
-  private static Stage primaryStage;
+public class CellularAutomataApp extends Application {
+  private FxmlLoader loader;
 
   public static void main(String[] args) {
     launch();
@@ -16,18 +17,9 @@ public class CellularAutomataApp extends Application implements FxmlLoader {
     stage.setOnHiding(event -> Platform.exit());
     stage.setResizable(false);
 
-    setPrimaryStage(stage);
+    loader = new FxmlLoader(stage);
+    loader.loadFxml("fxml/main.xml");
 
-    loadFxml(stage, "fxml/main.xml");
-    
     stage.show();
-  }
-
-  public static Stage getPrimaryStage() {
-    return primaryStage;
-  }
-
-  private void setPrimaryStage(final Stage primaryStage) {
-    CellularAutomataApp.primaryStage = primaryStage;
   }
 }
