@@ -31,26 +31,25 @@ javafx {
 }
 
 jacoco {
-    toolVersion = "0.8.6"
+    toolVersion = "0.8.14"
 }
 
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
 
-    // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation(platform('org.junit:junit-bom:6.0.1'))
+	testImplementation('org.junit.jupiter:junit-jupiter')
+	testRuntimeOnly('org.junit.platform:junit-platform-launcher')
     
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
 }
 
 application {
     // Define the main class for the application.
     mainClass = 'cellular_automata.CellularAutomataApp'
+    applicationDefaultJvmArgs = ["--enable-native-access=javafx.graphics"]
 }
 
 test {

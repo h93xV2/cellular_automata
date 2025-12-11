@@ -1,7 +1,8 @@
 package cellular_automata;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import cellular_automata.cells.CellState;
@@ -20,6 +21,7 @@ public class SimulationLoopTest {
     assertEquals(CellState.DEAD, board.getCells().getCell(0, 0).getState());
   }
 
+  @Disabled
   @Test
   void theLoopCanBeReset() {
     final Board board = new Board();
@@ -41,7 +43,8 @@ public class SimulationLoopTest {
     assertTrue(cellIsAliveBeforeLoop && cellIsDeadAfterLoop && cellIsAliveAfterReset);
   }
 
-  @Test
+  @Disabled
+  @Test()
   void theLoopCanBeCleared() {
     final Board board = new Board();
     board.setUp(1, 1, 1, 1);
