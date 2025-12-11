@@ -9,7 +9,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'jacoco'
 }
 
@@ -19,11 +19,14 @@ repositories {
     mavenCentral()
 }
 
-sourceCompatibility = 16
-targetCompatibility = 16
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
 
 javafx {
-    version = "15.0.1"
+    version = "25.0.1"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
@@ -47,7 +50,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClassName = 'cellular_automata.CellularAutomataApp'
+    mainClass = 'cellular_automata.CellularAutomataApp'
 }
 
 test {
@@ -58,7 +61,7 @@ test {
 jacocoTestReport {
     dependsOn test
     reports {
-        html.enabled true
-        csv.enabled true
+        html.required = true
+        csv.required = true
     }
 }
