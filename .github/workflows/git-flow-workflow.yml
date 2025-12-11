@@ -1,0 +1,25 @@
+name: Git Flow Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  gitflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: kvendingoldo/git-flow-action@v2.2.0
+        with:
+          init_version: 0.0.1
+          primary_branch: "main"
+          enable_github_release: true
+          auto_release_branches: "main"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: gitflow      # waits for gitflow job
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./gradlew build
