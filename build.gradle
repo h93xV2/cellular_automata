@@ -25,6 +25,14 @@ java {
     }
 }
 
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'cellular_automata.CellularAutomataApp'
+        )
+    }
+}
+
 javafx {
     version = "25.0.1"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
