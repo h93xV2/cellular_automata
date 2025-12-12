@@ -30,9 +30,7 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
-          # Fallback tag for initial release (ensure 'v0.0.0' exists in repo for first run)
-          fallbackTag: 'v0.0.0'
-          # If no commit requires a version bump (e.g. only docs/chore), default to patch bump
+          fallbackTag: 'v1.0.0'
           noVersionBumpBehavior: 'patch'
       - name: Create Git tag and GitHub Release
         uses: ncipollo/release-action@v1.20.0
