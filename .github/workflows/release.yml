@@ -42,4 +42,5 @@ jobs:
           prerelease: false
           allowUpdates: true
           makeLatest: true
+          artifacts: "build/libs/*.jar"
           token: ${{ github.token }}
