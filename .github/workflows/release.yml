@@ -1,0 +1,47 @@
+name: Git Flow Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  gitflow:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+            distribution: "temurin"
+            java-version: "25"
+            cache: "gradle"
+      - name: Build with Gradle
+        run: ./gradlew assemble
+      - name: Calculate next version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: main
+          # Fallback tag for initial release (ensure 'v0.0.0' exists in repo for first run)
+          fallbackTag: 'v0.0.0'
+          # If no commit requires a version bump (e.g. only docs/chore), default to patch bump
+          noVersionBumpBehavior: 'patch'
+      - name: Create Git tag and GitHub Release
+        uses: ncipollo/release-action@v1.20.0
+        with:
+          tag: ${{ steps.semver.outputs.next }}         # e.g. v1.2.3
+          commit: main                                  # tag the latest commit on main
+          name: ${{ steps.semver.outputs.next }}        # release title (version)
+          draft: false
+          prerelease: false
+          allowUpdates: true
+          makeLatest: true
+          token: ${{ github.token }}
