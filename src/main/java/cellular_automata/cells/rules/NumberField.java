@@ -6,8 +6,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class NumberField extends TextField {
-  private static final char minimumDigit = '0';
-  private static final char maximumDigit = '8';
+  private static final char MINIMUM_DIGIT = '0';
+  private static final char MAXIMUM_DIGIT = '8';
 
   public NumberField() {
     super();
@@ -24,7 +24,7 @@ public class NumberField extends TextField {
       final char[] chars = event.getCharacter().toCharArray();
 
       for (var c : chars) {
-        if (c < minimumDigit || c > maximumDigit) {
+        if (c < MINIMUM_DIGIT || c > MAXIMUM_DIGIT) {
           event.consume();
         }
       }

@@ -8,8 +8,9 @@ import java.util.function.Consumer;
 import cellular_automata.cells.rules.CellRules;
 
 public class CellMatrix implements Cloneable {
-  private static final int cellRowStartIndex = 0;
-  private static final int cellColumnStartIndex = 0;
+  private static final int CELL_ROW_START_INDEX = 0;
+  private static final int CELL_COLUMN_START_INDEX = 0;
+
   private Cell[][] seedCells;
   private Cell[][] tempCells;
   private Cell[][] workingCells;
@@ -48,8 +49,8 @@ public class CellMatrix implements Cloneable {
   }
 
   public void forEach(final BiConsumer<Integer, Integer> consumer) {
-    for (var x = cellRowStartIndex; x < width; x++) {
-      for (var y = cellColumnStartIndex; y < height; y++) {
+    for (var x = CELL_ROW_START_INDEX; x < width; x++) {
+      for (var y = CELL_COLUMN_START_INDEX; y < height; y++) {
         consumer.accept(x, y);
       }
     }
@@ -70,7 +71,7 @@ public class CellMatrix implements Cloneable {
   }
 
   private void checkBounds(final int x, final int y) {
-    if (x < cellRowStartIndex || width < x || y < cellColumnStartIndex || height < y) {
+    if (x < CELL_ROW_START_INDEX || width < x || y < CELL_COLUMN_START_INDEX || height < y) {
       throw new IndexOutOfBoundsException();
     }
   }
@@ -153,7 +154,11 @@ public class CellMatrix implements Cloneable {
   }
 
   public void copyRules(final CellRules cellRules) {
-    this.cellRules = (CellRules) cellRules.clone();
+    try {
+        this.cellRules = (CellRules) cellRules.clone();
+    } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+    }
   }
 
   public CellRules getRules() {

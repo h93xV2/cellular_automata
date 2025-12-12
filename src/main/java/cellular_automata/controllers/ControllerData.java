@@ -2,14 +2,4 @@ package cellular_automata.controllers;
 
 import cellular_automata.cells.rules.CellRules;
 
-public class ControllerData {
-  private CellRules cellRules;
-
-  public CellRules getCellRules() {
-    return cellRules;
-  }
-
-  public void setCellRules(CellRules cellRules) {
-    this.cellRules = cellRules;
-  }
-}
+public record ControllerData(CellRules cellRules) {}

@@ -1,11 +1,9 @@
 package cellular_automata.fxml;
 
-import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
 import cellular_automata.controllers.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,23 +18,29 @@ public class FxmlLoader {
     this.stage = stage;
   }
 
-  public Controller loadFxml(final String filePath) {
-    final ClassLoader classLoader = getClass().getClassLoader();
-    final File fxmlFile = new File(classLoader.getResource(filePath).getFile());
-    final Controller controller = connectStageAndController(stage, fxmlFile);
+  public Controller loadFxml(final String resourcePath) {
+    URL fxmlUrl = getClass().getResource(resourcePath);
+    if (fxmlUrl == null) {
+        throw new IllegalStateException(
+            "FXML resource not found: " + resourcePath
+        );
+    }
+
+    final Controller controller = connectStageAndController(stage, fxmlUrl);
 
     return controller;
   }
 
-  private Controller connectStageAndController(final Stage stage, final File fxmlFile) {
+  private Controller connectStageAndController(final Stage stage, final URL fxmlUrl) {
     Pair<Scene, Controller> sceneAndController = null;
 
     try {
-      sceneAndController = buildScene(fxmlFile);
+      sceneAndController = buildScene(fxmlUrl);
 
       stage.setScene(sceneAndController.getKey());
     } catch (IOException exception) {
       notifyNonRecoverableError("An error occurred while building the graphical user interface.", exception);
+      throw new RuntimeException(exception);
     }
 
     final Controller controller = sceneAndController.getValue();
@@ -45,8 +49,7 @@ public class FxmlLoader {
     return controller;
   }
 
-  private Pair<Scene, Controller> buildScene(final File fxmlFile) throws IOException {
-    final URL fxmlUrl = fxmlFile.toURI().toURL();
+  private Pair<Scene, Controller> buildScene(final URL fxmlUrl) throws IOException {
     final FXMLLoader loader = new FXMLLoader(fxmlUrl);
     final BorderPane container = loader.<BorderPane>load();
     final Scene scene = new Scene(container);

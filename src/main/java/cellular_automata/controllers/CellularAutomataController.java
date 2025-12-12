@@ -1,13 +1,12 @@
 package cellular_automata.controllers;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
-import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
-
 import cellular_automata.SimulationLoop;
+import static cellular_automata.alerts.Alerts.notifyNonRecoverableError;
 import cellular_automata.cells.Generations;
 import cellular_automata.filemanagement.FileSystemCoordinator;
 import cellular_automata.filemanagement.data.SimulationData;
@@ -51,21 +50,27 @@ public class CellularAutomataController extends Controller {
   private Label rules;
   @FXML
   private GenerationsLabel generationsLabel;
+
   private final Properties defaultProperties;
+  private final Generations generations;
+
   private FileSystemCoordinator fileSystem;
-  private Generations generations;
   private FxmlLoader editorLoader;
 
   public CellularAutomataController() {
     defaultProperties = new Properties();
 
-    final ClassLoader classLoader = getClass().getClassLoader();
-    final File defaultPropertiesFile = new File(classLoader.getResource("defaults.properties").getFile());
+    try (InputStream in = getClass().getResourceAsStream("/defaults.properties")) {
 
-    try (final FileInputStream in = new FileInputStream(defaultPropertiesFile)) {
-      defaultProperties.load(in);
+        if (in == null) {
+            throw new IllegalStateException("defaults.properties not found");
+        }
+
+        defaultProperties.load(in);
     } catch (IOException e) {
-      notifyNonRecoverableError("Unable to load the default application settings.", e);
+        notifyNonRecoverableError(
+            "Unable to load the default application settings.", e
+        );
     }
 
     generations = new Generations();
@@ -81,7 +86,7 @@ public class CellularAutomataController extends Controller {
       if (editorLoader == null)
         editorLoader = new FxmlLoader(setUpAndRetrieveEditorStage());
 
-      final Controller editorController = getEditorController(editorLoader.getStage());
+      final Controller editorController = getEditorController();
 
       editorLoader.getStage().showAndWait();
 
@@ -106,7 +111,7 @@ public class CellularAutomataController extends Controller {
 
   private SimulationLoop setUpAndRetrieveSimulationLoop() {
     final SimulationLoop simulation = new SimulationLoop(board,
-        Long.valueOf((String) defaultProperties.get("timeStep")), generations);
+        Long.parseLong((String) defaultProperties.get("timeStep")), generations);
 
     setUpControlButtons(simulation);
     setupSpeedSlider(simulation);
@@ -149,7 +154,7 @@ public class CellularAutomataController extends Controller {
   }
 
   private void setUpGenerationsLabel() {
-    generations.addGenerationsChangeListener(generationsLabel);
+    generations.addGenerationsChangeListener((PropertyChangeListener) generationsLabel);
     generationsLabel.setText(Integer.toString(generations.getValue()));
   }
 
@@ -162,8 +167,8 @@ public class CellularAutomataController extends Controller {
     return editorStage;
   }
 
-  private Controller getEditorController(final Stage editorStage) {
-    final Controller editorController = editorLoader.loadFxml("fxml/cellruleseditor.xml");
+  private Controller getEditorController() {
+    final Controller editorController = editorLoader.loadFxml("/fxml/cellruleseditor.fxml");
 
     editorController.setShareableData(getShareableData());
 
@@ -173,16 +178,16 @@ public class CellularAutomataController extends Controller {
   private void updateBoardUsingDataFromEditor(final ControllerData editorData) {
     board.getCells().getRules().clearBirthNeighborCounts();
     board.getCells().getRules().clearSurvivalNeighborCounts();
-    board.getCells().getRules().setNeighborsRequiredForBirth(editorData.getCellRules().getNeighborsRequiredForBirth());
+    board.getCells().getRules().setNeighborsRequiredForBirth(editorData.cellRules().getNeighborsRequiredForBirth());
     board.getCells().getRules()
-        .setNeighborsRequiredForSurvival(editorData.getCellRules().getNeighborsRequiredForSurvival());
+        .setNeighborsRequiredForSurvival(editorData.cellRules().getNeighborsRequiredForSurvival());
   }
 
   private void setUpBoardDimensions() {
-    final int boardWidth = Integer.valueOf((String) defaultProperties.get("boardWidth"));
-    final int boardHeight = Integer.valueOf((String) defaultProperties.get("boardHeight"));
-    final int cellWidth = Integer.valueOf((String) defaultProperties.get("cellWidth"));
-    final int cellHeight = Integer.valueOf((String) defaultProperties.get("cellHeight"));
+    final int boardWidth = Integer.parseInt((String) defaultProperties.get("boardWidth"));
+    final int boardHeight = Integer.parseInt((String) defaultProperties.get("boardHeight"));
+    final int cellWidth = Integer.parseInt((String) defaultProperties.get("cellWidth"));
+    final int cellHeight = Integer.parseInt((String) defaultProperties.get("cellHeight"));
 
     board.setUp(boardWidth, boardHeight, cellWidth, cellHeight);
   }
@@ -216,9 +221,9 @@ public class CellularAutomataController extends Controller {
   }
 
   private void initializeGameSpeedSlider() {
-    final double minimumSpeed = Double.valueOf((String) defaultProperties.get("minimumSpeed"));
-    final double initialSpeed = Double.valueOf((String) defaultProperties.get("initialSpeed"));
-    final double maximumSpeed = Double.valueOf((String) defaultProperties.get("maximumSpeed"));
+    final double minimumSpeed = Double.parseDouble((String) defaultProperties.get("minimumSpeed"));
+    final double initialSpeed = Double.parseDouble((String) defaultProperties.get("initialSpeed"));
+    final double maximumSpeed = Double.parseDouble((String) defaultProperties.get("maximumSpeed"));
 
     speed.setMin(minimumSpeed);
     speed.setValue(initialSpeed);
@@ -227,9 +232,7 @@ public class CellularAutomataController extends Controller {
 
   @Override
   public ControllerData getShareableData() {
-    final ControllerData data = new ControllerData();
-    data.setCellRules(board.getCells().getRules());
-    return data;
+    return new ControllerData(board.getCells().getRules());
   }
 
   @Override

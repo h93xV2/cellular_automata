@@ -8,6 +8,8 @@ import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 public class Board extends Canvas {
+  private static final double LINE_WIDTH = 1.0;
+
   private CellMatrix cells;
   private double cellWidth;
   private double cellHeight;
@@ -15,7 +17,6 @@ public class Board extends Canvas {
   private double workingCellHeight;
   private boolean showGridLines;
   private boolean boardSetUp;
-  private static final double lineWidth = 1.0;
 
   public void setUp(final int boardWidth, final int boardHeight, final int cellWidth, final int cellHeight) {
     setWidth(boardWidth);
@@ -95,8 +96,8 @@ public class Board extends Canvas {
     var cellHeight = workingCellHeight;
 
     if (showGridLines) {
-      cellWidth -= 2.0 * lineWidth;
-      cellHeight -= 2.0 * lineWidth;
+      cellWidth -= 2.0 * LINE_WIDTH;
+      cellHeight -= 2.0 * LINE_WIDTH;
       drawGridLines(gc);
     }
 
@@ -105,7 +106,7 @@ public class Board extends Canvas {
 
   private void drawGridLines(final GraphicsContext gc) {
     gc.setStroke(Color.LIGHTBLUE);
-    gc.setLineWidth(lineWidth);
+    gc.setLineWidth(LINE_WIDTH);
     gc.beginPath();
 
     for (var x = 0.0; x <= getWidth(); x += workingCellWidth) {
@@ -125,7 +126,7 @@ public class Board extends Canvas {
     var boardX = (double) (cellX * workingCellWidth);
 
     if (showGridLines) {
-      boardX += lineWidth;
+      boardX += LINE_WIDTH;
     }
 
     return boardX;
@@ -135,7 +136,7 @@ public class Board extends Canvas {
     var boardY = (double) (cellY * workingCellHeight);
 
     if (showGridLines) {
-      boardY += lineWidth;
+      boardY += LINE_WIDTH;
     }
 
     return boardY;
