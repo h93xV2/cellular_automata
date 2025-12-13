@@ -35,13 +35,18 @@ public final class FiniteCellMatrix implements CellMatrix, Cloneable {
     forEach((x, y) -> {
       final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
       try {
-          seedCells[x][y] = (Cell) sourceCell.clone();
+        seedCells[x][y] = (Cell) sourceCell.clone();
         tempCells[x][y] = (Cell) sourceCell.clone();
         workingCells[x][y] = (Cell) sourceCell.clone();
       } catch (CloneNotSupportedException e) {
         throw new RuntimeException(e);
       }
     });
+  }
+
+  @Override
+  public CellState getState(final int x, final int y) {
+    return getCell(x, y).getState();
   }
 
   public void forEach(final CellTriConsumer consumer) {

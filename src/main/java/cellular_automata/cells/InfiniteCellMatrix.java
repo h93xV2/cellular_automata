@@ -1,19 +1,27 @@
 package cellular_automata.cells;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import cellular_automata.cells.rules.CellRules;
 
 public class InfiniteCellMatrix implements CellMatrix {
+    private final Set<CellPoint> cellPoints;
 
-    @Override
-    public void forEach(CellTriConsumer consumer) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'forEach'");
+    public InfiniteCellMatrix() {
+        this.cellPoints = new HashSet<>();
     }
 
     @Override
-    public Cell getCell(int x, int y) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCell'");
+    public CellState getState(final int x, final int y) {
+        // TODO: This will not perform well for large data sets.
+        for (CellPoint cellPoint : cellPoints) {
+            if (cellPoint.getX() == x && cellPoint.getY() == y) {
+                return CellState.LIVE;
+            }
+        }
+
+        return CellState.DEAD;
     }
 
     @Override
@@ -42,8 +50,7 @@ public class InfiniteCellMatrix implements CellMatrix {
 
     @Override
     public void clear() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clear'");
+        this.cellPoints.clear();
     }
 
     @Override

@@ -3,9 +3,7 @@ package cellular_automata.cells;
 import cellular_automata.cells.rules.CellRules;
 
 public interface CellMatrix {
-    void forEach(final CellTriConsumer consumer);
-
-    Cell getCell(final int x, final int y);
+    CellState getState(int x, int y);
 
     void lockCurrentStateAsSeed();
 

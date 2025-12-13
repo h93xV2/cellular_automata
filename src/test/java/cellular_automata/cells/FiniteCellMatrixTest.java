@@ -4,10 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import cellular_automata.cells.Cell;
-import cellular_automata.cells.CellState;
-import cellular_automata.cells.FiniteCellMatrix;
-
 public class FiniteCellMatrixTest {
   @Test
   void cellsCanBeSet() {

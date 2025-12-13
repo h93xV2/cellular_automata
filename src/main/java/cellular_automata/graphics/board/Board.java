@@ -10,6 +10,9 @@ import javafx.util.Pair;
 public class Board extends Canvas {
   private static final double LINE_WIDTH = 1.0;
 
+  private int viewportWidth;
+  private int viewportHeight;
+
   private FiniteCellMatrix cells;
   private double cellWidth;
   private double cellHeight;
@@ -27,10 +30,10 @@ public class Board extends Canvas {
     this.workingCellWidth = this.cellWidth;
     this.workingCellHeight = this.cellHeight;
 
-    final int cellMatrixWidth = computeCellMatrixWidth();
-    final int cellMatrixHeight = computeCellMatrixHeight();
+    this.viewportWidth = computeCellMatrixWidth();
+    this.viewportHeight = computeCellMatrixHeight();
 
-    cells = new FiniteCellMatrix(cellMatrixWidth, cellMatrixHeight);
+    cells = new FiniteCellMatrix(viewportWidth, viewportHeight);
 
     setOnMouseClicked(event -> {
       final int convertedX = (int) (event.getX() / workingCellWidth);
@@ -75,18 +78,21 @@ public class Board extends Canvas {
 
     final Pair<Double, Double> computedCellDimensions = drawConditionalGridAndGetCellDimensions();
 
-    cells.forEach((x, y, cell) -> {
-      final double boardX = computeBoardX(x);
-      final double boardY = computeBoardY(y);
+    for (int i = 0; i < this.viewportWidth; i ++) {
+      for (int j = 0; j < this.viewportHeight; j ++) {
+        final CellState state = cells.getState(i, j);
+        final double boardX = computeBoardX(i);
+        final double boardY = computeBoardY(j);
 
-      if (CellState.DEAD.equals(cell.getState())) {
-        gc.setFill(Color.WHITE);
-      } else {
-        gc.setFill(Color.BLACK);
+        if (CellState.DEAD.equals(state)) {
+          gc.setFill(Color.WHITE);
+        } else {
+          gc.setFill(Color.BLACK);
+        }
+
+        gc.fillRect(boardX, boardY, computedCellDimensions.getKey(), computedCellDimensions.getValue());
       }
-
-      gc.fillRect(boardX, boardY, computedCellDimensions.getKey(), computedCellDimensions.getValue());
-    });
+    }
   }
 
   private Pair<Double, Double> drawConditionalGridAndGetCellDimensions() {
