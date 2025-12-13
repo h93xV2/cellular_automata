@@ -10,8 +10,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static cellular_automata.alerts.Alerts.notifyRecoverableError;
-import cellular_automata.cells.Cell;
 import static cellular_automata.cells.CellState.getRleSymbolToCellStateMap;
+
+import cellular_automata.cells.Cell;
 import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.data.PatternPoint;
 import cellular_automata.filemanagement.data.SimulationData;

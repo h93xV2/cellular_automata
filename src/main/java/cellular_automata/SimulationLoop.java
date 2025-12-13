@@ -1,6 +1,6 @@
 package cellular_automata;
 
-import cellular_automata.cells.CellMatrix;
+import cellular_automata.cells.FiniteCellMatrix;
 import cellular_automata.cells.Generations;
 import cellular_automata.graphics.board.Board;
 import javafx.animation.AnimationTimer;
@@ -8,7 +8,7 @@ import javafx.animation.AnimationTimer;
 public class SimulationLoop extends AnimationTimer {
   private final Board board;
   private final Generations generations;
-  private final CellMatrix cells;
+  private final FiniteCellMatrix cells;
   private final long referenceTimeStep;
   
   private long lastTime;

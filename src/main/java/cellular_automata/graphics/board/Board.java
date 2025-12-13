@@ -1,7 +1,7 @@
 package cellular_automata.graphics.board;
 
-import cellular_automata.cells.CellMatrix;
 import cellular_automata.cells.CellState;
+import cellular_automata.cells.FiniteCellMatrix;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -10,7 +10,7 @@ import javafx.util.Pair;
 public class Board extends Canvas {
   private static final double LINE_WIDTH = 1.0;
 
-  private CellMatrix cells;
+  private FiniteCellMatrix cells;
   private double cellWidth;
   private double cellHeight;
   private double workingCellWidth;
@@ -30,7 +30,7 @@ public class Board extends Canvas {
     final int cellMatrixWidth = computeCellMatrixWidth();
     final int cellMatrixHeight = computeCellMatrixHeight();
 
-    cells = new CellMatrix(cellMatrixWidth, cellMatrixHeight);
+    cells = new FiniteCellMatrix(cellMatrixWidth, cellMatrixHeight);
 
     setOnMouseClicked(event -> {
       final int convertedX = (int) (event.getX() / workingCellWidth);
@@ -154,7 +154,7 @@ public class Board extends Canvas {
     this.showGridLines = showGridLines;
   }
 
-  public CellMatrix getCells() {
+  public FiniteCellMatrix getCells() {
     return cells;
   }
 }

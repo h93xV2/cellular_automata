@@ -4,10 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class CellMatrixTest {
+import cellular_automata.cells.Cell;
+import cellular_automata.cells.CellState;
+import cellular_automata.cells.FiniteCellMatrix;
+
+public class FiniteCellMatrixTest {
   @Test
   void cellsCanBeSet() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
     final Cell initialCell = matrix.getCell(0, 0);
     final Cell newCell = new Cell();
     newCell.setState(CellState.LIVE);
@@ -19,21 +23,21 @@ public class CellMatrixTest {
 
   @Test
   void anExceptionIsThrownWhenSettingOutsideTheBoundaries() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
 
     assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(1, 2, new Cell()));
   }
 
   @Test
   void anExceptionIsThrownWhenGettingOutsideTheBoundaries() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
 
     assertThrows(IndexOutOfBoundsException.class, () -> matrix.getCell(1, 2));
   }
 
   @Test
   void checkMatrixCanBeReset() {
-    final CellMatrix matrix = new CellMatrix(1, 2);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 2);
     matrix.getCell(0, 1).toggleState();
 
     assertTrue(CellState.LIVE.equals(matrix.getCell(0, 1).getState()));
@@ -50,7 +54,7 @@ public class CellMatrixTest {
 
   @Test
   void cellsDeadAfterClear() {
-    final CellMatrix matrix = new CellMatrix(1, 2);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 2);
     matrix.getCell(0, 0).toggleState();
 
     final boolean aliveBeforeClear = CellState.LIVE.equals(matrix.getCell(0, 0).getState());
@@ -64,21 +68,21 @@ public class CellMatrixTest {
 
   @Test
   void getWidth() {
-    final CellMatrix matrix = new CellMatrix(2, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(2, 1);
 
     assertEquals(2, matrix.getWidth());
   }
 
   @Test
   void getHeight() {
-    final CellMatrix matrix = new CellMatrix(1, 5);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 5);
 
     assertEquals(5, matrix.getHeight());
   }
 
   @Test
   void oneCellDies() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
     matrix.getCell(0, 0).toggleState();
 
     final boolean aliveBeforeNext = CellState.LIVE.equals(matrix.getCell(0, 0).getState());
@@ -92,21 +96,21 @@ public class CellMatrixTest {
 
   @Test
   void setCellOutOfBoundsNegativeX() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
 
     assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(-1, 0, new Cell()));
   }
 
   @Test
   void setCellOutOfBoundsOverPositiveX() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
 
     assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(2, 0, new Cell()));
   }
 
   @Test
   void setCellOutOfBoundsNegativeY() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
 
     assertThrows(IndexOutOfBoundsException.class, () -> matrix.set(0, -1, new Cell()));
   }
@@ -119,14 +123,14 @@ public class CellMatrixTest {
 
     final CellState sourceState = sourceCells[0][0].getState();
 
-    final CellMatrix matrix = new CellMatrix(sourceCells);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(sourceCells);
 
     assertEquals(sourceState, matrix.getCell(0, 0).getState());
   }
 
   @Test
   void threeCellsCauseBirth() {
-    final CellMatrix matrix = new CellMatrix(2, 2);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(2, 2);
     matrix.getCell(0, 0).toggleState();
     matrix.getCell(0, 1).toggleState();
     matrix.getCell(1, 0).toggleState();
@@ -142,7 +146,7 @@ public class CellMatrixTest {
 
   @Test
   void cellDiesFromOverPopulation() {
-    final CellMatrix matrix = new CellMatrix(2, 3);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(2, 3);
     matrix.getCell(0, 0).toggleState();
     matrix.getCell(0, 1).toggleState();
     matrix.getCell(1, 0).toggleState();
@@ -155,7 +159,7 @@ public class CellMatrixTest {
 
   @Test
   void cellsCanBeSteppedBack() {
-    final CellMatrix matrix = new CellMatrix(1, 1);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(1, 1);
     matrix.getCell(0, 0).setState(CellState.LIVE);
     matrix.next();
     matrix.last();
@@ -165,7 +169,7 @@ public class CellMatrixTest {
 
   @Test
   void cellsCanBeSteppedBackMultipleTimes() {
-    final CellMatrix matrix = new CellMatrix(3, 2);
+    final FiniteCellMatrix matrix = new FiniteCellMatrix(3, 2);
     matrix.getCell(0, 1).setState(CellState.LIVE);
     matrix.getCell(1, 1).setState(CellState.LIVE);
     matrix.getCell(2, 0).setState(CellState.LIVE);
@@ -185,7 +189,7 @@ public class CellMatrixTest {
     source[0][1] = new Cell();
     source[0][1].toggleState();
 
-    final CellMatrix destination = new CellMatrix(1, 2);
+    final FiniteCellMatrix destination = new FiniteCellMatrix(1, 2);
     final boolean deadBefore = CellState.DEAD.equals(destination.getCell(0, 0).getState())
         && CellState.DEAD.equals(destination.getCell(0, 1).getState());
 
