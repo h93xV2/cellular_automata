@@ -15,8 +15,22 @@ A simulator for cellular automata systems. Created as a way to experiment with n
 * Save patterns.
 * Load patterns.
 
-## Setup
+## Local Setup
 
 The Java version is listed in the `.java-version` file. The file tells SDK managers which version of Java to install.
 
 Once Java is installed, run `./gradlew`.
+
+## Running Release Versions
+
+Prebuilt versions are available for Mac only.
+
+1. Head to the releases page of the repo.
+2. Download the DMG file.
+
+If Mac Gatekeeper blocks the file from being opened:
+
+1. Go to Settings.
+2. Privacy and Security.
+3. Scroll to the bottom.
+4. Click "Open Anyway" next to the app name.
