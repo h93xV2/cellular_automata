@@ -19,7 +19,7 @@ A simulator for cellular automata systems. Created as a way to experiment with n
 
 The Java version is listed in the `.java-version` file. The file tells SDK managers which version of Java to install.
 
-Once Java is installed, run `./gradlew`.
+Once Java is installed, run `./gradlew run`.
 
 ## Running Release Versions
 
