@@ -128,9 +128,7 @@ public class CellularAutomataController extends Controller {
     openFile.setOnAction(event -> {
       loop.stop();
 
-      final SimulationData saveData = fileSystem.openFromFile();
-
-      if (saveData != null) {
+      fileSystem.openFromFile().ifPresent(saveData -> {
         loop.reset();
         board.getCells().copyCellStates(saveData.getCells());
         board.getCells().copyRules(saveData.getCellRules());
@@ -138,7 +136,7 @@ public class CellularAutomataController extends Controller {
         board.getCells().lockCurrentStateAsSeed();
         rules.setText(board.getCells().getRules().toString());
         board.draw();
-      }
+      });
     });
   }
 

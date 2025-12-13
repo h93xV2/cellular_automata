@@ -46,12 +46,17 @@ public class FileSystemCoordinator {
     saveFileChooser.getExtensionFilters().addAll(applicationFileFilter);
   }
 
-  public SimulationData openFromFile() {
+  public Optional<SimulationData> openFromFile() {
     final File fileToOpen = openFileChooser.showOpenDialog(ownerWindow);
+
+    if (fileToOpen == null) {
+      return Optional.empty();
+    }
+
     final String filePath = fileToOpen.getPath();
     final String extension = filePath.substring(filePath.indexOf("."));
 
-    return fileExtensionToStrategyMap.get(extension).openFile(fileToOpen);
+    return Optional.of(fileExtensionToStrategyMap.get(extension).openFile(fileToOpen));
   }
 
   public void saveToFile(final SimulationData data) {
