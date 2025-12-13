@@ -11,17 +11,17 @@ public class CellRules {
     neighborsRequiredForBirth = new NeighborCounts(1);
     neighborsRequiredForBirth.add(3);
 
-    setNeighborsRequiredForSurvival(new NeighborCounts(2));
+    this.neighborsRequiredForSurvival = new NeighborCounts(2);
     neighborsRequiredForSurvival.add(2);
     neighborsRequiredForSurvival.add(3);
 
   }
 
-  public void addBirthNeighborCount(final int neighbors) {
+  public void addBirthNeighborCount(final Integer neighbors) {
     neighborsRequiredForBirth.add(neighbors);
   }
 
-  public void addSurvivalNeighborCount(final int neighbors) {
+  public void addSurvivalNeighborCount(final Integer neighbors) {
     neighborsRequiredForSurvival.add(neighbors);
   }
 

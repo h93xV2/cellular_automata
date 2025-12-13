@@ -12,7 +12,7 @@ public class NeighborCounts implements Iterable<Integer> {
   }
 
   public NeighborCounts(final int initialSize) {
-    setNeighborCounts(new ArrayList<>(initialSize));
+    neighborCounts = new ArrayList<>(initialSize);
   }
 
   public void add(final int neighborCount) {

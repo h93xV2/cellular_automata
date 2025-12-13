@@ -142,8 +142,11 @@ public class RunLengthEncodedFileParser implements FileParser {
   }
 
   private void parseNeighborList(final String neighborList, final Consumer<Integer> neighborConsumer) {
-    Arrays.asList(neighborList.split("")).stream().filter(neighborString -> !neighborString.isBlank())
-        .map(Integer::parseInt).forEach(neighborConsumer::accept);
+    Arrays.asList(neighborList.split(""))
+      .stream()
+      .filter(neighborString -> !neighborString.isBlank())
+      .map(Integer::parseInt)
+      .forEach(neighborConsumer::accept);
   }
 
   private void parseHeaderLine(final String line, final SimulationData data) {

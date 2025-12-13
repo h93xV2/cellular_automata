@@ -7,9 +7,9 @@ import java.util.function.Consumer;
 
 import cellular_automata.cells.rules.CellRules;
 
-public class CellMatrix implements Cloneable {
-  private static final int CELL_ROW_START_INDEX = 0;
-  private static final int CELL_COLUMN_START_INDEX = 0;
+public final class CellMatrix implements Cloneable {
+  public static final int CELL_ROW_START_INDEX = 0;
+  public static final int CELL_COLUMN_START_INDEX = 0;
 
   private Cell[][] seedCells;
   private Cell[][] tempCells;
@@ -34,9 +34,13 @@ public class CellMatrix implements Cloneable {
 
     forEach((x, y) -> {
       final Cell sourceCell = sourceCells[x][y] == null ? new Cell() : sourceCells[x][y];
-      seedCells[x][y] = (Cell) sourceCell.clone();
-      tempCells[x][y] = (Cell) sourceCell.clone();
-      workingCells[x][y] = (Cell) sourceCell.clone();
+      try {
+          seedCells[x][y] = (Cell) sourceCell.clone();
+        tempCells[x][y] = (Cell) sourceCell.clone();
+        workingCells[x][y] = (Cell) sourceCell.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
     });
   }
 
@@ -66,8 +70,13 @@ public class CellMatrix implements Cloneable {
     checkBounds(x, y);
 
     workingCells[x][y] = newCell;
-    tempCells[x][y] = (Cell) newCell.clone();
-    seedCells[x][y] = (Cell) newCell.clone();
+    
+    try {
+      tempCells[x][y] = (Cell) newCell.clone();
+      seedCells[x][y] = (Cell) newCell.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void checkBounds(final int x, final int y) {
@@ -93,7 +102,11 @@ public class CellMatrix implements Cloneable {
 
     forEach((x, y, cell) -> {
       tempCells[x][y].setState(cell.getState());
-      currentFrame[x][y] = (Cell) cell.clone();
+      try {
+        currentFrame[x][y] = (Cell) cell.clone();
+      } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+      }
     });
 
     history.push(currentFrame);

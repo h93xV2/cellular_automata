@@ -1,8 +1,10 @@
 package cellular_automata.cells;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CellTest {
   @Test
@@ -79,7 +81,7 @@ class CellTest {
   }
 
   @Test
-  void clonedCellIsNewObject() {
+  void clonedCellIsNewObject() throws CloneNotSupportedException {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
@@ -88,7 +90,7 @@ class CellTest {
   }
 
   @Test
-  void clonedCellEqualsOriginalCell() {
+  void clonedCellEqualsOriginalCell() throws CloneNotSupportedException {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
@@ -97,7 +99,7 @@ class CellTest {
   }
 
   @Test
-  void modifiedCloneIsNotEqualToOriginal() {
+  void modifiedCloneIsNotEqualToOriginal() throws CloneNotSupportedException {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();
@@ -107,7 +109,7 @@ class CellTest {
   }
 
   @Test
-  void originalIsNotAffectedByCloneStateChange() {
+  void originalIsNotAffectedByCloneStateChange() throws CloneNotSupportedException {
     final Cell cell = new Cell();
 
     final Cell clone = (Cell) cell.clone();

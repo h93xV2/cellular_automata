@@ -4,7 +4,7 @@ public class Cell implements Cloneable {
   private CellState state;
 
   public Cell() {
-    setState(CellState.DEAD);
+    state = CellState.DEAD;
   }
 
   public CellState getState() {
@@ -40,7 +40,7 @@ public class Cell implements Cloneable {
   }
 
   @Override
-  public Object clone() {
+  public Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException e) {

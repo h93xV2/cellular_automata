@@ -19,8 +19,9 @@ public class SimulationData {
 
   public SimulationData(final Cell[][] cells, final boolean showGridLines, final CellRules cellRules) {
     this();
-    setCells(cells);
-    setRules(cellRules);
+    
+    this.cells = cells;
+    this.cellRules = cellRules;
     this.showGridLines = showGridLines;
   }
 
@@ -105,7 +106,11 @@ public class SimulationData {
     for (var x = 0; x < cellsToCopy.length; x++) {
       for (var y = 0; y < cellsToCopy[0].length; y++) {
         if (cellsToCopy[x][y] != null) {
-          copyCells[x][y] = (Cell) cellsToCopy[x][y].clone();
+          try {
+            copyCells[x][y] = (Cell) cellsToCopy[x][y].clone();
+          } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+          }
         }
       }
     }

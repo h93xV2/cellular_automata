@@ -92,16 +92,16 @@ public class Board extends Canvas {
   private Pair<Double, Double> drawConditionalGridAndGetCellDimensions() {
     final GraphicsContext gc = getGraphicsContext2D();
 
-    var cellWidth = workingCellWidth;
-    var cellHeight = workingCellHeight;
+    var drawnCellWidth = workingCellWidth;
+    var drawnCellHeight = workingCellHeight;
 
     if (showGridLines) {
-      cellWidth -= 2.0 * LINE_WIDTH;
-      cellHeight -= 2.0 * LINE_WIDTH;
+      drawnCellWidth -= 2.0 * LINE_WIDTH;
+      drawnCellHeight -= 2.0 * LINE_WIDTH;
       drawGridLines(gc);
     }
 
-    return new Pair<>(cellWidth, cellHeight);
+    return new Pair<>(drawnCellWidth, drawnCellHeight);
   }
 
   private void drawGridLines(final GraphicsContext gc) {
