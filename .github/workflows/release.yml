@@ -7,7 +7,7 @@ on:
 
 jobs:
   gitflow:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
         contents: write
         packages: write
@@ -22,8 +22,6 @@ jobs:
             distribution: "temurin"
             java-version: "25"
             cache: "gradle"
-      - name: Build with Gradle
-        run: ./gradlew assemble
       - name: Calculate next version
         id: semver
         uses: ietf-tools/semver-action@v1
@@ -32,6 +30,8 @@ jobs:
           branch: main
           fallbackTag: 'v1.0.0'
           noVersionBumpBehavior: 'patch'
+      - name: Build with Gradle
+        run: ./gradlew clean jpackage -Pversion=${{ steps.semver.outputs.next }}
       - name: Create Git tag and GitHub Release
         uses: ncipollo/release-action@v1.20.0
         with:
@@ -42,5 +42,5 @@ jobs:
           prerelease: false
           allowUpdates: true
           makeLatest: true
-          artifacts: "build/libs/*.jar"
+          artifacts: "build/jpackage/*.dmg"
           token: ${{ github.token }}

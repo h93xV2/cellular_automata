@@ -50,7 +50,7 @@ public class CellRules {
   }
 
   @Override
-  public Object clone() {
+  public Object clone() throws CloneNotSupportedException {
     final CellRules newCopy = new CellRules();
     newCopy.clearBirthNeighborCounts();
     newCopy.clearSurvivalNeighborCounts();

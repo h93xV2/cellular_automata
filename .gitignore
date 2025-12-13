@@ -102,3 +102,6 @@ gradle-app.setting
 .gradletasknamecache
 
 .vscode/
+
+.lsp/
+.clj-kondo/

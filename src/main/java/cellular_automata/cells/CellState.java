@@ -8,7 +8,8 @@ public enum CellState {
   LIVE("o"),
   DEAD("b");
 
-  private String rleCellStateSymbol;
+  private final String rleCellStateSymbol;
+  
   private static Map<String, CellState> symbolMap;
 
   private CellState(final String symbol) {

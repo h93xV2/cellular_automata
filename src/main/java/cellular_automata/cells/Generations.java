@@ -4,8 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class Generations {
-  private static final String generationsPropertyName = "generations";
-  private static final int minimumGenerations = 0;
+  private static final String GENERATIONS_PROPERTY_NAME = "generations";
+  private static final int MINIMUM_GENERATIONS = 0;
   private int generations;
   private final PropertyChangeSupport changeSupport;
 
@@ -24,21 +24,21 @@ public class Generations {
   public void increment() {
     final int oldGenerations = generations;
     generations++;
-    changeSupport.firePropertyChange(generationsPropertyName, oldGenerations, generations);
+    changeSupport.firePropertyChange(GENERATIONS_PROPERTY_NAME, oldGenerations, generations);
   }
 
   public void decrement() {
-    if (minimumGenerations < generations) {
+    if (MINIMUM_GENERATIONS < generations) {
       final int oldGenerations = generations;
       generations--;
-      changeSupport.firePropertyChange(generationsPropertyName, oldGenerations, generations);
+      changeSupport.firePropertyChange(GENERATIONS_PROPERTY_NAME, oldGenerations, generations);
     }
   }
 
   public void reset() {
     final int oldGenerations = generations;
     generations = 0;
-    changeSupport.firePropertyChange(generationsPropertyName, oldGenerations, generations);
+    changeSupport.firePropertyChange(GENERATIONS_PROPERTY_NAME, oldGenerations, generations);
   }
 
   public int getValue() {

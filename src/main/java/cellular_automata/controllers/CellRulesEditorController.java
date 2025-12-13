@@ -18,11 +18,11 @@ public class CellRulesEditorController extends Controller {
   private Button apply;
   @FXML
   private Button cancel;
+  
   private ControllerData shareableData;
 
   public void initialize() {
-    shareableData = new ControllerData();
-    shareableData.setCellRules(new CellRules());
+    shareableData = new ControllerData(new CellRules());
 
     apply.setOnAction(event -> {
       copyFieldEntriesToShareableData();
@@ -40,8 +40,8 @@ public class CellRulesEditorController extends Controller {
 
   @Override
   public void setShareableData(final ControllerData data) {
-    final NeighborCounts neighborsRequiredForBirth = data.getCellRules().getNeighborsRequiredForBirth();
-    final NeighborCounts neighborsRequiredForSurvival = data.getCellRules().getNeighborsRequiredForSurvival();
+    final NeighborCounts neighborsRequiredForBirth = data.cellRules().getNeighborsRequiredForBirth();
+    final NeighborCounts neighborsRequiredForSurvival = data.cellRules().getNeighborsRequiredForSurvival();
 
     birthNeighbors.setText(neighborsRequiredForBirth.toString());
     survivalNeighbors.setText(neighborsRequiredForSurvival.toString());
@@ -50,19 +50,19 @@ public class CellRulesEditorController extends Controller {
   }
 
   private void copyFieldEntriesToShareableData() {
-    shareableData.getCellRules().clearBirthNeighborCounts();
-    shareableData.getCellRules().clearSurvivalNeighborCounts();
+    shareableData.cellRules().clearBirthNeighborCounts();
+    shareableData.cellRules().clearSurvivalNeighborCounts();
 
     final String birthNeighborString = birthNeighbors.getText();
 
     for (var i = 0; i < birthNeighborString.length(); i++) {
-      shareableData.getCellRules().addBirthNeighborCount(Integer.parseInt(birthNeighborString.substring(i, i + 1)));
+      shareableData.cellRules().addBirthNeighborCount(Integer.parseInt(birthNeighborString.substring(i, i + 1)));
     }
 
     final String survivalNeighborString = survivalNeighbors.getText();
 
     for (var j = 0; j < survivalNeighborString.length(); j++) {
-      shareableData.getCellRules()
+      shareableData.cellRules()
           .addSurvivalNeighborCount(Integer.parseInt(survivalNeighborString.substring(j, j + 1)));
     }
   }

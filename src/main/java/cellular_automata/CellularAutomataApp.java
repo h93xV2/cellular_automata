@@ -18,7 +18,7 @@ public class CellularAutomataApp extends Application {
     stage.setResizable(false);
 
     loader = new FxmlLoader(stage);
-    loader.loadFxml("fxml/main.xml");
+    loader.loadFxml("/fxml/main.fxml");
 
     stage.show();
   }

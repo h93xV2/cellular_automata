@@ -10,28 +10,26 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static cellular_automata.alerts.Alerts.notifyRecoverableError;
-import static cellular_automata.cells.CellState.getRleSymbolToCellStateMap;
-import static cellular_automata.filemanagement.parsers.LineType.getRleLineMarkerToLineTypeMap;
-
 import cellular_automata.cells.Cell;
+import static cellular_automata.cells.CellState.getRleSymbolToCellStateMap;
 import cellular_automata.cells.rules.CellRules;
 import cellular_automata.filemanagement.data.PatternPoint;
 import cellular_automata.filemanagement.data.SimulationData;
+import static cellular_automata.filemanagement.parsers.LineType.getRleLineMarkerToLineTypeMap;
 
 public class RunLengthEncodedFileParser implements FileParser {
-  private static final String fileNameExtension = ".rle";
-
-  private static final int characterOffset = 2;
-  private static final int topLeftCornerX = 0;
-  private static final int topLeftCornerY = 1;
-  private static final String endOfLineSplitter = "\\$";
-  private static final String endOfPatternMarker = "!";
-  private static final String startOfHeaderLineCharacter = "x";
-  private static final String coordinateComponentSeparator = " ";
+  private static final String FILE_NAME_EXTENSION = ".rle";
+  private static final int CHARACTER_OFFSET = 2;
+  private static final int TOP_LEFT_CORNER_X = 0;
+  private static final int TOP_LEFT_CORNER_Y = 1;
+  private static final String END_OF_LINE_SPLITTER = "\\$";
+  private static final String END_OF_PATTERN_MARKER = "!";
+  private static final String START_OF_HEADER_LINE_CHARACTER = "x";
+  private static final String COORDINATE_COMPONENT_SEPARATOR = " ";
 
   @Override
   public String getValidFileExtension() {
-    return fileNameExtension;
+    return FILE_NAME_EXTENSION;
   }
 
   @Override
@@ -48,7 +46,8 @@ public class RunLengthEncodedFileParser implements FileParser {
   private SimulationData parseFileData(final BufferedReader reader) throws IOException {
     final SimulationData data = new SimulationData();
 
-    var line = "";
+    String line;
+
     var encodedCellLines = new StringBuilder();
     var endOfPatternReached = false;
 
@@ -59,7 +58,7 @@ public class RunLengthEncodedFileParser implements FileParser {
         if (!endOfPatternReached) {
           encodedCellLines.append(line);
 
-          if (line.contains(endOfPatternMarker)) {
+          if (line.contains(END_OF_PATTERN_MARKER)) {
             endOfPatternReached = true;
           }
         } else {
@@ -80,7 +79,7 @@ public class RunLengthEncodedFileParser implements FileParser {
     if (typeOfLineUnderInspection != null) {
       populateDataFromMarkedLine(line, typeOfLineUnderInspection, data);
     } else {
-      if (lineStart.startsWith(startOfHeaderLineCharacter)) {
+      if (lineStart.startsWith(START_OF_HEADER_LINE_CHARACTER)) {
         parseHeaderLine(line, data);
       } else {
         throw new CellStateLineDetectedException();
@@ -103,14 +102,14 @@ public class RunLengthEncodedFileParser implements FileParser {
   }
 
   private String parseInformationLine(final String line) {
-    return line.substring(characterOffset).trim();
+    return line.substring(CHARACTER_OFFSET).trim();
   }
 
   private PatternPoint parseTopLeftCorner(final String line) {
     final String strippedLine = parseInformationLine(line);
-    final String[] coordinates = strippedLine.split(coordinateComponentSeparator);
-    final int x = Integer.valueOf(coordinates[topLeftCornerX]);
-    final int y = Integer.valueOf(coordinates[topLeftCornerY]);
+    final String[] coordinates = strippedLine.split(COORDINATE_COMPONENT_SEPARATOR);
+    final int x = Integer.parseInt(coordinates[TOP_LEFT_CORNER_X]);
+    final int y = Integer.parseInt(coordinates[TOP_LEFT_CORNER_Y]);
 
     return new PatternPoint(x, y);
   }
@@ -197,13 +196,13 @@ public class RunLengthEncodedFileParser implements FileParser {
   private String[] getEncodedCellRowsFromEncodedCellLine(final String line) {
     final String processedLine = prepareCellLineForProcessing(line);
 
-    return processedLine.split(endOfLineSplitter);
+    return processedLine.split(END_OF_LINE_SPLITTER);
   }
 
   private String prepareCellLineForProcessing(final String line) {
     var processedLine = line.trim();
     processedLine = processedLine.replace(" ", "");
-    processedLine = processedLine.replace(endOfPatternMarker, "");
+    processedLine = processedLine.replace(END_OF_PATTERN_MARKER, "");
 
     return processedLine;
   }
@@ -234,7 +233,7 @@ public class RunLengthEncodedFileParser implements FileParser {
   }
 
   private int calculateDecodedCharacterCount(final int count, final char character) {
-    return (count * 10) + Integer.valueOf(String.valueOf(character));
+    return (count * 10) + Integer.parseInt(String.valueOf(character));
   }
 
   private Cell buildCellFromCharacterRepresentation(final char character) {

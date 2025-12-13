@@ -6,13 +6,14 @@ import cellular_automata.graphics.board.Board;
 import javafx.animation.AnimationTimer;
 
 public class SimulationLoop extends AnimationTimer {
+  private final Board board;
+  private final Generations generations;
   private final CellMatrix cells;
+  private final long referenceTimeStep;
+  
   private long lastTime;
   private boolean firstIteration;
-  private final long referenceTimeStep;
   private long currentTimeStep;
-  private Board board;
-  private Generations generations;
 
   public SimulationLoop(final Board board, final long timeStep, final Generations generations) {
     this.board = board;

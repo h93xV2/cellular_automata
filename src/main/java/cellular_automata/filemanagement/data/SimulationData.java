@@ -84,7 +84,11 @@ public class SimulationData {
   }
 
   public void setRules(final CellRules cellRules) {
-    this.cellRules = (CellRules) cellRules.clone();
+    try {
+        this.cellRules = (CellRules) cellRules.clone();
+    } catch (CloneNotSupportedException e) {
+        throw new RuntimeException(e);
+    }
   }
 
   public Cell[][] getCells() {
